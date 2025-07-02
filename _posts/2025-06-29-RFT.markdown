@@ -1,0 +1,494 @@
+---
+layout: post
+title:  "Relativistic Field Theory with Geometric Algebra"
+date:   2025-06-29 15:53:00 +0100
+categories: Relativity
+---
+
+<style>
+.wrapper {
+  max-width: 1500px !important;
+}
+</style>
+
+{% include mathjax.html %}
+
+
+
+$\newcommand{\mbf}{\mathbf}$
+
+
+In this blog page we describe how we can understand field theories from action principles. Most physical laws can be derived by minimizing the action. The action represents the total energy of the system, which must be conserved. This means that we may determine the equations that govern physical laws by minimizing the action by solving the Euler Lagrange Equations.
+
+Let us consider a system where we have a single particle that describes a trajectory $x(\tau)$ and with velocity ${v}(\tau) = \frac{dx}{d\tau} = \dot{x}(\tau)$, let us also assume that the particle is subjected to some vector potential $A=A(x)$, that does not change in time. The action for this particle is
+
+
+$$
+\mathcal{A} = \int -{m} \dot{x}^2 + qA(x)\cdot \dot{x}\  d\tau \label{eq:action}
+$$
+
+
+
+The Euler Lagrange equations tells us that in order to minimize $\ref{eq:action}$ on must determine $x=x(\tau)$ that solves
+
+$$
+\frac{d}{d\tau}\frac{d\mathcal{L}}{d\dot{x}} - \frac{d\mathcal{L}}{dx}=0\label{eq:euler:lagrange:tau}
+$$
+
+where $\mathcal{L}$ is the lagrangian and is given by $\mathcal{L}(x(t))\equiv -{m} \dot{x}^2 + A(x)\cdot \dot{x}$. The only component of $\mathcal{L}$ that depends explicitily on $x$ is the $A(x)$. Note that we may write the Euler-Lagrange equations in the following form
+
+$$
+\partial_\tau \nabla_{\dot{x}}\mathcal{L} - \nabla_{x}\mathcal{L} = 0
+$$
+
+To determine the derivative of $A(x)\cdot \dot{x}$ we must define a new quantity. Let $\underline{A}$ be the jacobian matrix of the vector potential $A$, this means that $\underline{A}z\equiv z\cdot \nabla_x A$. And $\bar{A}$ the jacobian transpose, thus $\bar{A}z\equiv \nabla_x z\cdot A$. Taking the derivative $\nabla_x$ of $\mathcal{L}$ one obtains
+
+$$
+\nabla_{x}\mathcal{L} = q\nabla_{x}A(x)\cdot \dot{x} = q\bar{A}\dot{x}
+$$
+
+While the derivetive with respect to the velocity gives us:
+
+$$
+\nabla_{\dot{x}}\mathcal{L} = -2m\dot{x} + qA(x)
+$$
+
+Then taking the proper time $\tau$ derivative we obtain
+
+$$
+\partial_\tau\nabla_{\dot{x}}\mathcal{L} = -2m\ddot{x} + q\dot{x}\cdot \nabla_x A = -2m\ddot{x} + q\underline{A}\dot{x}
+$$
+
+Putting the entire Euler-Lagrange equation together one finds that 
+
+$$
+m\ddot{x} = (1/2)q (\underline{A}-\bar{A})\dot x
+$$
+
+Note how this almost looks like the Lorentz force Law. Defining the eletromagnetic tensor as 
+
+$$
+F = (1/2)(\underline{A}-\bar{A})\label{eq:F:from:potential}
+$$
+
+Note that $F$ is skew-symmetric under the metric. This means that the components of $F$ are not skew symmetric but $F$ satisfies $F^\top = -F$. Where the transpose is defined with respect to the inner product, in particular we have $(F^\top x)\cdot y \equiv x\cdot (Fy)$. Recall that the inner product satisfies $e_\mu\cdot e_\nu = \eta_{\mu\nu}$ with $\eta_{\mu\nu}$ the metric of space-time $\eta_{\mu\mu}=\\{-++++\\}$. Under this new definition we finally arrive at the equation
+
+$$
+m\ddot{x} = q F\dot{x} \label{eq:lorentz:force:law}
+$$
+
+You might recall the similarity of $(\ref{eq:F:from:potential})$ with the formula
+
+$$
+F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu
+$$
+
+
+
+We want to simplify (\ref{eq:lorentz:force:law}) by transforming it to a relation between position and velocity. To achieve that we will take the integral on both sides, and then use the fundamentdal theorem of calculus. 
+
+$$
+m\int_{\tau_0}^{\tau_f} \ddot{x}\ d\tau  = q\int_{\tau_0}^{\tau_f} F\dot{x} \ d\tau\ \ \Leftrightarrow\ \ m \dot{x}(\tau_f) - m\dot{x}(\tau_0) = q\int_{x_0}^{x_f} Fd\vec{x} 
+$$
+
+Now consider the existence of a vector potential $G$ such that $Fz=z\cdot\nabla_x G=\underline{G}z$, then the integral over $Fd\vec{x}$ takes the form
+
+$$
+\int_{x_0}^{x_f} Fd\vec{x} = \int_{x_0}^{x_f}d\vec{x}\cdot\nabla_x G = G(x_f)-G(x_0) = G(x(\tau_f)) - G(x(\tau_0))
+$$
+
+Now set $G_0=G(x(\tau_0))$ and $\tau_f\rightarrow \tau$ to finally get the following equation
+
+$$
+\dot{x}(\tau) = (q/m) [G(x(\tau)) - G_0]
+$$
+
+
+This shows that the velocity is in fact expressed as a field, that is, it is a function of space-time position $x$. In particular we may consider 
+
+$$
+v(x)\equiv\dot{x}(\tau) = (q/m) [G(x(\tau)) - G_0]\notag
+$$
+
+This sugests that we may consider a field theory for the velocity field $v(x)$. Let us replace $\dot{x}=v(x)$ in the Lagrangian, then 
+
+$$
+\mathcal{L}(v(x)) = -mv^2(x)+A(x)\cdot v(x)
+$$
+
+Note that while the previous Lagrangian was a function of $\tau$, this is a function of the space-time vector $x$.
+
+## Solving in Coordinate Time $t$
+
+Now let us consider a different approach to compute the Lorentz Force Law from the action integral. We want to consider some coordinate time $t$ for which the position $X$ of the particle changes let $e_0$ be some arbitrary time coordinate that satisfies $e_0^2=-1$ and $I=e_1e_2e_3$ the subspace where the position vector $X$ resides in. First note that the second term of the Action  $\eqref{eq:action}$ can be expressed as
+
+$$
+\int A(x)\cdot \dot{x}\ d\tau = \int A(x)\cdot d\vec{x} = \int A(t,X(t))\cdot \frac{dx}{dt}\ dt
+$$
+
+where $x=(t,X)=te_0+X$, and its derivative is $\frac{dx}{dt}=\left(\frac{dt}{dt},\frac{dX}{dt}\right)=\left(1,\frac{dX}{dt}\right)=e_0+\frac{dX}{dt}$. Now let $A_0=A\cdot e_0$, then the integral takes the form
+
+
+$$
+\int A(x)\cdot d\vec{x} = \int A_0 + A_{\mathcal{E}}\cdot \dot{X}\ dt
+$$
+
+with $A=(A_0,a)=A_0e_0 + A_{\mathcal{E}}a$, $A_{\mathcal{E}}=P_I(A)=A\cdot II^{-1}$ and $I=e_1e_2e_3$, and where we define $\dot{X}=\frac{dX}{dt}$. The action for the velocity is simply
+
+$$
+\int -m \dot{x}^2\ d\tau = \int -m\ d\tau = \int -m \sqrt{1-\dot{X}^2}\ dt
+$$
+
+where we used the change of variable $\frac{d\tau}{dt}=\sqrt{1-\dot{X}^2}=\gamma^{-1}(\dot{X})$ and $\frac{dt}{d\tau}=\frac{1}{\sqrt{1-\dot{X}^2}}=\gamma(\dot{X})$. The complete action for this system then takes the form:
+
+$$
+ \mathcal{A} = \int -m \sqrt{1-\dot{X}^2} + A_0 + A_{\mathcal{E}}\cdot \dot{X}\ dt
+$$
+
+The Euler-Lagrange equations for this action will be similar to $\eqref{eq:euler:lagrange:tau}$:
+
+$$
+\frac{d}{dt}\frac{d\mathcal{L}}{d\dot{X}} - \frac{d\mathcal{L}}{dX}=0\label{eq:euler:lagrange:t}
+$$
+or using the sorthand notation for the derivatives:
+$$
+\partial_t \nabla_{\dot{X}}\mathcal{L} - \nabla_{X}\mathcal{L} = 0
+$$
+
+Let us first evaluate the derivative with respect to $\dot{X}$
+
+$$
+\nabla_{\dot{X}}\mathcal{L} = m\frac{\dot{X}}{\sqrt{1-\dot{X}^2}} +qA_{\mathcal{E}}
+$$
+
+and the derivative with respect to coordinate time is:
+
+$$
+\partial_t\nabla_{\dot{X}}\mathcal{L} = m\frac{d}{dt}\left[  \frac{\dot{X}}{\sqrt{1-\dot{X}^2}}\right] + q\frac{dA_{\mathcal{E}}}{dt}
+$$
+
+Then we evaluate the derivative with respect to space coordinate $X$. Thus 
+
+$$
+\nabla_{X}\mathcal{L} = q\left[\nabla_XA_0 + \nabla_XA_{\mathcal{E}} \cdot \dot{X}\right]
+$$
+
+Now the Euler-Lagrange equations become of the form
+
+$$
+m\frac{d}{dt}\left[  \frac{\dot{X}}{\sqrt{1-\dot{X}^2}}\right] = q\left[\nabla_XA_0 + \nabla_X A_{\mathcal{E}}\cdot \dot{X}-\frac{dA_{\mathcal{E}}}{dt}\right]
+$$
+
+Next note that $A_{\mathcal{E}}=A_{\mathcal{E}}(t,X(t))$ this means that when we take the derivative with respect to coordinate time $t$ of $A_{\mathcal{E}}$ we must consider the chain rule, then
+
+$$
+\frac{dA_{\mathcal{E}}}{dt} = \frac{\partial A_{\mathcal{E}}}{\partial t} + \dot{X}\cdot \nabla_X A_{\mathcal{E}}
+$$
+
+and yet again we rewrite the Euler-Lagrange equations:
+
+$$
+m\frac{d}{dt}\left[  \frac{\dot{X}}{\sqrt{1-\dot{X}^2}}\right] = q\left[\nabla_XA_0 + \nabla_X A_{\mathcal{E}} \cdot \dot{X}-\frac{\partial A_{\mathcal{E}}}{\partial t} - \dot{X}\cdot \nabla_X A_{\mathcal{E}}
+\right]\label{eq:euler:lagrage:complicated}
+$$
+
+Note that to derive the same set of equations as in the last section, it is not possible directly from the above equations. The reader should note that there are no $e_0$ components in the above equation. We could forecast and tell what is missing, instead we will define $\nabla_x \equiv e^0\frac{\partial}{\partial t}+\nabla_X$, $v=\frac{dx}{dt}=e_0+\dot{X}=e_0+V$ with $e_0=-e_0$ such that $e_0\cdot e^0=1$.
+
+We will show that the right hand side is equivalent to the euclidean component of the following 
+
+$$
+\nabla_x A\cdot v - v\cdot\nabla_xA\label{eq:skew:op:A}
+$$
+
+It can be noted that we may identify the above as the skew-symmetric part of the jacobian of $A(x)$ aplied to the vector $v$. Expanding the above we have 
+
+$$
+-e_0\frac{\partial}{\partial t} A\cdot v + \nabla_X A\cdot v - e_0 v\cdot \nabla_x A_0 - v\cdot \nabla_x A_{\mathcal{E}}
+$$
+
+Now we can start to identify the equal components on boths expressions specifically
+
+$$
+\begin{align}
+\nabla_X(A_0+A_{\mathcal{E}}\cdot\dot{X}) &= \nabla_X A\cdot v\\
+\frac{\partial A_{\mathcal{E}}}{\partial t} + \dot{X}\cdot \nabla_X A_{\mathcal{E}} &= v\cdot \nabla_x A_{\mathcal{E}}
+\end{align}
+$$
+
+While we can transform the right hand side of $\eqref{eq:euler:lagrage:complicated}$ into $\eqref{eq:skew:op:A}$ we must now add a $e_0$ term to the right hand side, this term is
+
+$$
+m \frac{d}{dt}\frac{e_0}{\sqrt{1-\dot{X}}}
+$$
+
+Now note that 
+
+$$
+e_0 + \dot{X} = \frac{d}{dt}(te_0+X) = \frac{dx}{dt} = \frac{d\tau}{dt} \frac{dx}{d\tau} = \sqrt{1-\dot{X}^2}\frac{dx}{d\tau}\label{eq:change:vars}
+$$
+
+thus the left hand side of $\eqref{eq:euler:lagrage:complicated}$ turns into
+
+$$
+m\frac{d}{dt}\left[\frac{dx}{d\tau}\right]
+$$
+
+We can use $\eqref{eq:change:vars}$ to assert the change of coordinates $v=\frac{dx}{dt}=\sqrt{1-\dot{X}^2}\frac{dx}{d\tau}$ and then
+
+$$
+\nabla_x A\cdot v - v\cdot\nabla_xA =\sqrt{1-\dot{X}^2} \left(\nabla_x A\cdot \frac{dx}{d\tau} - \frac{dx}{d\tau}\cdot\nabla_xA\right)
+$$
+
+Dividing by $\sqrt{1-\dot{X}^2}$ on both sides and noticing that $(1-\dot{X}^2)^{-1/2}=\frac{dt}{d\tau}$ we have
+
+$$
+m  (1-\dot{X}^2)^{-1/2}\frac{d}{dt}\left[\frac{dx}{d\tau}\right] = m \frac{dt}{d\tau}\frac{d}{dt}\left[\frac{dx}{d\tau}\right] = m \frac{d^2x}{d\tau^2}
+$$
+
+Thus we may finally write the covariant Lorentz Force Law with respect to the vector potential $A$. In all its glory the Law is
+
+$$
+\boxed{
+m \frac{d^2x}{d\tau^2} = \nabla_x A\cdot \frac{dx}{d\tau} - \frac{dx}{d\tau}\cdot\nabla_xA
+}
+$$
+
+Defining the linear transformation operator $F$ as $qFv\equiv \nabla_x A\cdot v - v\cdot\nabla_xA$ and letting the overdot express derivative with respect to proper time we have
+
+$$
+m\ddot{x} = qF\dot{x}
+$$
+
+### Note about Proper Time
+
+One of the invariants of special relativity is the tiny change of proper-time and this tiny change relates with the magnitude of the tiny change in the space-time position, in particural we have the relation 
+
+$$
+d\tau^2 = -dx^2 = dt^2 - dX^2
+$$
+
+but now note that a tiny change in $\tau$ can be written as 
+
+$$
+d\tau = \sqrt{-dx^2} = \sqrt{dt^2-dX^2} = \sqrt{\left(\frac{dt}{dt}\right)^2 - \left(\frac{dX}{dt}\right)^2}dt = \sqrt{1-V^2}dt
+$$
+
+This is a straightforward approach to derive the lorentz factor that comes from the invariance relation. Note that this invariance relation leads us to an invariance relation between frames. Consider $x_1$ to be the position at frame one, while $x_2$ is the position at frame two. By the invariance principal
+
+$$
+d\tau^2 = -dx_1^2 = -dx_2^2
+$$
+
+This implies that $dx_1$ and $dx_2$ must tranform into each other under Lorentz transformations, namely
+
+$$
+dx_1 = L dx_2
+$$
+
+with $L=L(x_1)=L'(x_2)$ and satisfying $L^\top = L^{-1}$ and with the $\top$ operator defined as $(La)\cdot b\equiv a\cdot(L^\top b)$ ($\top$ is not the same as matrix transpose, the reader should not be confused by this similarity!!!). Now computing the magnitude of $dx_1$ we have
+
+$$
+dx_1^2 = dx_1\cdot dx_1 = (Ldx_2)\cdot(Ldx_2) = (L^\top L dx_2)\cdot dx_2 = dx_2^2
+$$
+
+Where we used $L^\top L = I$.
+Indeed if $L$ is a Lorentz transformation, the differentials $dx_1$ and $dx_2$ have the same ''magnitude''.
+
+
+## General Relativity Formulation
+
+In this part we will consider the case of general relativity. The key difference between general and special relativity is that in general relativity space-time is curved. In particular the invariant which is proper time $d\tau$ satisfies the following
+
+$$
+d\tau^2 = -(\underline{h}dx)^2 =- dx\cdot (gdx)\label{eq:invariant:gen:rel}
+$$
+
+with $h$ the Gauge Tensor, it relates with the metric tensor $g$ via $h^\top h=g$. The invariant in general relativity is now $\eqref{eq:invariant:gen:rel}$. Let us now consider a transformation $x=f(y)$, given this transformation the differential $dx$ transforms as
+
+$$
+dx = \frac{dx}{dy}dy = \underline{f}dy
+$$
+
+Then the invariant becomes 
+
+$$
+d\tau^2 = -dy\cdot (\bar{f}g\underline{f}dy) =- dy\cdot (gdy)
+$$
+
+which implies that $\underline{f}$ must satisfy 
+
+$$
+\bar{f}g\underline{f} = g
+$$
+
+This equation can be solved for $\underline{f}$ by considering the square root of $g$. In particular if we set 
+
+$$
+\boxed{
+  \bar{f} = g^{1/2}R^{\top}g^{-1/2}
+}
+$$
+
+Where $R\in\mathbb{R}^{4\times 4}$ is a Lorentz transformation matrix. Then it is trivial to check that 
+
+$$
+\bar{f}g\underline{f} = g^{1/2}R^{\top}g^{-1/2} g g^{-1/2}Rg^{1/2} = g
+$$
+
+The action for a particle under a gravitational field dictated by $g$ and a electromagnetic field expressed by the vector potential $A$ is of the form
+
+
+$$
+\mathcal{A}_\text{GR} = \int -m \sqrt{-(\underline{h}dx)^2} + q\int \bar{h}^{-1}(A)\cdot \underline{h}(dx)
+$$
+
+Note that from the action defined for SR we changed $dx\mapsto hdx$ and $A\mapsto \bar{h}^{-1}A$. This is what will make the theory covariant. Instead of the parameterization considered for special relativity we shall consider an arbitrary parameterization thus we will use
+
+$$
+dx = \frac{dx}{d\theta}d\theta= \dot{x}d\theta
+$$
+
+with $\dot{x}=\frac{dx}{d\theta}$. Under this parameterization and simplifying the action we find 
+
+
+$$
+\mathcal{A}_\text{GR} = \int -m|ih\dot{x}|d\theta + \int qA\cdot\dot{x}\!\ d\theta
+$$
+
+with $i$ the imaginary unit $i^2=-1$. The Euler Lagrange equation for this action is
+
+$$
+\frac{d}{d\theta}\nabla_{\dot{x}} \mathcal{L} - \nabla_x \mathcal{L}=0
+$$
+
+The derivative of the lagrangian with respect to the velocity $\dot{x}$ is
+
+$$
+\nabla_{\dot{x}} \mathcal{L} = m\frac{\bar{h}\underline{h}\dot{x}}{|i\underline{h}\dot{x}|} + q A
+$$
+
+taking the derivative with respect to $\theta$ we have 
+
+$$
+m\frac{d}{d\theta}\left[\frac{\bar{h}\underline{h}\dot{x}}{|i\underline{h}\dot{x}|}\right] + q \dot{x}\cdot\nabla_x A
+$$
+
+The derivative with respect to $x$ gives
+
+$$
+\nabla_x \mathcal{L} = m\frac{\nabla_x \underline{h}(\dot{x})^2}{|i\underline{h}\dot{x}|} + q\nabla_x A\cdot \dot x
+$$
+
+The Euler-Lagrange equations have the final form:
+
+$$
+m\frac{d}{d\theta}\left[\frac{\bar{h}\underline{h}\dot{x}}{|i\underline{h}\dot{x}|}\right] + q \dot{x}\cdot\nabla_x A - m\frac{\nabla_x \underline{h}(\dot{x})^2}{|i\underline{h}\dot{x}|} - q\nabla_x A\cdot \dot x = 0
+$$
+
+Now we are going to remove the $\|i\underline{h}\dot{x}\|$ by noticing that dividing $\eqref{eq:invariant:gen:rel}$ by $d\theta^2$ gives us an expression of the form
+
+$$
+|i\underline{h}\dot{x}| = \frac{d\tau}{d\theta}
+$$
+
+and 
+
+$$
+\frac{dx}{d\theta} = \frac{dx}{d\tau}\frac{d\tau}{d\theta} = \frac{dx}{d\tau} |i\underline{h}\dot{x}|
+$$
+
+Now note that 
+
+$$
+\frac{\underline{h}(\dot{x})^2}{|i\underline{h}\dot{x}|} = \frac{|i\underline{h}\dot{x}|^2\underline{h}(dx/d\tau)^2}{|i\underline{h}\dot{x}|} = |i\underline{h}\dot{x}|\underline{h}(dx/d\tau)^2
+$$
+
+After all of this change of parameterizations we will arrive at the following equation
+
+$$
+m\frac{d}{d\tau} g\dot{x} = q(\nabla_xA\cdot\dot{x} + \dot{x}\cdot\nabla_xA) + m \nabla_x \dot{x}\cdot g(\dot{x}) = qF\dot{x} + m\nabla_x\dot{x}\cdot g(\dot{x}) 
+$$
+
+where now the dot represents derivative in proper-time $\tau$. Comparing with what was obtained for the Special Relativity case we note that there is an additional term, namely $m\nabla_x\dot{x}\cdot g(\dot{x})$ is a quadratic term that makes the equation quadratic in $\dot{x}$.
+
+
+
+Now recall that the metric tensor $g$ depends on $x$, this means that we must consider the chain rule and the product rule for $\frac{d}{d\tau} g\dot{x}$, letting $\dot{g} = \frac{dg}{d\tau} = \dot{x}\cdot\nabla_x g\dot{x}$ we rewrite the equation in the form
+
+$$
+m g\ddot{x} = -m\dot{x}\cdot\nabla_x g\dot{x} + qF\dot{x} + m\nabla_x\dot{x}\cdot g(\dot{x})
+$$
+
+Now let $g(x)\dot x=G(x,\dot{x})$ then define $\underline{G}v=v\cdot{\nabla_x} G$ and $H=\bar{G}-\underline{G}$, then the equations can be written in the following form
+
+$$
+mg\ddot{x} = mH(x,\dot{x})\dot{x} + qF(x)\dot{x} = (mH(x,\dot{x})+qF(x))\dot{x}\ \Leftrightarrow\ m\ddot{x} = g^{-1}\left(mH(x,\dot{x})+qF(x)\right)\dot{x}
+$$
+
+
+
+$$
+\boxed{
+m\ddot{x} = g^{-1}\left(mH(x,\dot{x})+qF(x)\right)\dot{x}
+}
+$$
+
+<!-- Now we want to rewrite the equations to explicitily show that the proper-time velocity depends on two components, the analog to the vector potential $G(x)$ and a field that comes from the curvature of space time, let us call it  -->
+
+
+
+## A change of variables for the Action
+
+Let us consider the following action
+
+$$
+\mathcal{A} = \int - m\sqrt{dy^2} + \int (\nabla_y \phi)\cdot dy
+$$
+
+Now consider the following relations when we take the change of coordinates $y=h(x)$
+
+$$
+\begin{align}
+\nabla_x &= \frac{d}{dx} = \frac{dy}{dx}\frac{d}{dy} = \bar{h}\nabla_y\\
+dy &= \frac{dy}{dx}dx = \underline{h}dx
+\end{align}
+$$
+
+Thus $dy= \underline{h}dx$ and similarly $\nabla_x = \bar{h}\nabla_y$. With $\underline{h}v\equiv v\cdot\nabla_x h$. Then it is straightforward to see that 
+
+$$
+(\nabla_y\phi)\cdot dy = (\nabla_y\phi)\cdot(\underline{h}dx) = (\bar{h}\nabla_y\phi)\cdot dx = (\nabla_x \phi')\cdot dx
+$$
+
+with $\phi'(x)=\phi(f(x))$. Note that while $(\nabla_y\phi)\cdot dy$ remains the same value under a coordinate transfortion, the tiny distance measure becomes
+
+$$
+dy^2= (\underline{h}dx)^2
+$$
+
+And the action takes the new form
+
+$$
+\mathcal{A} = \int - m\sqrt{\underline{h}(dx)^2} + \int (\nabla_x \phi')\cdot dx
+$$
+
+
+
+<!-- Now let us consider an action where multiple particles are involved. Let us consider the field $v(x)$ that shall represent the velocity at position $x$. -->
+<!-- Let us consider a field $v(x)$ that takes the role of the velocity $\dot{x}$. We want to provide an equivalent action for this field. The action is -->
+<!---->
+<!-- $$ -->
+<!-- \mathcal{A} = \int -mv^2(x)+qA(x)\cdot v(x)\ d^4 x -->
+<!-- $$ -->
+<!---->
+<!-- Note that in this case the Lagrangian does not depend on any derivative of $v$, thus finding the minima of the action reduces to taking $\nabla_v \mathcal{L}=0$. Which will give us the equation -->
+<!---->
+<!-- $$ -->
+<!-- mv(x) = (1/2)qA(x) -->
+<!-- $$ -->
+<!-- Replacing $\dot{x}(\tau)=v(x)$ we get an equation for a single particle -->
+<!---->
+<!-- $$ -->
+<!-- m\dot{x}(\tau) = (1/2)qA(x(\tau)) -->
+<!-- $$ -->
+
