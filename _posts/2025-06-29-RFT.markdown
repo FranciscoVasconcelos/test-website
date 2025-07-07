@@ -16,6 +16,7 @@ categories: Relativity
 
 
 $\newcommand{\mbf}{\mathbf}$
+$\newcommand{\und}{\underline}$
 
 
 In this blog page we describe how we can understand field theories from action principles. Most physical laws can be derived by minimizing the action. The action represents the total energy of the system, which must be conserved. This means that we may determine the equations that govern physical laws by minimizing the action by solving the Euler Lagrange Equations.
@@ -471,6 +472,182 @@ And the action takes the new form
 $$
 \mathcal{A} = \int - m\sqrt{\underline{h}(dx)^2} + \int (\nabla_x \phi')\cdot dx
 $$
+
+
+## A note on the metric tensor
+
+We start by defining a system of coordinates 
+
+$$
+\{e_\mu\ |\ \mu=0,1,2,3 \}
+$$
+
+that is compatible with the metric tensor
+
+$$
+g_{\mu\nu} = e_\mu\cdot e_\nu
+$$
+
+Note that each basis vector is a vector field, that is $e_\mu=e_\mu(x)$. A vector $v$ can be expressed through its covariant components $v^\mu$ as a linear combination of the basis vectors, then 
+
+$$
+V = v^{\mu}e_\mu
+$$
+
+note however that we can express the covariant components via the standard basis, in particular we define 
+
+$$
+v = v^\mu \gamma_\mu 
+$$
+
+The role of $\underline{h}$ is made clear when we define it as the map from the $\gamma_\mu$ to the $e_\mu$, in other words $e_\mu = \underline{h}\gamma_\mu$ thus we can express the upercase $V$ as 
+
+$$
+V = \underline{h}v
+$$
+
+Now that we have this more concise definition of a vector expressed in the metric tensor basis, we can easily derive the covariant derivative. Simply take the directional derivative of $V$, to obtain
+
+$$
+a\cdot\nabla_x V = (a\cdot\nabla \underline{h})v + \underline{h}(a\cdot\nabla_x v)
+$$
+
+from here we may define the covariant directional derivative as 
+
+$$
+D_a v = (a\cdot\nabla \underline{h})v + \underline{h}(a\cdot\nabla_x v)\ \Leftrightarrow \ D_a = a\cdot\nabla \underline{h} + \und{h}a\cdot\nabla_x 
+$$
+
+Then we define a covariant directional derivative for each of the basis vectors $$a=\gamma_\mu$$, then defining $\partial_\mu=\gamma_\mu\cdot\nabla_x$, and $$\und{h}_\mu=\partial_\mu \und{h}$$ and abusing notation to write $$D_{\gamma_\mu}=D_\mu$$, we have
+
+$$
+D_\mu \equiv \und{h}_\mu +  \und{h}\partial_\mu
+$$
+
+This definition extends over to arbitrary multivector fields by considering $\underline{h}$ to express the outermorphism transformation. In particular we consider that for some bivector $$A=a_1\wedge a_2$$ we have 
+
+$$
+\und{h}A = \und{h}(a_1)\wedge \und{h}(a_1)
+$$
+
+Similarly $\und{h}_\mu$ shares the same property, i.e. $$ \und{h}_\mu A = \und{h}_\mu(a_1)\wedge \und{h}_\mu (a_1) $$. Thus $$ \und{h}_\mu $$ not only expresses the derivative of the operator that transforms vectors into vectors but also of its extension as an outermorphism, that is $$\und{h}_\mu=\partial_\mu \und{h}$$ is the derivative of the multilinear operator $\und{h}$. The covariant derivative on $A$ is 
+
+$$
+D_\mu A = \und{h}_\mu(A) + \und{h}(\partial_\mu A) = \und{h}_\mu(a_1)\wedge \und{h}_\mu (a_1) + \und{h}(\partial_\mu a_1)\wedge\und{h}(a_2) + \und{h}( a_1)\wedge\und{h}(\partial_\mu a_2)
+$$
+
+Note that we have to be carefull when evaluating $\und{h}(\partial_\mu A)$, we must first allways evaluate the derivative and only after can we apply the outermorphism. We have defined the covariant derivative as an operator that transforms vector and multivector fields linearly, it applies linear transformations and computes derivatives, however each $D_\mu$ is a derivative on a single direction in particular in the $\gamma_\mu$ direction. To form the full covariant derivative we have to include the $\gamma_\mu$ components, to motivate such a construction we express the normal derivative as
+
+$$
+\nabla = \gamma^\mu \gamma_\mu \cdot \nabla = \gamma^{\mu} \partial_\mu
+$$
+
+from this expression it should be sensible to construct a covariant derivative in the same manner, that is, 
+$$
+D = \gamma^\mu \gamma_\mu \cdot D = \gamma^{\mu} D_\mu
+$$
+
+however because $D_\mu$ is a multilinear differential operator we don't fully understand the meaning of the product $\gamma^{\mu} D_\mu$, thus the full vector covariant derivative simply defined by the operator equation $D= \gamma^{\mu} D_\mu$. In order to make full sense of this new operator we must understand how it acts on elements, when we look at the expression $\gamma^\mu D_\mu A$ we read it in the following manner: Apply the operator $D_\mu$ first then multiply by $\gamma_mu$, this can be illustrated using parenthesis 
+
+$$DA = \gamma^\mu D_\mu A = \gamma^{\mu}(D_\mu A) = \gamma^\nu\cdot (D_\mu A) + \gamma^\nu\wedge (D_\mu A)$$
+
+to recall how this operator acts recal that it does not make sense to multiply a vector $\gamma^\mu$ with a linear operator. We now define two particular cases of the covariant derivative. If we regard $D$ as a vector we can imediatly write that 
+
+$$
+DA = D\cdot A + D\wedge A
+$$
+
+Letting $A=A_r$ be of grade $r$ we have that 
+
+$$
+DA_r =  D\cdot A_r + D\wedge A_r = \langle DA_r\rangle_{r-1} + \langle DA_r\rangle_{r+1}
+$$
+
+this suggests the following definitions for covariant divergence and covariant curl 
+
+$$
+\begin{align}
+D\cdot A_r &\equiv \langle DA_r\rangle_{r-1} = \langle \gamma^\mu (D_\mu A_r)\rangle_{r-1}\\
+D\wedge A_r &\equiv \langle DA_r\rangle_{r+1} = \langle \gamma^\mu (D_\mu A_r)\rangle_{r+1}
+\end{align}
+$$
+
+this definition extends for a multivector of multiple grades $A=\sum_r A_r$ thus $D\cdot A \equiv \sum_r D\cdot A_r$ is well defined. Even though $D$ is not a vector, it can be regarded as one since it operates in the same manner as $\nabla$ operator. Another important definition is the directional derivative,
+
+$$
+a\cdot D = a\cdot\gamma^\mu \gamma_\mu\cdot D = a\cdot\gamma^\mu D_\mu = a^\mu D_\mu
+$$
+
+the covariant directional derivative is just the linear combinations of the operators $D_\mu$ weighted by the components of $a$.
+
+
+
+### The covariant derivative on linear operators
+
+
+Consider some matrix operator $T$, similar to the operator $D_\mu$. In the classical sense the operator applied to the gradient vector $\nabla$ reads
+
+$$
+\dot{T}\dot{\nabla}  = \partial_\mu T \gamma^\mu
+$$
+
+
+Taking into observation this expression then the operation $\dot{T}\dot{D}$ must be expressed as the following 
+
+$$
+\dot{T}\dot{D} \equiv D_\mu T\gamma^\mu = (\underline{h}_\mu +\underline{h}\partial_\mu)T\gamma^\mu
+$$
+
+Thus we will have two terms on this expression, the first is $$\underline{h}_\mu T \gamma^\mu$$ which simply means: apply the composition of the linear transformation $$\underline{h}_\mu$$ to the linear operator $T$ and then evaluate the result $$(\underline{h}_\mu T)\gamma^\mu$$. The other part of the equation can be interpeted as, apply the derivative $\partial_\mu$ to $T$ to get $T_\mu\equiv \partial_\mu T$, then compose $\underline{h}$ with $T_\mu$ and apply that result to the vector $\gamma^\mu$.
+
+
+The laplacian operator must also be considered for instance the normal laplacian is 
+
+$$
+\nabla^2 = \nabla\cdot\nabla = \partial_\mu\partial^\mu
+$$
+
+In a similar fashion we can define the covariant Laplacian 
+
+$$
+D^2 = D\cdot D \equiv D_\mu D^\mu
+$$
+
+where $D^\mu=\gamma_\mu^2 D_\mu$. But this definition does not comply with the laplacian of $\underline{h}A$, instead we must compute the Laplacian of this quantity
+
+$$
+\nabla^2 \underline{h}A = (\partial^\mu\underline{h}_\mu)A + \und{h}_\mu(\partial^\mu A) +(\partial^\mu \und{h})\partial_\mu A + \und{h}\partial^\mu\partial_\mu A
+$$
+
+this suggests the following definition for $D^2$ 
+
+$$
+D^2 \equiv \underline{h}_\mu^\mu + \und{h}_\mu\partial^\mu  + \und{h}^\mu\partial_\mu  + \und{h}\partial^\mu\partial_\mu 
+$$
+
+
+with the subscript $\mu$ index meaning derivative $\partial_\mu$ and the supscript meaning $\partial^\mu$.
+
+The goal of this new definitions is to express the energy-momentum conservation law in the form 
+
+$$
+\boxed{
+\dot{T}\dot{D} = 0
+}
+$$
+
+where $T\in\mathbb{R}^{4\times 4}$ is the energy-momentum rank-2 tensor, or just a matrix.
+
+# Densities
+
+To define densities covariantly we must consider a representation that expresses the density with direct reference to some reference frame. We will consider the following line integral
+
+$$
+\rho(x) = \int_\ell \delta(x-x')dx' = \int_{-\infty}^\infty \delta(x-x(\tau))d\tau
+$$
+
+with $x(\tau)$ some arbitrary function of $\tau$. We shall see that when $x(\tau)=\tau e_0 + X_0$, with $e_0^2=-1$ and $X_0\cdot e_0=0$ the integral reduces to a stationary mass in the reference frame $\\{e_0,e_1,e_2,e_3\\}$.
+
 
 
 
