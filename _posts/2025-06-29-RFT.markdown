@@ -646,7 +646,53 @@ $$
 \rho(x) = \int_\ell \delta(x-x')dx' = \int_{-\infty}^\infty \delta(x-x(\tau))d\tau
 $$
 
-with $x(\tau)$ some arbitrary function of $\tau$. We shall see that when $x(\tau)=\tau e_0 + X_0$, with $e_0^2=-1$ and $X_0\cdot e_0=0$ the integral reduces to a stationary mass in the reference frame $\\{e_0,e_1,e_2,e_3\\}$.
+with $x(\tau)$ some arbitrary function of $\tau$. We shall see that when $x(\tau)=\tau e_0 + X_0$, with $e_0^2=-1$ and $X_0\cdot e_0=0$ the integral reduces to a stationary mass in the reference frame $\\{e_0,e_1,e_2,e_3\\}$. 
+We can generalize the notion of densities to $m$-dimensional space by considering an integral over some $m$-dimensional manifold $\mathcal{M}$, in general we may consider 
+
+$$
+\rho(x) = \int_\mathcal{M} \delta(x-x')d^mx 
+$$
+
+We say that $\rho(x)$ is space-like if $\mathcal{M}$ is a space-like hypersurface, that is all tangent vectors at the point $x$ have positive norm $\und{h}(v)^2>0$ for all tangent vectors of $\mathcal{M}$ at $x$. 
+
+
+## Generalization of the line integral
+
+We can generalize the line integral that is weighted by the metric tensor. The generalization can be achived by considering a manifold $\mathcal{M}$ as a subspace of dimension $m$ a subspace of $\mathbb{R}^4$. Then an integral that is weighted by the component $\sqrt{\underline{h}(D^mx)^2}$, thus 
+
+$$
+\int_{\mathcal{M}} |\underline{h}(D^mx)|\label{eq:manifold:integral:M}
+$$
+
+The element $\underline{h}(D^mx) = \underline{h}(dx^1\wedge \cdots \wedge dx^2)$ is an infinitesimal $m$-volume element and $\|\underline{h}(D^mx)\| $ is its volume. Thus the integral in $\eqref{eq:manifold:integral:M}$ measures how much space-time volume is inside of the manifold $\mathcal{M}$. The quantity $\underline{h}(D^mx)$ represent a tangent hypersurface at the point $x$. For $\mathcal{M}$ to be space-like we must have that $\underline{h}(D^mx)^2>0$. Or $\underline{h}(dx)^2>0$ for $dx\in \mathcal{T}_\mathcal{M}(x)$ (the tangent space of $\mathcal{M}$ at the space-time location $x$).
+
+
+The energy-momentum tensor over some world-line $x(\tau)$ is computed as a line integral:
+
+$$
+T^{\mu\nu} = M\int_{\ell} u^\mu u^\nu \delta(x-x')|\und{h}(dx')| = M\int_\mathbb{R} \dot{x}^\mu\dot{x}^\nu \delta(x-x(\tau)) |\und{h}(\dot{x})|\ d\tau
+$$
+
+where $u=\dot{x}$ is the velocity along the world line. The density depends on the space-time metric $\und{h}$ and on the chosen world-line $x(\tau)\in\ell$.
+
+The energy density in some reference frame $v$ is given by 
+
+$$
+
+\rho(x)=v\cdot T\cdot v= T^{\mu\nu} v_\mu v_\nu = M \int_\ell \frac{(u_\mu v^\mu)^2}{\sqrt{-\und{h}(\dot{x})^2}
+} \delta(x-x(\tau))d\tau  = M \int_\ell \frac{\left(\und{h}(u)\cdot\und{h}(v)\right)^2}{\sqrt{-\und{h}(\dot{x})^2}
+} \delta(x-x(\tau))d\tau 
+$$
+
+$\rho(x)=v\cdot T\cdot v$ is the energy density measured by the observer moving with space-time velocity $v$. If the observer is comoving with the particle then $u=v$ and the density reduces to 
+
+
+$$ 
+\rho(x) = u \cdot T \cdot u = M\int_\ell \frac{\und{h}(\dot{x})^4}{\sqrt{-\und{h}(\dot{x})^2}} \delta(x-x(\tau))d\tau 
+$$
+
+
+
 
 
 
