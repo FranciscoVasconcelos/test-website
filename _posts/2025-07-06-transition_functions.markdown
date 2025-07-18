@@ -27,6 +27,9 @@ $\newcommand{\mcal}{\mathcal}$
 {% include mathjax.html %}
 
 
+TODO:
+ - Clarify/prove Taylor series approximation for functionals
+ - Prove identity $\eqref{eq:der:of:der:identity}$
 
 
 
@@ -99,7 +102,7 @@ $$
 \mcal{F}(\mcal{V}^n,\mcal{U}^m) = \{ f: \mcal{V}^n\mapsto\mcal{U}^m\} 
 $$
 
-Similarly to how functions act on vector spaces, functionals or functional operators $\mbf{F}\in\mcal{G}=\\{G:\mcal{F}(\mcal{V}^n,\mcal{U}^m)\mapsto \mcal{F}(\mcal{V}^n,\mcal{U}^m)\\}$ act on functions to produce other functions. The most simple kind of functionals are linear functionals or also called linear operators, as the name sugests they have the property that they transform functions linearly. To reduce notation and since for simplicity we want to focus on a particular case of function spaces let us consider some arbitrary vector space denoted $\Omega$ where the domain of the functions is defined, and the codomain to be $\mbb{R}$, then we shall use 
+Similarly to how functions act on vector spaces, functionals or functional operators ${F}\in\mcal{G}=\\{G:\mcal{F}(\mcal{V}^n,\mcal{U}^m)\mapsto \mcal{F}(\mcal{V}^n,\mcal{U}^m)\\}$ act on functions to produce other functions. The most simple kind of functionals are linear functionals or also called linear operators, as the name sugests they have the property that they transform functions linearly. To reduce notation and since for simplicity we want to focus on a particular case of function spaces let us consider some arbitrary vector space denoted $\Omega$ where the domain of the functions is defined, and the codomain to be $\mbb{R}$, then we shall use 
 
 $$
 \mcal{F}({\Omega}) =\mcal{F}_{\Omega} \equiv \{ f:\Omega\mapsto \mbb{R} \}
@@ -268,6 +271,217 @@ $$
 $$
 
 
+## Derivatives as Integrals
+
+One of the interesting aspects of the formulation of linear operators via kernel functions is that it can also encode/represent derivatives. In particular with the use of the dirac-delta function and its derivatives we can compute kernel functions from derivatives, consider for instance the general derivative operator 
+
+
+$$
+\mbf{D} = \sum_{k=0}^n a_k(x)\frac{d^k}{dx^k}
+$$
+
+we shall show that the kernel of $\mbf{D}$ is 
+
+$$
+D(x,y) = \sum_{k=0}^n (-1)^ka_k(x) \delta^{(k)}(x-y)
+$$
+
+with $\delta^{(k)}$ the $k$-th derivative of the dirac-delta function. To show that $D(x,y)$ is indeed the kernel function of $\mbf{D}$ we will show that 
+
+$$
+\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(y)dy = (-1)^k\frac{\partial^{k}\psi}{\partial x^k}\label{eq:dirac:delta:derivative}
+$$
+
+To show how this holds recall the classic integration by parts formula
+
+$$
+\int_{I} \psi \phi'\ dx = [\psi\phi]_{\partial{I}} - \int_{I}\psi'\phi\ dx
+$$
+
+with $I\in\mathbb{R}$ some interval and $\partial I$ its boundary. Applying this result to $\psi(x)\delta^{(k)}(x-y)$ yields the formula 
+
+$$
+\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(x)\ dx = [\delta^{(k)}(x-y)\psi(x)]_{-\infty}^{+\infty} - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx = - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx
+$$
+
+where $\delta^{(k)}$ plays the role of $\phi$. To obtain the final result we made $[\delta^{(k)}(x-y)\psi(x)]_{-\infty}^{+\infty}$ disapear, we argue that either $\psi$ vanishes at $\pm\infty$ or that $y$ will never attain the value of $\pm\infty$. Applying repeated integration by parts $k$-times will yield the following 
+
+
+$$
+\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(x)\ dx = (-1)^k \int_{\mathbb{R}} \delta(x-y) \frac{\partial^k\psi}{\partial{x}^k}\ dx
+$$
+
+which after evaluating the integral on the right will give $\eqref{eq:dirac:delta:derivative}$.
+
+## Derivative operator from Kernel Function
+
+By the use of taylor series expansion of the kernel function we can find how the kernel function can give rise to a differential operator. We want to show that there exists coefficients $a_k(x)$ such that 
+
+
+$$
+\mbf{A} = \sum_{k=0}^\infty a_k(x)\frac{d^k}{dx^k}
+$$
+
+
+To show this we make a change of variables $y\mapsto x+y$ and taylor expand $\psi(x+y)=\sum_{k=0}^\infty \frac{y^k}{k!} \frac{d^k\psi(x)}{dx^k}$, then applying $\mbf{A}$ on the test function $\psi$ yields
+
+$$
+\begin{split}
+\mbf{A}\psi = \int_\mathbb{R} A(x,y) \psi(y) \ dy &= \int_{\mathbb{R}} A(x,x+y)\psi(x+y) \ dy = \int_{\mathbb{R}} A(x,x+y)\sum_{k=0}^\infty\frac{y^k}{k!}{\psi^{(k)}(x)} \ dy\\
+&= \sum_{k=0}^\infty {\psi^{(k)}(x)}\int_{\mathbb{R}} A(x,x+y)\sum_{k=0}^\infty\frac{y^k}{k!}\ dy = \sum_{k=0}^\infty a_k(x)\frac{d^k\psi}{dx^k}
+\end{split}
+$$
+
+where we defined $a_k(x)\equiv\int_{\mathbb{R}} A(x,x+y){y^k}/{k!}\ dy$. Of course this assumes that the series converges as $k$ goes to inffinity. 
+
+## The Domain Transformation Operator
+
+Let $F\in\mathcal{G}$ be a functional that transforms the domain of functions, symbolically this is expressed as $\psi(x)\overset{F}{\longmapsto}\psi(f(x))$ where $f:\Omega\rightarrow \Omega$. $F$ is a linear functional, thus it has an associated linear operator $\mbf{F}$ and kernel function $K(x,y)$. The kernel $K$ of $\mbf{F}$ is:
+
+$$
+K(x,y) = \delta(y-f(x))
+$$
+
+by which is trivial to show that 
+
+$$
+\mbf{F}\psi = \int_{\Omega} \delta(y-f(x))\psi(y)\ dy  = \psi(f(x))
+$$
+
+To this kinds of linear operators we shall call them <ins>**Domain Transformation Operators**</ins>. 
+
+
+### A More General Derivative Operator 
+
+Recall that in section [Derivative Operator](# Derivative operator from Kernel Function) we showed how we could provide a differential operator representation of the linear operator by the taylor series of $\psi(x+y)$, however because of convergence properties this change of variables might not be the most appropriate, so instead we consider the change of variable $y\mapsto y+f(x)$. Then the operator will be the composition of a differential operator and a domain transformation operator. Mathematically this is expressed as
+
+$$
+\mbf{A}\psi = \sum_{k=0}^\infty a_k(x)\frac{d^k}{dx^k}\psi(f(x)) = \mbf{D}\mbf{F}\psi
+$$
+
+where $a_k(x)\equiv\int_{\mathbb{R}} A(x,f(x)+y){y^k}/{k!}\ dy$, the kernel of $\mbf{D}$ and of $\mbf{F}$ are
+
+
+$$
+\begin{align}
+\mbf{D} &=  \sum_{k=0}^\infty a_k(x)\frac{d^k}{dx^k}\\
+F(x,y) &= \delta(y-f(x)) 
+\end{align}
+$$
+
+
+## The Functional Derivative 
+
+In this section we explore a new concept in functional analysis, the functional derivative. In the functional analysis we want to study functionals $G\in\mcal{G}$ and how they change when their argument, which is a function $$\psi\in\mathcal{F}_{\Omega}$$, change. The functional derivative will help us answer the question: How does a functional change when we change its argument by a tiny amount. The first definition that will help us answer this question is the definition of the directional derivative. If we want to determine how a functional changes when its arguments changes in some particular "_direction_" $\phi$ we compute the directional derivative defined as follows
+
+$$
+\phi\cdot\mathcal{D} F(\psi) \equiv \lim_{\varepsilon\rightarrow 0} \frac{F(\psi+\varepsilon\phi)-F(\psi)}{\varepsilon}
+$$
+
+
+The directional functional derivative help us determine changes in some particular direction, but what if we do not care about any particular directions. Indeed the functional derivative $\mcal{D}$ will provide us with such an attribute, the functional derivative expresses the directional derivative in all possible different directions $\phi$. We can, indeed, consider a set of basis functions $\phi_1,\phi_2,\cdots$ and their reciprocal functions $\phi^1,\phi^2,\cdots$, that generate the entire functional space $$\mathcal{F}_{\Omega}$$, and write the derivative as
+
+$$
+\mcal{D} = \sum_\mu \phi^\mu\phi_\mu\cdot\mcal{D} 
+$$
+
+with $\phi_\mu^\dagger\phi^\nu=\delta_{\mu\nu}$. However we are not interested on a definition through some set of basis functions. As the reader may already be aware, the space of functions is infinite dimensional this means that the quantity of basis functions is infinite. To provide a basis independent definition of $\mcal{D}$ we consider an integral over the space of all possible functions, and write it as 
+
+
+$$
+\fder = \int d\phi\  \phi'\phi\cdot \fder = \int_{\mbb{R}^\infty} d^\infty z\ \phi'(z,x)\phi(z,x)\cdot\fder  \equiv \bsym{\Phi}' \bsym{\Phi}\cdot\fder
+$$
+
+where $\phi'$ is the operational inverse of $\phi$, that is 
+
+$$
+\bsym{\Phi}'^\dagger\bsym{\Phi} = \bsym{\Phi}^\dagger\bsym{\Phi}'=
+\int_{\mbb{R}^\infty} \phi'(z,x)\phi(z,y) \ d^\infty z
+= \delta(x-y)$$
+
+
+We can think about $\phi(z,x)$ as being a parameterized function with parameter $z$ of the argument $x\in\Omega$. That is, for each different fixed value of $z$ we have a different function $\phi(z,x)$. We can also think on $\phi$ as the kernel function of a linear operator $\bsym{\Phi}$, with $\bsym{\Phi}'$ being its inverse with kernel $\phi'$. 
+
+I am not satisfied with the previous two definitions since they either involve integration over an infinite dimensional space or a sum over an infinite number of functions, and when we are adding or integrating infinites amounts of something a lot of questions about convergence start to arise, and to be honest I want to avoid needing to answer such questions, let us leave it for the mathmatical purists to figure it out! So, I will provide another definition for the total functional derivative $\fder$ as the following:
+
+$$
+(\fder F)^\dagger{\phi} \equiv \int_{\mbb{R}} (\fder F)(y,x)\phi(x)\ dx = \lim_{\varepsilon\rightarrow 0} \frac{F(\psi+\varepsilon \phi)-f(\psi)}{\varepsilon} = \phi\cdot\fder F
+$$
+
+What this definition says is that applying the operator $(\fder f)^\dagger$ to some function $\phi$ yields the directional functional derivative, in the $\phi$ direction, evaluated at $\psi$. An important property of the defined derivatives is the following 
+
+$$
+\boxed{
+\fder_{\phi} \phi\cdot\fder_\psi f(\psi) = \fder_\psi f(\psi)
+}\label{eq:der:of:der:identity}
+$$
+
+note that $\phi\cdot\fder_\psi f(\psi)$ is just a linear function on $\phi$ thus the derivative transforms the linear equation $\phi\cdot\fder_\psi f(\psi)$ into the operator $\fder_\psi f(\psi)$.
+
+### The Chain Rule 
+
+We want to prove the general chain rule that is provided in the space of fuctions. In finite dimensional euclidean vector spaces, when we compose two functions and take their derivative we get the chain rule for the derivative. The same is true when we compose functionals, let $F(\psi) =  G(f(\psi))$, then the functional chain rule is:
+
+$$\boxed{
+\textbf{Chain rule:}\ \ \fder F = \fder_\psi G(f(\psi))  = \bar{f}(\fder_\phi) G(\phi)
+}\label{eq:chain:rule}$$
+
+with $\bar{f}\equiv (\fder f)^\dagger$ and $\phi=f(\psi)$. A particular case of the chain rule arises when we consider $f$ to be a linear functional, that is $\phi=f(\psi)=\mbf{A}\psi$ is 
+
+$$
+\fder_\psi G(\mbf{A}\psi) = \mbf{A}^\dagger(\fder_\phi) G(\phi) 
+$$
+ 
+To show that the functional chain rule holds we provide the following proof. We start by considering the directional derivative in the $\phi$ direction then
+
+$$
+\phi\cdot\mcal{D} F = \lim_{\varepsilon\rightarrow 0} \frac{F(\psi+\varepsilon\phi)-F(\psi)}{\varepsilon} = \lim_{\varepsilon\rightarrow 0} \frac{G(f(\psi+\varepsilon\phi))-G(f(\psi))}{\varepsilon}
+$$
+
+now taylor expand the functional $f$ as $f(\psi+\varepsilon\phi) = f(\psi)+\varepsilon \phi\cdot\mcal{D}f(\psi)+O(\varepsilon^2)$, since $\varepsilon\rightarrow 0$ we may ignore second order terms and then write
+
+$$
+\phi\cdot\mcal{D} F =\lim_{\varepsilon\rightarrow 0} \frac{G(f(\psi)+\varepsilon \phi\cdot\mcal{D}f(\psi)) - G(f(\psi))}{\varepsilon} =\lim_{\varepsilon\rightarrow 0} \frac{G(\theta+\varepsilon \rho) - G(\theta)}{\varepsilon}
+$$
+
+with $\theta=f(\psi)$ and $\rho=\phi\cdot\mcal{D}f(\psi)$. Notice how the leftmost limit is just the derivative of $G$ with respect to its argument thus:
+
+$$
+\lim_{\varepsilon\rightarrow 0} \frac{G(\theta+\varepsilon \rho) - G(\theta)}{\varepsilon} = \rho\cdot\mcal{D}_\theta G(\theta)
+$$
+
+But now recall that $\rho$ is itself a directional functional derivative of $f$, which I will write as
+
+$$
+\rho = \phi\cdot\mcal{D}f(\psi) = (\fder f)^\dagger\phi
+$$
+
+then 
+
+$$
+\rho\cdot\fder_\theta = \rho^\dagger\fder_\theta =  \phi^\dagger (\fder f)\fder_\theta = \phi\cdot \bar{f}(\fder_\theta)
+$$
+
+where 
+
+$$
+\begin{align}
+\und{f}(\phi) &= \und{f}\phi = \phi\cdot \fder f \equiv (\fder f)^\dagger\phi\\
+\bar{f}(\phi) &= \bar{f}\phi = \phi\cdot (\fder f)^\dagger \equiv (\fder f)\phi
+\end{align}
+$$
+
+which will finally give the chain rule for the directional derivative 
+
+$$
+\phi\cdot\mcal{D} F = \phi\cdot \bar{f}(\fder_\theta) G(\theta)
+$$
+
+Taking the functional derivative with respect to $\phi$ of the above and using the identity $\eqref{eq:der:of:der:identity}$ will yield the chain rule $\eqref{eq:chain:rule}$.
+
+
+
+
 
 ## Fokker Plank equation
 
@@ -311,21 +525,12 @@ $$
 \mbf{i^\dagger D}\psi = \int_{\mbb{R}} \frac{d}{dx}(f(t,x)\psi(t,x)) + \frac{1}{2} \frac{d^2}{dx^2} (g(t,x)^2 \psi(t,x) )\ dx = 0
 $$
 
-assuming boundary terms vanish i.e. $f(t,\pm\infty)\psi(t,\pm\infty)= \frac{d}{dx}g(t,\pm\infty)^2 \psi(t,\pm\infty) = 0$.
+assuming boundary terms vanish i.e. $f(t,\pm\infty)\psi(t,\pm\infty)= \frac{d}{dx}g(t,\pm\infty)^2 \psi(t,\pm\infty) = 0$. This means that, even though $\mbf{i^\dagger D}$ does not vanish the total probability is preserved preserved since $\mbf{i^\dagger D}\psi=\mbf{i}^\dagger\dot{\psi} = \frac{d}{dt}\mbf{i}^\dagger\psi = 0$, which means that $\mbf{i^\dagger}\psi$ is constant on $t$. 
 
 
 One of the most used differential equations for the description of space-time evolution of density distributions is the fokker plank equation. We can derive a differential equation by truncating the taylor series of $\rho$ at some integer value. To see how this approximation gives rise to a differential equation we write 
 
-
-$$
-\begin{split}
-\int_\mathbb{R} A(x,y) \rho(y) \ dy &= \int_{\mathbb{R}} A(x,x+y)\rho(x+y) \ dy = \int_{\mathbb{R}} A(x,x+y)\sum_{k=0}^\infty\frac{y^k}{k!}{\rho^{(k)}(x)} \ dy\\
-&= \sum_{k=0}^\infty {\rho^{(k)}(x)}\int_{\mathbb{R}} A(x,x+y)\sum_{k=0}^\infty\frac{y^k}{k!}\ dy\approx \sum_{k=0}^N a_k(x){\rho^{(k)}(x)}
-\end{split}
-$$
-
-
-where we made a change of variables $y\mapsto x+y$ in the first step and where we defined $a_k(x)\equiv\int_{\mathbb{R}} A(x,x+y){y^k}/{k!}\ dy$. Note that both $A(x,y)$ and $\rho(x)$could be made time $t$ independent without any change being made to the above. Then an equation of the form 
+ Note that both $A(x,y)$ and $\rho(x)$could be made time $t$ independent without any change being made to the above. Then an equation of the form 
 
 $$
 \boxed{
@@ -357,38 +562,13 @@ A(x,y) = \sum_k \delta^{(k)}(x-y) a_k(x)
 $$
 
 with $\delta^{(k)}(x-y)=\frac{\partial^{k}\delta}{\partial x^k}$ the $k$-th derivative of the delta-de-dirac distribution function. To see if this indeed is equivalent to the differential equation we first need to recall that 
-
-$$
-\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(y)dy = (-1)^k\frac{\partial^{k}\psi}{\partial x^k}\label{eq:dirac:delta:derivative}
-$$
-
 where we assume that $\psi$ and all its derivatives vanish at $-\infty$ and $+\infty$. Then the application of $A$ to $\rho$ gives 
 
 $$
 A\rho = \int_{\mathbb{R}}\sum_k \delta^{(k)}(x-y) c_k(x)\rho(y)\ dy = \sum_k a_k(x) \int_{\mathbb{R}}\delta^{(k)}(x-y)\rho(y)\ dy = \sum_k (-1)^k a_k(x)\frac{\partial^{k}\rho}{\partial x^k}
 $$
 
-We can consider an aproximate solution by considering a gaussian distribution function instead of the delta-de-dirac, making it computationaly feasible in terms of integral operations. To show how the relationship between the derivatives of the delta-de-dirac function as an operator yield the signed derivative, first recall the classic integration by parts formula
-
-$$
-\int_{I} \psi \phi'\ dx = [\psi\phi]_{\partial{I}} - \int_{I}\psi'\phi\ dx
-$$
-
-with $I\in\mathbb{R}$ some interval and $\partial I$ its boundary. Applying this result to $\psi(x)\delta^{(k)}(x-y)$ yields the formula 
-
-$$
-\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(x)\ dx = [\delta^{(k)}(x-y)\psi(x)]_{-\infty}^{+\infty} - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx = - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx
-$$
-
-where $\delta^{(k)}$ plays the role of $\phi$. To obtain the final result we made $[\delta^{(k)}(x-y)\psi(x)]_{-\infty}^{+\infty}$ disapear, we argue that either $\psi$ vanishes at $\pm\infty$ or that $y$ will never attain the value of $\pm\infty$. Applying repeated integration by parts will yield the following 
-
-
-$$
-\int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(x)\ dx = (-1)^k \int_{\mathbb{R}} \delta(x-y) \frac{\partial^k\psi}{\partial{x}^k}\ dx
-$$
-
-which after evaluating the integral on the right will give $\eqref{eq:dirac:delta:derivative}$.
-
+We can consider an aproximate solution by considering a gaussian distribution function instead of the delta-de-dirac, making it computationaly feasible in terms of integral operations. To show how the relationship between the derivatives of the delta-de-dirac function as an operator yield the signed derivative, first 
 
 ## Functional directional and total derivatives 
 
@@ -497,47 +677,11 @@ $$
 
 with $\phi_\mu\cdot \phi^\nu = \int_{\mbb{R}} \phi_\mu(x) \phi^\nu(x)\ dx=\delta_{\mu\nu}$. Note however that the space of functions is infinite dimensional, meaning that the sum will go up to infinity. We can provide another representation by considering an integral over all possible functions 
 
-$$
-\fder = \int d\phi\  \phi'\phi\cdot \fder = \int_{\mbb{R}^\infty} d^\infty z\ \phi'(z,x)\phi(z,x)\cdot\fder  \equiv \bsym{\Phi}' \bsym{\Phi}\cdot\fder
-$$
-
-where $\phi'$ is the operational inverse of $\phi$, that is 
-
-$$
-\bsym{\Phi}'\cdot\bsym{\Phi} = 
-\int_{\mbb{R}^\infty} \phi'(z,x)\phi(z,y) \ d^\infty z
-= \delta(x-y)$$
-
-Let us define the total functional derivative $\fder$ as the following functional equation:
-
-$$
-(\fder f)^\top\bsym{\phi} \equiv \int_{\mbb{R}} (\fder f)(y,x)\phi(x)\ dx = \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon \phi)-f(\psi)}{\varepsilon} = \phi\cdot\fder f
-$$
-
-What this definition says is that applying $(\fder f)^\top$ to some function $\phi$ yields the directional functional derivative, in the $\phi$ direction, evaluated at $\psi$. 
-
-An important property of the defined derivatives is the following 
-
-$$
-\boxed{
-\fder_{\phi} \phi\cdot\fder_\psi f(\psi) = \fder_\psi f(\psi)
-}
-$$
-
-note that $\phi\cdot\fder_\psi f(\psi)$ is just a linear function on $\phi$ thus the derivative transforms the linear equation $\phi\cdot\fder_\psi f(\psi)$ into the operator $\fder_\psi f(\psi)$. Another property is that if $f(\psi)$ is of rank-$k$ the  its derivative will be of rank-$(k+1)$, in other words in terms of number of arguments of functions, if $f$ is a function of $k$ arguments, i.e. $f=f(\psi,x_1,x_2,\dots,x_k)$ then $\fder f = (\fder f)(\psi,x_1,\dots,x_{k+1})$  
+ Another property is that if $f(\psi)$ is of rank-$k$ the  its derivative will be of rank-$(k+1)$, in other words in terms of number of arguments of functions, if $f$ is a function of $k$ arguments, i.e. $f=f(\psi,x_1,x_2,\dots,x_k)$ then $\fder f = (\fder f)(\psi,x_1,\dots,x_{k+1})$  
 
 
 
 
-$$\boxed{
-\textbf{Chain rule:}\ \ \fder F = \fder_\psi G(f(\psi))  = \bar{f}(\fder_\phi) G(\phi)
-}\label{eq:chain:rule}$$
-
-with $\bar{f}\equiv (\fder f)^\top$ and $\phi=f(\psi)$. And a particular case is 
-
-$$
-\fder_\psi G(\mbf{A}\psi) = \mbf{A}^\top(\fder_\phi) G(\phi) 
-$$
 
 with $\phi=\mbf{A}\psi$. The derivative of a simple function $f$ (a function that only operates on functions element wise) is a diagonal operator. An example of such a function is $f(\psi)=(\psi(x))^\alpha$ for some $\alpha\in\mbb{R}$. 
 
