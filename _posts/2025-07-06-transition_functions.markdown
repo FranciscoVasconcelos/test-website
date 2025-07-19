@@ -17,10 +17,11 @@ $\newcommand{\bsym}{\boldsymbol}$
 $\newcommand{\fder}{\mathcal{D}}$ 
 $\newcommand{\trace}{\mathrm{Tr}}$ 
 $\newcommand{\mcal}{\mathcal}$
+$\newcommand{\msf}{\mathsf}$
 
 <style>
 .wrapper {
-  max-width: 1500px !important;
+max-width: 1500px !important;
 }
 </style>
 
@@ -28,8 +29,9 @@ $\newcommand{\mcal}{\mathcal}$
 
 
 TODO:
- - Clarify/prove Taylor series approximation for functionals
- - Prove identity $\eqref{eq:der:of:der:identity}$
+- Clarify/prove Taylor series approximation for functionals
+- Prove identity $\eqref{eq:der:of:der:identity}$
+- Need to clarify notation between adjoint and differential operators of euclidean space and of functional space (Hilbert spaces and Banach spaces)
 
 
 
@@ -114,16 +116,16 @@ $$
 \mcal{G}(\Omega) \equiv \{ G:\mcal{F}_\Omega \mapsto \mcal{F}_\Omega \}
 $$
 
- - We use $\nabla$ to express the gradient with respect to arguments of functions
- - We use $\fder$ to express the functional derivative
- - We use greek letters for functions $\psi,\phi,\rho\in  \mcal{F}_{\Omega}$,
- - Upper case and lower case latin letters for functionals e.g. $F,f,g,h,J\in\mcal{G}(\Omega)$. 
- - Bold symbols for linear functionals or linear operators $\mbf{A,B,C,D}\in L(\Omega)$
- - The last letters of the alphabet to represent arguments of functions $x,y,z,w\in\Omega$ or $x_1,x_2,\dots,x_m\in\Omega$ 
- - The symbol ${}^\dagger$ is used to denote the transmutation operation over function spaces (is equivalent to matrix transpose)
- - Kernel functions have the same letter as associated linear functionals, but non bold $A(x,y),B(x,y),C(x,y),D(x,y)\in \mcal{F}(\Omega\times \Omega)$
+- We use $\nabla$ to express the gradient with respect to arguments of functions
+- We use $\fder$ to express the functional derivative
+- We use greek letters for functions $\psi,\phi,\rho\in  \mcal{F}_{\Omega}$,
+- Upper case and lower case latin letters for functionals e.g. $F,f,g,h,J\in\mcal{G}(\Omega)$. 
+- Bold symbols for linear functionals or linear operators $\mbf{A,B,C,D}\in L(\Omega)$
+- The last letters of the alphabet to represent arguments of functions $x,y,z,w\in\Omega$ or $x_1,x_2,\dots,x_m\in\Omega$ 
+- The symbol ${}^\dagger$ is used to denote the transmutation operation over function spaces (is equivalent to matrix transpose)
+- Kernel functions have the same letter as associated linear functionals, but non bold $A(x,y),B(x,y),C(x,y),D(x,y)\in \mcal{F}(\Omega\times \Omega)$
 
- 
+
 To a linear operator $\mbf{A}\in L(\Omega)$ we can always associate an integral operator, with an associated kernel function $A\in\mcal{F}(\Omega\times\Omega)$. Operating on some function with the linear operator $\mbf{A}$ is equivalent to integrating over the vector space $\Omega$, then 
 
 $$
@@ -167,7 +169,7 @@ $$
 \mbf{U^\dagger U} = \mbf{I}
 $$
 
-where $\mbf{I}$ is the identity operator, the associated kernel function is $I(x,y)=\delta(x-y)$ where $\delta(x)\in\mcal{F}_\omega$ is the dirac-de-delta funcion defined over the vector space $\Omega$. In terms of integrals the orthogonality condition tells us that 
+where $\mbf{I}$ is the identity operator, the associated kernel function is $I(x,y)=\delta(x-y)$ where $\delta(x)\in\mcal{F}_\Omega$ is the dirac-de-delta funcion defined over the vector space $\Omega$. In terms of integrals the orthogonality condition tells us that 
 
 $$
 \int_{\Omega} U(z,x)U(z,y)\ dz = \delta(x-y)
@@ -180,7 +182,7 @@ Again, see the similarity with the linear algebra expression $\eqref{eq:ortho;co
 
 ## Probability Densities
 
-In this section I explore the analog of markov chains and probability transition matrices for probability density functions. With the use of special types of functional operators we can consider linear functional transformations that transform probability density functions to other probability density functions. A probability density function $$\rho\in\mcal{F}_\Omega$$ has the property that is positive and that integrates to one. In order for the transition probability operator $\mbf{A}$ to preserve this quantity there are certain properties that the kernel function must satisfy. Let us say that a function is normalized with respect to some function $\mbf{a}\in\mcal{F}_\omega$ when it satisfies 
+In this section I explore the analog of markov chains and probability transition matrices for probability density functions. With the use of special types of functional operators we can consider linear functional transformations that transform probability density functions to other probability density functions. A probability density function $$\rho\in\mcal{F}_\Omega$$ has the property that is positive and that integrates to one. In order for the transition probability operator $\mbf{A}$ to preserve this quantity there are certain properties that the kernel function must satisfy. Let us say that a function is normalized with respect to some function $\mbf{a}\in\mcal{F}_\Omega$ when it satisfies 
 
 
 $$
@@ -431,7 +433,7 @@ with $\bar{f}\equiv (\fder f)^\dagger$ and $\phi=f(\psi)$. A particular case of 
 $$
 \fder_\psi G(\mbf{A}\psi) = \mbf{A}^\dagger(\fder_\phi) G(\phi) 
 $$
- 
+
 To show that the functional chain rule holds we provide the following proof. We start by considering the directional derivative in the $\phi$ direction then
 
 $$
@@ -465,10 +467,12 @@ $$
 where 
 
 $$
+\boxed{
 \begin{align}
 \und{f}(\phi) &= \und{f}\phi = \phi\cdot \fder f \equiv (\fder f)^\dagger\phi\\
 \bar{f}(\phi) &= \bar{f}\phi = \phi\cdot (\fder f)^\dagger \equiv (\fder f)\phi
 \end{align}
+}
 $$
 
 which will finally give the chain rule for the directional derivative 
@@ -480,7 +484,108 @@ $$
 Taking the functional derivative with respect to $\phi$ of the above and using the identity $\eqref{eq:der:of:der:identity}$ will yield the chain rule $\eqref{eq:chain:rule}$.
 
 
+First we need to understand the derivative $\fder$ operator as a function of $y$. In some sense the product $\fder F$ is an 'outer product' of $\fder(y)$ with $F(\psi,x)$, this implies that what the chain rule says: how is $\fder_\phi$ transformed by the linear operator $\bar{f} = \fder f$. Let us expand the integral operator of $\bar{f}(\fder_\phi)$ then
 
+$$
+\bar{f}(\fder_\phi) = \int_{\mbb{R}} (\fder f)(y,z)\fder_\phi(z)\ dz 
+$$
+
+The resulting product of $\bar{f}(\fder_\phi)$ with $G(\phi)$ will be the outer product, in other words it will result in a function of $x$ and $y$, that is, $\bar{f}(\fder_\phi)G(\phi) = \bar{f}(\fder_\phi)[y] G(\phi)[x]$. Let us express this product as
+
+$$
+\bar{f}(\fder_\phi)G(\phi) = \int_{\Omega}(\fder f)(y,z)(\fder_\phi G)(z,x)\  dz \equiv (\fder f)(\fder_\phi G)
+$$
+
+Which shows that the chain rule results in the product of two linear operators or in the product of linear operator with a function when $G$ does not explicitily depend on $x$.  
+
+**Particular Case**
+
+A particular case of the chain rule is when I assume that $G$ is simple on $\phi=f(\psi)$ and thus $\fder_\phi(z)G(\phi,x)=G'(\phi)\delta(x-z)$ then 
+
+$$
+\fder F = \int_{\mbb{R}} (\fder f)(y,z)\fder_\phi(z) G(\phi,x)\ dz =  \int_{\mbb{R}} (\fder f)(y,z) G'(\phi)\delta(x-z)\ dz = (\fder f)(y,x) G'(\phi,x)
+$$
+
+with $G'=\frac{\partial G}{\partial \phi}$ the classic derivative of $G$ with respect to $\phi$. Or more sucintily 
+
+$$\boxed{\fder F=(\fder f) \frac{\partial G}{\partial \phi}}\label{eq:part:case:simple}$$
+
+**Functional Divergence**
+
+Note how we can also consider the functional divergence which we denote $\fder\cdot F$. The divergence is simply the trace of the gradient of $F$, in other words 
+
+$$
+\boxed{
+\fder \cdot F = \trace(\fder F)= \int_{\mbb{R}} (\fder F)(x,x)\ dx 
+}$$
+
+### Simple Functionals and its Derivatives
+
+We call a functional $$F:\mcal{F}_\Omega\mapsto\mcal{F}_\Omega$$ simple when it is a function of its arguments. For each value $x$ of the argument of the function $\psi$ it outputs a value which is a function of $\psi(x)$. Using some non-standard notation a simple functional $f$ satisfies:
+
+$$\phi(x) = f(\psi(x)) = f(\psi)[x]$$
+
+This means that evaluating $\phi = f(\psi)$ at the point $y$ gives us $f(\psi(y))$. If we relate this with functions defined on finite dimensional euclidean space $\mcal{E}^n$, we say that a function $\sigma:\mbb{R}^n\mapsto\mbb{R}^n$ is simple if it acts on vectors element wise. For instance $\sigma\left(\sum_{k=1}^n v_ne_n\right)=\sigma_0(v_n)e_n$. With $e_n$ the standard orthogonal basis vectors of $\mcal{E}^n$. Or with the use of vector notation $\sigma([v_1 \ v_2 \ \dots \ v_n])=[\sigma_0(v_1) \ \sigma_0(v_2) \ \dots \ \sigma_0(v_n)]$. 
+
+
+The functional derivative of a simple functional $f$ results in a diagonal kernel function
+
+$$
+\fder f = \frac{\partial f}{\partial\psi}\delta(x-y)\label{eq:der:simp:func}
+$$
+
+To show that this holds we use the definiton of the directional derivative to show that 
+
+$$
+\begin{split}
+\phi\cdot \fder f &= \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi)-f(\psi)}{\varepsilon}\\
+&= \phi\lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi)-f(\psi)}{\phi\varepsilon} \\
+&= \phi \lim_{\delta\rightarrow 0} \frac{f(\psi+\delta)-f(\psi)}{\delta}\\
+&= \phi\frac{\partial f}{\partial \psi}
+\end{split}
+$$
+
+since at the limit when $\varepsilon$ goes to zero the ratio will not depend on $\phi$ or any of its derivatives, in other words we can take a change of variables $\delta=\varepsilon\phi$. The functional derivative of a functional $F\in\mcal{G}$ is the kernel that transforms $\phi$ in the linear operational equation $\phi\cdot\fder F$. Hence the kernel function of this linear transformation is a diagonal kernel and given by $\eqref{eq:der:simp:func}$. 
+
+
+
+
+
+
+### Deriving Euler-Poisson From the Chain Rule
+
+In this section we want to use some of the "mathematical tools" that we built to determine equations of variational calculus. In particular, of most importance we have the Euler-Lagrange equation and the Euler-Poisson equation. What this equations tells us is that their solution is the trajectory of a particle that is a stationary trajectory of the action integral. In other words solutions to the Euler-Lagrange equation aims to find stationary points of 
+
+$$
+J = \int_{\mbb{R}} L\left(\psi,\frac{d\psi}{dx}\right)\ dx\label{eq:act:int:eul:lag}
+$$
+
+with $L$ some function of both of its arguments $L:\mbb{R}\times \mbb{R}\rightarrow \mbb{R}$ (Note however that $L$ is a simple functional, that is it is a function in the classic sense). The Euler-Lagrange equations tells us that in order to find the stationary paths $\psi(x)$ for the action integral we must determine $\psi$ that solves the Euler-Lagrange equation
+
+$$
+\frac{dL}{d\psi} - \frac{d}{dt}\frac{dL}{d\dot{\psi}} = 0
+$$
+
+with $\dot{\psi}=\frac{d\psi}{dx}$. With the notation that we have introduced so far we can express the action integral as 
+
+$$
+J = \mbf{i}^\dagger L(\psi,\mbf{D}\psi)
+$$
+
+with $\mbf{D}=\frac{d}{dx}$. To derive the Euler Poisson equation we recall that the kernel of $\mbb{D}$ is $-\delta'(x-y)$, then using the chain rule and considering $L$ to be simple we have  
+
+$$
+\fder^\dagger J = (\fder L)^\dagger \mbf{i} = \left(\left(\frac{\partial L}{\partial \psi} + \mbf{D}^\dagger\frac{\partial L}{\partial \dot{\psi}}\right)\delta(x-y)\right)^\dagger \mbf{i} = \frac{\partial L}{\partial \psi} + \left(\frac{\partial L}{\partial \dot{\psi}}\mbf{D}^\dagger \delta(x-y)\right)^\dagger \mbf{i} 
+$$
+
+
+$\mbf{D}^\dagger$ is a linear operator that transforms elements with argument $x$. The second term is equal to the integral 
+
+$$
+\int_{\mbb{R}} \frac{\partial L}{\partial \dot{\psi}} \delta'(x-y)\ dy = -\frac{d}{dx}\frac{\partial L}{\partial \dot{\psi}}
+$$
+
+where we used $\mbf{D}^\dagger\delta(x-y)=\delta'(x-y)$. In a similar manner we can derive the Euler-Poisson equations, the key difference is that we will have a function $L$ of multiple arguments where each argument is a $k$ derivative of $\psi$, consequently a linear transformation (in the sense of functions) of $\psi$.  
 
 
 ## Fokker Plank equation
@@ -530,7 +635,7 @@ assuming boundary terms vanish i.e. $f(t,\pm\infty)\psi(t,\pm\infty)= \frac{d}{d
 
 One of the most used differential equations for the description of space-time evolution of density distributions is the fokker plank equation. We can derive a differential equation by truncating the taylor series of $\rho$ at some integer value. To see how this approximation gives rise to a differential equation we write 
 
- Note that both $A(x,y)$ and $\rho(x)$could be made time $t$ independent without any change being made to the above. Then an equation of the form 
+Note that both $A(x,y)$ and $\rho(x)$could be made time $t$ independent without any change being made to the above. Then an equation of the form 
 
 $$
 \boxed{
@@ -677,7 +782,7 @@ $$
 
 with $\phi_\mu\cdot \phi^\nu = \int_{\mbb{R}} \phi_\mu(x) \phi^\nu(x)\ dx=\delta_{\mu\nu}$. Note however that the space of functions is infinite dimensional, meaning that the sum will go up to infinity. We can provide another representation by considering an integral over all possible functions 
 
- Another property is that if $f(\psi)$ is of rank-$k$ the  its derivative will be of rank-$(k+1)$, in other words in terms of number of arguments of functions, if $f$ is a function of $k$ arguments, i.e. $f=f(\psi,x_1,x_2,\dots,x_k)$ then $\fder f = (\fder f)(\psi,x_1,\dots,x_{k+1})$  
+Another property is that if $f(\psi)$ is of rank-$k$ the  its derivative will be of rank-$(k+1)$, in other words in terms of number of arguments of functions, if $f$ is a function of $k$ arguments, i.e. $f=f(\psi,x_1,x_2,\dots,x_k)$ then $\fder f = (\fder f)(\psi,x_1,\dots,x_{k+1})$  
 
 
 
@@ -709,22 +814,7 @@ $$
 $$
 
 
-A particular case of the chain rule is when I assume that $G$ is simple on $\phi$ and thus $\fder_\phi(z)G(\phi,x)=G'(\phi)\delta(x-z)$ then 
 
-$$
-\fder F = \int_{\mbb{R}} (\fder f)(y,z)\fder_\phi(z) G(\phi,x)\ dz =  \int_{\mbb{R}} (\fder f)(y,z) G'(\phi)\delta(x-z)\ dz = (\fder f)(y,x) G'(\phi,x)
-$$
-
-with $G'=\frac{\partial G}{\partial \phi}$ the classic derivative of $G$ with respect to $\phi$. Or more sucintily 
-
-$$\boxed{\fder F=(\fder f)(y,x) G'(\phi,x)}\label{eq:part:case:simple}$$
-
-Note how we can also consider the functional divergence which we denote $\fder\cdot F$. The divergence is simply the trace of the gradient of $F$, in other words 
-
-$$
-\boxed{
-\fder \cdot F = \trace(\fder F)= \int_{\mbb{R}} (\fder F)(x,x)\ dx 
-}$$
 
 In variational problems of mechanichs and physics we usually enconter action integrals, which are just the integral of the Lagrangian function. Let $F$ be some Lagrangian function, then define 
 
@@ -986,9 +1076,137 @@ with $g$ an appropriate function.
 
 
 
+## A note on Functional Neural Networks
+
+One of the goals of this formalism is to enable the realization of functional neural networks. A functional neural network is indeed a functional $F\in\mcal{G}$ that transforms input functions of $\mcal{F}(\Omega)$ into output functions $\mcal{F}(\Theta)$, formally this can be expressed as 
+
+$$
+F:\mcal{F}(\Omega)\mapsto\mcal{F}(\Theta)
+$$
+
+while in classical neural networks the weights are matrices or vector of $\mbb{R}^n$ in functional neural networks weights are linear operators or functions. By composing linear functional layers with non-linear layers we can provide a complex/complicated neural network that will express some generalized functional. 
+
+An example application is the problem of classification. The classification problem aims to find to which class or cathegory does an object belong to. Usually the input is just a set of matrices or vectors that represent the object, while the output is discrete probability that tells the probability of that object being in that class. We want a more geometrically meaningfull approach, so, instead of encoding the object data as ordered arrays of floating points we express it as a function, this could be a density function in space and time, a colored function which tells at each point $x\in\mbb{R}^3$ what the color is.  The input is a function that maps $\mbb{R}^n$ into $\mbb{R}^m$. If I have RGB data in 3D space and time then the input function would take space time coordinates $x\in\mbb{R}^4$ as their input and as output a color coordinate $\mbb{R}^3$. The output function of the neural network will then provide a probability density distribution, it can be a discrete probability density for each point in space-time ${x}\in\mbb{R}^4$ that tells us what is the probability of the point to belong to that object. Another possibility is to consider as output a continuous distribution function for which we assume a continuous cathegorization of data (consider continuous labels). Or even a continuous probability density for each point $\rho(x,y)$ where $x$ is the point in space-time and $y$ is the point in cathegorical space.
+
+In summary, input data is described as a function of space and time, and the output describes a cathegorical probability associated with that input data.  
+
+In order to train functional neural networks we need a new set of tools that provides with a way to update weights that will decrease the value of the cost function. This is one of the reasons why we introduced the functional derivative and the directional functional derivative, so that we can think about stationary points and local/global minimum with respect to the weight functions. A simple example of a functional neural network can be expressed as 
+
+$$
+\psi_{k+1} = \sigma\left(\mbf{W}_k\psi_{k} + \mbf{c}_k \right)
+$$
+
+with $\sigma$ a simple functional of its argument, $\mbf{W}_k$ are linear functionals and $\mbf{c}_k$ are trainable functions and $\psi_0$ is the input. $k$ is the neural-network layer. Then the goal is to minimize the cost functional $J(\mbf{W}_0,\dots,\mbf{W}_N)$ with respect to the weight functionals $\mbf{W}_0,\dots,\mbf{W}_N$ for all input functions that represent different datasets. 
+
+
+Functional neural networks naturaly provides with point permutation invariance, since data is codified in a manner that does not order objects with coordinates (or does not order coordinates).  
+
+### Minimizing Cost Functionals
+
+To be able to optimize cost functionals we will use the functional taylor series expansion. This can then be used to approximate a functional around a function. At some point in time me or someone else will prove that any functional $F$ can be expressed as the taylor series
+
+$$
+F(\psi+\phi) = \sum_{k=0}^\infty \frac{(\phi\cdot\fder)^kF(\psi)}{k!}
+$$
+
+Newton's method and gradient descent can be established by approximating the taylor series to second and first order respectively. For gradient descent we assume the approximation 
+
+$$
+F(\psi+\phi)\approx F(\psi) + \phi\cdot\fder F(\psi) = F(\psi) + \phi^\dagger \fder F(\psi)
+$$
+
+The direction of greatest descent is $\phi = -\eta\fder F$ with $\eta>0$. Then the gradient descent update is 
+
+$$\boxed{
+\psi_{k+1} = \psi_k - \eta_k \fder F(\psi_k)
+}$$
+
+Newton's method considers a second order approximation then 
+
+$$
+F(\psi+\phi)\approx  F(\psi) + \phi^\dagger \fder F(\psi)+\tfrac{1}{2}\phi^\dagger \fder^2 F(\psi)\phi
+$$
+
+where $\fder^2 F$ is the hessian operator of $F$ (equivalent to the hessian matrix). Minimizing the approximate functional yields newtown's method
+
+$$
+\boxed{
+\psi_{k+1} = \psi_k - \alpha_k (\fder^2 F(\psi_k))^{-1}\fder F(\psi_k)
+}
+$$
+
+while Newtons' method involves computing the inverse of the linear operator $\fder^2 F$ gradient descent only involves the computation of the functional gradient of $F$. 
+
+### Equivariant and Invariant Neural Networks
+
+
+$\newcommand{\RR}{\msf{R}}$
+
+The other goal that we also aim to achieve is Neural Networks with equivariance and invariance properties. To achieve such goal we start by defining two types of functional, the covariant functional, which transforms rotations of the domain of functions into the counter-domain, this can be expressed as 
+
+$$
+F(\psi(\mathsf{R}x)) = \mathsf{R}^\top F(\psi(x))
+$$
+
+with $\mathsf{R}\in SO(p,q)$ a special pseudo orthogonal transformation matrix. A very trivial functional with such a property is 
+
+$$
+F(\psi) = \int_{\mbb{R}^n} x \rho(\|x\|,y) \psi(x) dx 
+$$
+
+with $\rho(\|x\|,y)$ some arbitrary function of its arguments. The functional $F:\mcal{F}(\Omega)\mapsto\mcal{F}(\Theta)$. Note however that we may also consider non-linear functionals, that transform $\psi$ non-linearly. The other functional that we are interested in is the invariant functional $g:\mcal{F}(\Theta)\mapsto\mcal{F}(\Theta)$. Consider $\Psi\in\mcal{F}(\Theta)$ then $g$ must satisfy
+
+$$
+g(\RR\Psi(y)) = g(\Psi(y))
+$$
+
+
+A trivial example of such a functional is 
+
+$$
+g(\Psi) = \|\Psi(y)\|^2_{\mcal{V}}[y]
+$$
+
+where the norm is to be taken element wise, that is, the norm in the vector space $\mcal{V}$. This functional is a simple functional and satisfies the equivariance property since for any $\Phi$ and $\Psi$ we have
+
+$$\RR(\Phi)\cdot\RR(\Psi) = \Phi\cdot\Psi$$
+
+where $\cdot$ is the inner product on $\mathcal{V}$. However we can construct other functionals, another trivial one is 
+
+$$
+g(\Psi) = \Psi(x)\cdot\Psi(y)
+$$
+
+This results on a kernel of a linear operator and can be interpeted as the inner product operator with respect to the function $\Psi$. 
+
+## Functional Operators on Fields
+
+
+Now we generalize the ideia of functional to the idea of functional operators on some arbitrary field $\mcal{V}$. 
 
 
 
+
+To distinguish between vector spaces and function spaces, we will call vectors to elements from some arbitrary finite dimensional pseudo-Euclidean space $\mcal{V}$. $\mcal{V}$ is so general that it can represent any associative hypercomplex system or just some arbitrary vector space. $\mcal{V}$ is a field, a geometric algebra $\mbb{G}$ can be interpeted as a field. Transformations of fields can be achieved by the use of transformation functions $\msf{F}\in\mcal{F}(\mcal{V}\mapsto\mcal{V})=\\{\msf{G} : \mcal{V}\mapsto\mcal{V}\\}$. 
+
+
+
+  - Scalar functions of fields: $\psi,\theta,\phi\in\mcal{F}(\mcal{V}) = \\{\psi : \mcal{V}\mapsto\mbb{R}\\}$  
+  - Functions that transform fields $\msf{F},\msf{G},\msf{H}\in\mcal{H}(\mcal{V})=\\{\msf{F}:\mcal{V}\mapsto\mcal{V}\\}$ 
+  - Non scalar functions of fields $\Psi,\Theta,\Phi,\Omega\in\mcal{F}(\mcal{V}\mapsto\mcal{V})=\\{\Psi : \mcal{V}\mapsto\mcal{V}\\}$
+  - Linear transformations $\msf{A}$ of fields can be denoted $\msf{A}\in\mcal{L}(\mcal{V})\equiv\mcal{L}_{\mcal{V}}$ that transforms $\mcal{V}$ into $\mcal{V}$ linearly
+
+A field $\mcal{V}$ is a pseudo-euclidean vector space with some important multiplicative properties. When we talk about fields we can also talk about transformations of fields, of upmost importance are the linear transformations of fields. When we talk about a linear transformation we are just considering a 'matrix' that transforms fields $\mcal{V}$, let $x\in\mcal{V}$ then $\msf{A}x\in\mcal{V}$ is a linear transformation of $x$. Of course we can also talk about general transformations that transform fields, let $\msf{A}\in\mcal{F}(\mcal{V}\mapsto\mcal{V})$ then $\msf{A}(x)\in\mcal{V}$. 
+
+
+
+To generalize linear operators, we have to consider non-scalar kernel functions, thus in general the kernel of $\mbf{A}$ is either itself a field $\mcal{V}$ or a general linear transformation 'matrix'. Since the prior is a generalization of the previous we shall use $\msf{A}(x,y)$ to denote non-scalar kernels of linear operators. This means that for a function $\Psi(x)$ the operator $\mbf{A}$ will act as the integral 
+
+$$
+\mbf{A}\Psi = \int_{\mcal{V}} \msf{A}(x,y)\Psi(y)\ dy
+$$
+
+where $\msf{A}(x,y)\in\mcal{L}(\mcal{V})$ or $\msf{A}\in\mcal{K}(\mcal{V})$ meaning the kernel $\msf{A}$ of $\mbf{A}$ is a 'matrix' valued function of two arguments $x,y\in\mcal{V}$. For each value of $x$ and $y$ we are computing inside of the integral the matrix vector product $\msf{A}(x,y)\Psi(y)$, so its a linear transformation inside of a linear operator, it is the inception of linear operators and transformations (a transformation inside a transformation inside a transformation inside a transformation ....).  
 
 
 ## LIXO 
