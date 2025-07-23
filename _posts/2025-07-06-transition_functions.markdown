@@ -1179,6 +1179,47 @@ $$
 
 This results on a kernel of a linear operator and can be interpeted as the inner product operator with respect to the function $\Psi$. 
 
+## Estimating Rotations from covariant transformations 
+
+Let us start by defining an arbitrary function $\Psi(y):\mbb{R}\rightarrow \mcal{V}$ which is a functional of $\psi$, in other words let $F\in\mcal{F}(\mcal{V})$ some covariant functional, then define
+
+$$
+\Psi \equiv F(\psi)
+$$
+
+Now consider a function $\phi$ that relates with $\psi$ via a change of coordinates i.e. :
+
+$$
+\phi(x) = \psi(\RR x)
+$$
+
+then because of the equivariance property of the covariant functional $F$ we find that 
+
+$$
+\Phi \equiv F(\phi) = F(\psi(\RR x)) = \RR^\top F(\psi) = \RR^\top \Psi
+$$
+
+this sugests that we may be able to compute $\RR$ by minimizing the cost function 
+
+$$
+J(\RR) = \| \RR\Phi - \Psi\|^2
+$$
+
+subject to the constraint $\RR^\top\RR = \msf{I}$ and with $\\|\cdot\\|^2$ the functional norm given by 
+
+$$
+\|A\|^2 = \int_{\mbb{R}} |A(x)|^2 dx
+$$
+
+where $\|\cdot\|^2 $ is the norm on the field $\mcal{V}$. To provide a way to weigh more some points we can also provide a weighing operator $\mbf{W}$ with scalar kernel, this way we can rewrite the cost function in a weight dependent manner as
+
+$$
+J(\RR) = \|\mbf{W}(\RR\Phi-\Psi)\|^2
+$$
+
+where the kernel of $\mbf{W}$ is $W:\mbb{R}\times \mbb{R}\mapsto \mbb{R}$ a scalar function with two scalar arguments.
+
+
 ## Functional Operators on Fields
 
 
@@ -1207,6 +1248,369 @@ $$
 $$
 
 where $\msf{A}(x,y)\in\mcal{L}(\mcal{V})$ or $\msf{A}\in\mcal{K}(\mcal{V})$ meaning the kernel $\msf{A}$ of $\mbf{A}$ is a 'matrix' valued function of two arguments $x,y\in\mcal{V}$. For each value of $x$ and $y$ we are computing inside of the integral the matrix vector product $\msf{A}(x,y)\Psi(y)$, so its a linear transformation inside of a linear operator, it is the inception of linear operators and transformations (a transformation inside a transformation inside a transformation inside a transformation ....).  
+
+
+# Valuing Options from Stochastic Models
+
+
+
+To value an option we need to estimate future stock values, the problem is that stock values are not deterministic, they are stochastic! The value of an option is the average payoff value adjusted to today's value. This means that to determine the option value we need to estimate the probability distribution of the stock at time $t+T$ knowing that the value of the stock today is $s_t$. This can be expressed a linear operator equation 
+
+$$
+\dot{\psi}(\tau) = \mbf{A}(\tau)\psi(\tau)
+$$
+
+The Peano Baker series ensures that we can compute an operator $\bsym{\Pi}=\bsym{\Pi}(\tau,\tau+T)$ such that 
+
+$$
+\phi_t = \psi_t(T) = \bsym{\Pi}(t,t+T)\psi_t
+$$
+
+$\phi_t$ is the probability distribution function of a stock at time $t+T$ given the probability distribution $\psi_t$ at today's time $t$. Let $S_t\sim\phi_t$ be the random stock variable distrubuted as the function $\phi_t$. The random payoff variable $P_t$ for a call option is 
+
+$$
+P_t = \max(0,S_t-K)
+$$
+
+The expected payoff can be determined using the definition of expected value:
+
+$$
+\mbb{E}[P_t] = \int_{\mbb{R}}\max(0,s-K)\phi_t(s)\ ds = \int_{K}^\infty (s-K)\phi_t(s)\ ds
+$$
+
+As important as the expected payoff we also care about the standard deviation of $P_t$, which can be computed as
+
+$$
+\text{Var}[P_t] = \mbb{E}\left[(P_t-\mbb{E}[P_t])^2\right] =   \mbb{E}[P_t^2] - \mbb{E}[P_t]^2 = \int_{K}^\infty (s-K)^2\phi_t(s)\ ds - \left(\int_{K}^\infty (s-K)\phi_t(s)\ ds\right)^2
+
+$$
+
+The value $v$ of an option is an explicit function of both the strike value $K$ and time $t$. Let us define it clearly as
+
+
+$$
+v(t,K) = e^{-r(t)T}\mbb{E}[P_t] = e^{-r(t)T}\int_{K}^\infty (s-K)\phi_t(s)\ ds
+$$
+
+while $\phi_t$ is a functional of $\psi_t$. In other words assuming $\bsym{\Pi}(t,t+T)\equiv\bsym{\Pi}_{t}^T$ a known linear operator we write $v$ as also a function of $\psi_t$:
+
+$$
+v(t,K,\psi_t) = e^{-r(t)T}\int_{K}^\infty (s-K)\left[\bsym{\Pi}_{t}^T\psi_t\right](s)\ ds 
+$$
+
+Note that of particular importance we care about a known initial value of the stock price, this means that the distribution function $\psi_t$ simplifies to 
+
+$$
+\psi_t(s) = \delta(s-s_t)
+$$
+
+where $s_t$ is the know stock value at time $t$, this suggests that $v$ is in fact also a function of the today's stock value. 
+
+
+
+## Shift Operators and Generators
+
+Let us consider the following operator equation 
+
+$$
+\dot{\psi} = d\mbf{H}\psi
+$$
+
+with $\mbf{H}$ a constant operator of time. The solution to this equation is trivial and given by
+
+
+$$
+\psi(t) = e^{td\mbf{H}}\psi_0
+$$
+
+where $\psi_0$ is the initial distribution function. We care about shift operators $\mbf{S}$ that shift the domain of functions i.e, 
+
+$$
+\psi(x) \overset{\mbf{S}}{\longmapsto}\psi(x+y)
+$$
+
+Interestingly if we taylor expand $\psi(x+y)$ around $\mbf{y}$ we find that 
+
+$$
+\psi(x+y) = \sum_{k=0}^\infty \frac{y^k}{k!}\frac{d^k}{dx^k}\psi(x)
+$$
+
+Note that if we define $\mbf{H}\equiv \frac{d}{dx}$ the above reduces to 
+
+$$
+\psi(x+y) = \sum_{k=0}^\infty \frac{y^k}{k!}\mbf{H}^k\psi = e^{y\mbf{H}}\psi
+$$
+
+which means that $\mbf{H}$ is the generator of shift/translations of the domain of functions. $\mbf{H}$ generates the lie-algebra of shift operators. Another simple way to express the shift operator is through its kernel, in simple notation we may write that 
+
+$$
+\mbf{S}\psi = \int_{\mbb{R}}\delta(x+y-z)\psi(z)\ dz
+$$
+
+thus the kernel $S$ of $\mbf{S}$ is the function 
+
+$$
+S(x,z) = \delta(x+y-z)
+$$
+
+The key ideia between a discrete and continuous time models is that the continuous solution generates the lie-algebra for the discrete solution. 
+
+In a discrete description we would write a shift operator equation in the form
+
+$$
+\psi_{k} = \mbf{S}(k)\psi_{k+1}
+$$
+
+with the kernel of $\mbf{S}(t)$ given by $S(t,x,y)= \delta(x-y+d_k\Delta t)$. While the continuous time operator equation is 
+
+$$
+\dot{\psi}(t) = d(t)\mbf{H}\psi(t)
+$$
+
+where we can relate the  shifts in discrete and continuous time domains by
+
+$$ d_k \Delta t= \int_{t}^{t+\Delta t} d(t)\ dt$$
+
+
+This suggests that we may introduce a dividend shift in the continuous time equation by pre or post multiplying by $d(t)\mbf{H}$ then the differential equation takes the form
+
+$$
+\dot{\psi}(t) = d(t)\mbf{H}\mbf{A}(t)\psi(t)
+$$
+
+
+### Space Dependent Shifts
+
+We May also consider shifts that also depend on space $x$, in particular the Kernel function $S$ of a shift operator $\mbf{S}$ that shifts by a $\mu(x)$ amount is 
+
+$$
+S(x,y) = \delta(x+\mu(x)-y)
+$$
+
+Similarly to what we did previously we can taylor expand $\psi(x+\mu(x))$ thus
+
+$$
+e^{\mu(x)\mbf{H}}\psi = \psi(x+\mu(x)) = \sum_{k=0}^\infty \frac{\mu(x)^k}{k!} \frac{d^k}{dx^k}\psi(x)
+$$
+
+thus $\mbf{H}=\frac{d}{dx}$. And this means that the differential equation which dictates a space shift $\mu(x)$ is 
+
+$$
+\dot{\psi} = \mu(x)\mbf{H}\psi
+$$
+
+We can also introduce shift that vary through time by making $\mu$ and $x$ and $t$ dependent, then
+
+$$
+\dot{\psi} = \mu(x,t)\mbf{H}\psi
+$$
+
+
+To check if the operator $\mu(x,t)\mbf{H}$ preserves $\mbf{i}$-normalization we compute 
+
+$$
+\mu\mbf{Hi} = \int_{\mbb{R}} \mu(x,t)\delta'(x-y)\ dx = -\left[ \frac{d\mu}{dx}\right]_{-\infty}^{+\infty}
+$$
+
+which must vanish at the endpoints $\pm\infty$. Thus $\frac{d\mu}{dx}$  must go to zero at the endpoints for all times $t$.
+
+### Changing the Standard Deviation
+
+Next we want to show that the equation 
+
+$$
+\dot{\psi} = \tfrac{1}{2}\sigma^{2}(x)\mbf{G}\psi
+$$
+
+with $\mbf{G}=\frac{d^2}{dx^2}$ will shift the standard deviation by a $t\sigma^2(x)$ amount. First we consider $\sigma^2$ constant and the equation reduces to 
+
+$$
+\dot{\psi} = \tfrac{1}{2}\sigma^2\mbf{G}\psi
+$$
+
+the Kernel of the generating operator $\mbf{K} = \exp({\tfrac{t}{2}\sigma^2\mbf{G}})$ is 
+
+$$
+K(x,y,t) = \frac{1}{\sqrt{2\pi\sigma^2 t}}\exp\left(-\frac{1}{2}\frac{(x-y)^2}{\sigma^2t}\right)
+$$
+
+I want to determine the kernel of the generating operator i.e.
+
+
+$$
+\mbf{K}(t) = e^{\frac{1}{2}\sigma^2(x)\mbf{G}} = \exp\left(\frac{t}{2}x^2\sigma_0^2\mbf{G}\right) = ???
+$$
+
+
+I want to consider the cases $\sigma(x)=\sigma_0x$ . This will lead to the [Log-normal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution). The goal is to find the discretization operator for the *log-normal diffusion PDE* by detemining the kernel of $\mbf{K}(t)$.
+
+
+The kernel for geometric brownian motion is (Shreve Vol. II page 119. Ex. 3.6) 
+
+$$
+K(\tau,x,y) = \frac{1}{\sigma x \sqrt{2\pi\tau}}\exp\left( -\frac{1}{2}\frac{(\log(x/y)-\nu\tau)^2}{\sigma^2\tau} \right)
+$$
+
+with $\nu=\mu-\tfrac{1}{2}\sigma^2$.
+
+
+The probability density function is 
+
+$$
+\psi(\tau,x) = \frac{1}{\sigma x\sqrt{2\pi \tau}}\exp\left( -\frac{1}{2}\frac{(\log(x/x_0)-\nu\tau)^2}{\sigma^2\tau} \right)
+$$
+
+when the initial distribution function is $\psi_0(x)=\delta(x-x_0)$. 
+
+
+The discrete time update is determined by considering a discrete operator $\mbf{L}(k)$ with the following kernel
+
+
+$$
+L(k,x,y) = \frac{1}{\sigma_kx\sqrt{2\pi \Delta t}}\exp\left( -\frac{1}{2}\frac{(\log(x/y)-\nu_k\Delta t)^2}{\sigma_k^2\Delta t} \right)
+$$
+
+with $\Delta t$ the discretization period and with $\nu_k=\mu_k-\tfrac{1}{2}\sigma_k^2$. Where we assume that $\sigma_k$ and $\mu_k$ are constant inside of the time interval $t\in[k\Delta t,(k+1)\Delta t]$. The discretized equation then is of the following form
+
+$$
+\psi(k+1) = \mbf{L}(k)\psi(k)
+$$
+
+Consider a initial known value of $\psi$ at time $k$ and denote it by $\psi_k$, now determine the value of the probability in the next $T$ steps, then obtain 
+
+$$
+\phi_k = \bsym{\Pi}(k,k+T)\psi_k = \mbf{L}(k+T)\mbf{L}(k+T-1)\cdots\mbf{L}(k)\psi_k
+$$
+
+thus the transition functional operator from step $k$ to step $k+T$ is 
+
+$$
+\bsym{\Pi}_k^T\equiv\bsym{\Pi}(k,k+T) = \mbf{L}(k+T)\mbf{L}(k+T-1)\cdots\mbf{L}(k)
+$$
+
+Note how the matrix $\bsym{\Pi}_k^T$ satisfies the recursive equation
+
+$$
+\bsym{\Pi}_{k+1}^T\mbf{L}(k)=\mbf{L}(k+T+1)\bsym{\Pi}_k^T
+$$
+
+which can be used programatically to update the value of $\bsym{\Pi}_k^T$ for each new step $k$.
+
+
+### Geometric Brownian Motion (GBM)
+
+We can wirite the stochastic differential equation for the geometric brownian motion as 
+
+$$
+dS_t = \mu S_tdt+\sigma S_t dW_t
+$$
+
+with $W_t$ a [Wiener Process](https://en.wikipedia.org/wiki/Wiener_process). The solution to this equation is 
+
+$$
+S(t) = S(0)\exp(\nu t+\sigma W_t)
+$$
+
+with $\nu=\mu-(1/2)\sigma^2$. The wiener process $W_t$ satisfies 
+
+$$
+W_{t_2} - W_{t_1} = \sqrt{t_2-t_1}Z
+$$
+
+with $Z$ is an independent standard normal variable. This enables us to write the following relation
+
+$$
+\frac{S(t_2)}{S(t_1)} = \frac{\exp(\nu t_1+\sigma W_{t_1})}{\exp(\nu t_2+\sigma W_{t_2})} = \exp(\nu(t_2-t_1)+\sigma(W_{t_2} - W_{t_1})) = \exp(\nu\Delta t + \sigma\sqrt{\Delta t}Z)
+$$
+
+with $\Delta t=t_2-t_1$. Setting $t=t_1$ and $t_2=t+\Delta t$ we can establish the following result 
+
+$$
+S(t+\Delta t) = S(t) \exp(\nu\Delta t + \sigma\sqrt{\Delta t}Z)
+$$
+
+This results suggests that we can consider the discretization by writting
+
+$$
+S_{k+1} = S_k\exp(\nu_k\Delta t + \sigma_k\sqrt{\Delta t}Z_k)\label{eq:disc:update:GMB}
+$$
+
+### Estimating Parameters for GBM
+
+Rewriting $\eqref{eq:disc:update:GMB}$ we find that 
+
+$$
+\log(S_{k+1}/S_k) = \nu_k\Delta t+\sigma_k\sqrt{\Delta t}Z_k
+$$
+
+since $Z_k$ is an i.i.d. standard normal variable we can easily deduce the parameters $\nu_k$ and $\sigma_k$. In order to provide multiple samples for each time we will consider a running model of the form 
+
+$$
+A_j = \alpha_kZ_j + \beta_k,\ \text{for }j=k,\dots,k+N
+$$
+
+with $A_k=\log(S_{k+1}/S_k)$, $\alpha_k=\sigma_k\sqrt{\Delta t}$ and $\beta_k=\nu_k\Delta t$. Let $a_k$ be samples from $A_k$ then the parameters $\alpha_k$ and $\beta_k$ can be computed from the moving average of $a_j = \log(s_{j+1}/s_j)$ and from its standard deviation, thus
+
+$$
+\hat{\beta}_k = \frac{1}{N} \sum_{j=k}^{k+N}\log(s_{j+1}/s_j), \ \quad \hat{\alpha}_k = \sqrt{\frac{1}{N} \sum_{j=k}^{k+N}(\log(s_{j+1}/s_j)-\hat{\beta}_k)^2}
+$$
+
+while the parameters $(\sigma_k,\nu_k,\mu_k)$ are 
+
+$$
+\begin{align}
+\sigma_k& = \frac{\alpha_k}{\sqrt{\Delta t}}, \quad \nu_k = \frac{\beta_k}{\Delta t}\\
+\mu_k& = (1/2)\sigma_k^2 + \nu_k = (1/\Delta t) ((1/2)\alpha_k^2+\beta_k)
+\end{align}
+$$
+
+The chosen model works given the assumption that the values of $\alpha_k$ and $\beta_k$ do not change much in the next $N$ time steps.
+
+
+### Adjusting Dividends to Present Value
+
+Assume a continuous dividend $d(t)$ and a continuous risk-free rate $r(t)$. The value of the dividend adjusted to time $t+T$ is 
+
+$$
+\hat{d}(t) = d(t)\exp\left(\int_{t}^{t+T} r(\tau)d\tau \right)\label{eq:forward:dividend}
+$$
+
+To compute the total dividend we have to add all of the dividend values. Consider that we want to determine the total dividend value inside the time interval $t\in[t_1,t_2]$ then we compute the integral
+
+$$
+\boxed{
+D(t_1,t_2) = \int_{t_1}^{t_2} \hat{d}(\theta)d\theta = \int_{t_1}^{t_2} d(\theta)\exp\left(\int_{\theta}^{\theta+T} r(\tau)d\tau \right) d\theta
+}
+$$
+
+
+Of particular interest is the cumulative value of the dividend from $t$ to $t+T$ this sugests that we define the present value dividend $D(t)$ as 
+
+$$
+D_f(t+T) \equiv \int_{t}^{t+T} d(\theta)\exp\left(\int_{\theta}^{\theta+T} r(\tau)d\tau \right) d\theta
+$$
+
+
+<!-- To determine the total amount of dividends up to some value $t+T$ we simply integrate from -->
+
+
+**A backward model** considers adjusting $d(t)$ to the time $t-T$, thus
+
+$$
+b(t) = d(t)\exp\left(-\int_{t-T}^{t} r(\tau)d\tau \right)
+$$
+
+note that this is the same as setting $T\rightarrow -T$ in equation $\eqref{eq:forward:dividend}$. The total amount of dividend between $t-T$ and $t$ is 
+
+$$
+D_b(t-T) \equiv \int_{t-T}^{t} d(\theta)\exp\left(-\int_{\theta-T}^{\theta} r(\tau)d\tau \right) d\theta
+$$
+
+We can define a cumulative dividend function that can determine the cumulative dividends both in the forward and backward directions, as such we define
+
+$$
+D(t+T) \equiv\left| \int_{t}^{t+T} d(\theta)\exp\left(\int_{\theta}^{\theta+T} r(\tau)d\tau \right) d\theta \right|
+$$
 
 
 ## LIXO 
