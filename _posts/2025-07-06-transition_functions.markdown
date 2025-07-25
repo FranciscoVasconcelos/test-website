@@ -1414,6 +1414,66 @@ $$
 
 which must vanish at the endpoints $\pm\infty$. Thus $\frac{d\mu}{dx}$  must go to zero at the endpoints for all times $t$.
 
+### Dividends Paying
+
+A reasonable model that includes dividends paying at discrete time intervals can be expressed as the following 
+
+$$
+\boxed{
+\psi_{k+1} = e^{d_k\mbf{D}}\mbf{B}_k \psi_k
+}
+$$
+
+recall that the operator for geometric brownian motion $\mbf{K}=\mbf{K}(t)$ is a function of time, this means that the solution to 
+
+$$
+\dot{\psi}(t) = \mbf{K}(t)\psi(t)
+$$
+
+is not given by an exponential of $\mbf{K}$. Instead it must be computed from a product integral, the general transition matrix is given by:
+
+$$
+\bsym{\Phi}(\tau,t) = \mbf{I} + \int_{\tau}^t \mbf{K}(\sigma_1)\ d\sigma_1 + \dots + \int_{\tau}^t \mbf{K}(\sigma_1) \int_{\tau}^{\sigma_1} \mbf{K}(\sigma_2) \int_{\tau}^{\sigma_2} \mbf{K}(\sigma_3) \   d\sigma_3 d\sigma_2d\sigma_1 + \cdots
+$$
+
+This means that $$\mbf{B}_k=\bsym{\Phi}(t_k,t_{k+1})$$ for $$t_0<t_2<\cdots<t_n$$. Note however that we can express the series using a [time-ordering](https://en.wikipedia.org/wiki/Time-ordering) operator $\mcal{T}$:
+
+$$
+\mbf{\Phi}(\tau,t) = \exp\mcal{T}\int_{\tau}^t \mbf{K}(\sigma)\ d\sigma
+$$
+
+We can also express the solution as the exponential of some time varying operator $\bsym{\Omega}(t,t_0)$ this way we can write the solution as 
+
+$$
+\psi(t) = \exp(\bsym{\Omega}(t,t_0))\psi(t_0) 
+$$
+
+Note however that the [derivative of the exponential map](https://en.wikipedia.org/wiki/Derivative_of_the_exponential_map) is not as simple as when considering operators as linear functions of time. The [Magnus Expansion](https://en.wikipedia.org/wiki/Magnus_expansion) provides us with a way to compute the operator $\mbf{\Omega}$ from $\mbf{K}$. The magnus expansion provides us with good approximations for the solution, in particular first and second order terms are 
+
+$$
+\begin{align}
+\bsym{\Omega}_1(\tau,t) &= \int_\tau^t \mbf{K}(t_1)dt_1\\
+\bsym{\Omega}_2(\tau,t) &= \frac{1}{2}\int_\tau^t dt_1\int_{\tau}^{t_1}dt_2\ [\mbf{K}(t_1),\mbf{K}(t_2)]\\
+\end{align}
+$$
+
+with $[\mbf{A},\mbf{B}]\equiv \mbf{AB-BA}$ the operator commutator of $\mbf{A}$ and $\mbf{B}$. Admiting a small time step $t-\tau=\Delta t$ we consider a first order approximation of the Magnus Expansion, as such we write the discrete equation in the form 
+
+$$
+\psi_{k+1} = e^{d_k\mbf{D}}e^{\int_{t_k}^{t_{k+1}} \mbf{K}(\sigma)d\sigma }\psi_k
+$$
+
+with $\mbf{D}$ the first derivative operator. Under the assumption that the time interval $\Delta t_k = t_{k+1}-t_k$ are quite small we can assume that this discrete equation models the continuous version pretty well. Let $$\bsym{\Theta}_k=\int_{t_k}^{t_{k+1}} \mbf{K}(\sigma)d\sigma$$ then rewrite the above assume
+
+$$
+\psi_{k+1}=e^{d_k \mbf{D}} e^{\bsym{\Theta}_k}\psi_k
+$$
+
+
+Computationaly solving this discrete equation is quite straightforward when we discretize the operators $\mbf{D}$ and $\bsym{\Theta}_k$ by computing an appropriate matrices $\mathrm{D},\mathrm{\Theta}\in\mathbb{R}^{N\times N}$ with $N$ the number of discretization points, then tyhe operator exponential becomes matrix exponential which is straightforward to compute in standard linear algebra libraries.
+
+
+
 ### Changing the Standard Deviation
 
 Next we want to show that the equation 
@@ -1535,6 +1595,51 @@ $$
 S_{k+1} = S_k\exp(\nu_k\Delta t + \sigma_k\sqrt{\Delta t}Z_k)\label{eq:disc:update:GMB}
 $$
 
+We can solve this equation backwards up to step $k=0$, the solution is given by 
+
+$$
+S_{k} = S_0 \exp(\nu_0\Delta t + \sigma_0\sqrt{\Delta t}Z_0)\cdots \exp(\nu_{k-1}\Delta t + \sigma_{k-1}\sqrt{\Delta t}Z_{k-1})
+$$
+
+which simplifies using the properties of the exponential function
+
+$$
+S_{k} = S_0\exp\left(\sum_{j=0}^{k-1} \nu_j\Delta  t+\sigma_j\sqrt{\Delta t} Z_j  \right)
+$$
+
+since the random variables $Z_j$ are statistically independent their sum is also a normal random variable with standard deviation $$\bar{\sigma}^2_k=\sum_{j=0}^{k-1}\sigma_j^2$$. Defining $$\bar{\nu}_k=\sum_{j=0}^{k-1} \nu_j$$ we may write the above solution as the following 
+
+$$
+S_k = S_0\exp(\bar{\nu}_k\Delta t+ \bar{\sigma}_k\sqrt{\Delta t}Z)
+$$
+
+**The Expected Payoff** of a call option at time $k$ can then be computed by determining the expected value of $P_k = \max(0,S_k-K)\equiv(S_k-K)_+$ thus
+
+$$
+\mbb{E}[P_k] = \mbb{E}[(S_k-K)_+] = \frac{1}{\sqrt{2\pi}}\int_{\mbb{R}} (s_0\exp(\bar{\nu}_k\Delta t+ \bar{\sigma}_k\sqrt{\Delta t}x) -K)_+e^{-x^2/2}dx
+$$
+
+with $s_0$ a known value. Note that the integrand is non-zero only for $s_0\exp(\bar{\nu}_k\Delta t+ \bar{\sigma}_k\sqrt{\Delta t}x)-K>0$, thus we care about integrating only when the variable of integration is greater then
+
+
+$$
+\alpha_k\equiv\frac{\log(K/s_0) - \bar{\nu}_k \Delta t}{\bar{\sigma}_k\sqrt{\Delta t}}
+$$
+
+this means that we may rewrite the integration as
+
+$$
+\mbb{E}[P_k]  = \frac{1}{\sqrt{2\pi}}\int_{\alpha_k}^\infty (s_0\exp(\bar{\nu}_k\Delta t+ \bar{\sigma}_k\sqrt{\Delta t}x) -K)e^{-x^2/2}dx
+$$
+
+This can be evaluated by considering the cumulative distribution function $F_Z(x)$ of the standard normal random variable $Z$
+
+$$
+\mbb{E}[P_k] =   s_0e^{\bar{\nu}_k\Delta t}e^{\tfrac{1}{2}\bar{\sigma}_k\sqrt{\Delta t}}[1-F_Z(\tfrac{1}{2}\bar{\sigma}_k\sqrt{\Delta t}-\alpha_k)] -K[1-F_Z(\alpha_k)]
+$$
+
+
+
 ### Estimating Parameters for GBM
 
 Rewriting $\eqref{eq:disc:update:GMB}$ we find that 
@@ -1613,417 +1718,49 @@ D(t+T) \equiv\left| \int_{t}^{t+T} d(\theta)\exp\left(\int_{\theta}^{\theta+T} r
 $$
 
 
-## LIXO 
+## Functional Optimization Problems 
 
+The goal of this section is to provide a generalization of optimization problems in [Function spaces](https://en.wikipedia.org/wiki/Function_space) such [Hilbert spaces](https://en.wikipedia.org/wiki/Hilbert_space) and [Banach spaces](https://en.wikipedia.org/wiki/Banach_space) and [$L^p$ spaces](https://en.wikipedia.org/wiki/Lp_space). A generalized functional optimization problem aims to determine the minimum of some static simple functional $F:\mcal{F}(\mcal{V})\rightarrow \mbb{R}$ under some equality or inequality constraints. 
 
-
-
-
-A total derivative should be comparable to the gradient of some vector valued function. In particular if $f:\mathbb{R}^n\mapsto\mathbb{R}^m$ then the derivative is 
-
-$$
-J_{ij} = \frac{\partial f_i(\psi)}{\partial \psi_j} = e_j^\top\nabla f^\top e_i
-$$
-
-the functional derivative can then be understood by taking the $i$ and $j$ and replacing by the arguments 
-
-
-The $i$-th component of the 'vector' $f$ becomes the $y$-th component $f_i=e_i^\top f\mapsto e(y)\cdot f = \delta(x-y)f$ and the $j$-th component of $\psi$ becomes the $x$-th component thus $\psi_j=e_j^\top\psi = e(x)\cdot \psi=\psi(x)$
-
-
-$$
-J(x,y) = e(x)\cdot\delta f\cdot e(y)
-$$
-
-
-with $e(x)$ an orthonormal basis set 
-
-$$
-\boxed{
-e(x)\cdot e(y) = \delta(x-y)
-}
-$$
-
-
-
-The unit vector $e(x)$ extracts the $x$-th component from any function of $y$. In particular 
-
-$$
-e(x)\cdot \psi(y) = \int_{\mathbb{R}} \delta(x-y)\psi(y) =   \psi(x)
-$$
-
-this result in a vector with a component at 'index' $x$.
-
-
-$$
-e_x\cdot \delta f\cdot e_y = \left(\lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon e_x) - f(\psi)}{\varepsilon}\right)\cdot e_y
-$$
-
-
-
-## Mais lixo
-
-It is not that much clear what the chain rule expressed in $\eqref{eq:chain:rule}$ can be interpeted both computationaly and philosophically. First we need to understand the derivative $\fder$ operator as a vector aka a function. In some sense the product $\fder F$ is a product of $\fder(y)$ with $F(\psi,x)$, this implies that what the chain rule says is how the $\fder_\phi$ gets transformed by the jacobian transformation $\bar{f} = (\fder f)^\top$. Let us expand the integral operator of $\bar{f}(\fder_\phi)$
-
-$$
-\bar{f}(\fder_\phi) = \int_{\mbb{R}} (\fder f)(x,y)\fder_\phi(y)\ dy 
-$$
-
-Now assume that $\fder f$ is a simple differential operator of the form $\\fder f = (-1)^k \delta^{(k)}(x-y)$ where $\delta^{(k)}$ is the $k$-the derivative of the dirac function. And use the chain rule to write 
-
-$$
-\fder F = \int_{\mbb{R}} (\fder f)(y,z)\fder_\phi(z)\ dz\ G(\phi,x) = \int_{\mbb{R}} (-1)^k \delta^{(k)}(y-z) \fder_\phi(z)G(\phi,x)\ dz\label{eq:chain:rule:expanded}
-$$
-
-but 
-
-Even though this result might not make things more clear, to try and clarify 
-
-Then equation $\eqref{eq:chain:rule:expanded}$ becomes
-
-$$
-\fder \cdot F = \int_{\mbb{R}}\int_{\mbb{R}} (-1)^k \delta^{(k)}(x-z) \fder_\phi(z)G(\phi,x)\ dz\ dx = 
-$$
-
-
-### Nao e tao lixo assim mas tem de ser transformado 
-
-
-The solution of this equation can be expressed via the exponential, thus
-
-$$
-\rho(t) = e^{\int_{t_0}^t \mbf{B}(\tau)d\tau}\rho_0
-$$
-
-where we
-
-
-
-Let $\chi(x,y)$ be the transition function from point $x\in\mathbb{R}^n$ to point $y\in\mathbb{R}^n$. for this function to be a proper probability transition function all of its "colums" must sum to one this means that 
-
-$$
-\int_{\mathbb{R}^n} \chi(x,y)dy = 1,\ \forall x\in\mathbb{R}^n
-$$
-
-in matrix form this would read 
-
-$$
-\sum_j \chi_{ij} = 1, \forall i=1,2,\dots,N
-$$
-
-The transition function is aplied to probability density to give back another probability density, in other words, let $\rho(x)$ be a probability density, then 
-
-$$
-\theta(y) = \int_{\mathbb{R}^n}\rho(x) \chi(x,y) dx
-$$
-
-is a probability density function. To show that it is a density function we check if it integrates to one:
-
-$$
-\int_{\mathbb{R}^n} \theta(y)\ dy =  \int_{\mathbb{R}^n}\rho(x) \int_{\mathbb{R}^n}\chi(x,y)\ dy\ dx=\int_{\mathbb{R}^n}\rho(x) dx = 1
-$$
-
-For a transition matrix the transition equation is just matrix vector multiplication:
-
-$$\theta_i = \sum_i \rho_i\chi_{ij}$$
-
-
-What the transition function tells us is that if we are at some point $x$ what is the 'probability' of going to point $y$.
-
-## Discrete time steps
-
-Assume that our probability distribution evolves through the following discrete time equation
-
-$$
-\rho(y,k+1) = \int_{\mathbb{R}^n}\rho(x,k) \chi(x,y,k) dx\label{eq:discrte:eq:trans:func}
-$$
-
-where $\chi(x,y,k)$ is a transition function for time $k$. So for each time step $k$ the transition function transforms the density distribution into a distribution at time $k+1$. This is the Ananalog to a markov chain where we have the probability update 
-
-$$
-\rho(k+1) = \chi(k)\rho(k)
-$$
-
-with $\chi(k)\in\mathbb{R}^{N\times N}$ and $\rho(k)\in\mathbb{R}^N$.
-
-## Examples of transition functions for probabilities
-
-A simple example of a transition function is the following 
-
-$$
-\chi(x,y) = \mathcal{N}\{ \Sigma(x),\mu(x) \}(y) \equiv (2\pi)^{-n/2}\det(\Sigma(x))^{-1/2}\exp\left(-\tfrac{1}{2}(y-\mu(x))^\top\Sigma^{-1}(x)(y-\mu(x))  \right)
-$$
-
-It is easy to check that in fact this function satisfies the properties of a transition function, just note that it is a gaussian function on the variable $y$.
-
-
-## Particular Case
-
-For the particular case of $n=1$ and $\mathbb{R}^n=\mathbb{R}$ the transition function simplifies to 
-
-$$
-\chi(x,y,k) \equiv \frac{\exp\left(-\tfrac{1}{2}\sigma^{-2}(x,k)(y-x)^2  \right)}{\sqrt{2\pi\sigma^2(x,k)}}
-$$
-
-where $\sigma^2(x,k)$ is some arbitrary variance and where we set $\mu(x)=x$.
-
-
-For computations we need to consider a discretization of the spatial domain. Let $X={x_1,x_2,\dots,x_N}$ be the discretization of space. Assume that $\rho(x_i+\Delta_x)=\rho(x_{i+1})$ for $\Delta_x<x_{i+1}-x_i$. That is $\rho$ is assumed constant in the interval $[x_i,x_{i+1}]$. Then the transition function reads
+In general we may consider the following form to express the optimization problem 
 
 $$
 \begin{split}
-\rho(y,k+1) &= \int_{-\infty}^{+\infty} \rho(x,k)\chi(x,y,k)dx\\
-&= \sum_i \int_{x_i}^{x_{i+1}} \rho(x,k)\chi(x,y,k)dx \\
-&= \sum_i \rho(x_i,k)\int_{x_i}^{x_{i+1}}\chi(x,y,k)dx\\
-&= \sum_{i}\rho_{ik} \chi_i(y,k)
+\underset{\psi\in\mcal{F}_\mcal{V\rightarrow U}}{\text{minimize}} &\ F(\psi)\\
+\text{subject to}\ &G(\psi) = 0\\
+&H(\psi) \leqslant 0
 \end{split}
 $$
 
-with $\int_{x_i}^{x_{i+1}}\chi(x,y,k)dx\equiv \chi_i(y,k)$. Evaluating this at some discrete points $y_j$ we arrive at the discrete time and discrete space equation 
+with $H,G\in\mcal{G}_\mcal{V\rightarrow U}=\{\mcal{F}(\mcal{V})\rightarrow \mcal{F}(\mcal{U})\}$ some appropriatly chosen functionals. We may consider lagrange functionals associated to this optimization problem, indeed we can show that 
 
 $$
-\rho(j,k+1) = \sum_i \rho(i,k)\chi(i,j,k)
-$$
-
-with $i,j,k$ appropriate integers. The discrete version of $\chi(x,y,k)$ is defined as the following integral
-
-$$
-\chi(i,j,k) \equiv \int_{x_i}^{x_{i+1}}\chi(x,y_j,k)dx\approx [\chi(x_{i+1},y_j,k)+\chi(x_{i},y_j,k)]\frac{\Delta_x}{2}
-$$
-
-Since the approximation does not ensure that the transition matrix is not a proper probability transition matrix we normalize the columns by defining 
-
-$$
-\hat{\chi}(i,j,k)\equiv\frac{\chi(i,j,k)}{\sum_{l}\chi(i,l,k)}
-$$
-
-and we use $\hat{\chi}$ instead!
-
-
-To better motivate the considered approach we define the following function
-
-$$
-g(\sigma,\mu,y) \equiv \frac{\exp(-\tfrac{1}{2}\sigma^{-2}(z-\mu)^2)}{\sqrt{2\pi\sigma^2}}
-$$
-
-Given a discrete time interval $\Delta t$ the time varying transition function that tells us how the distribution changes from $t$ to $t+\Delta t$ can be expressed as 
-
-$$
-A(x,y,t,\Delta t) = g(\sigma(x,t)\sqrt{\Delta t},\mu(x,t)\Delta t,y)
-$$
-
-That is we recover a distribution with standard deviation $\sigma(x,t)\sqrt{\Delta t}$ and expected value $\mu(x,t)\Delta t$. This allows us to carefully define the operator equation
-
-$$
-\rho(x,t+\Delta t) = A(t,\Delta t)\rho(x,t)
-$$
-
-where $A(t,\Delta t)\in\mathcal{A}^2$ is a time varying rank-2 operator. 
-
-### Transition function for the Gaussian distribution
-
-Consider that $\sigma$ and $\mu$ is constant in space and time, then applying the operator twice we get a distribution with a transformation of $\sigma$ and $\mu$
-
-$$
-A(\sigma_1^2,\mu_1)A(\sigma_2^2,\mu_2) = A(\sigma_1^2+\sigma_2^2,\mu_1+\mu_2)
-$$
-
-with the operator 
-
-$$
-A(\sigma,\mu)\rho =  \int_{\mbb{R}}\frac{\exp(-\tfrac{1}{2}\sigma^{-2}(x-z-\mu)^2)}{\sqrt{2\pi\sigma^2}}\rho(z)\ dz
-$$
-
-the transition function for the Gaussian distribution will act as a convolution operation, which is not necessarily true for transition functions of more general probability distributions. If $\rho(x)$ is expressible as a Gaussian distribution with standard deviation $\sigma'$ and expected value $\mu'$ then the resulting distribution after applying $A$ to $\rho$ will have  standard deviation ${\sigma'}^2+\sigma^2$ and expected value $\mu+\mu'$, this can be expressed as follows
-
-$$
- A(\sigma^2,\mu)\rho({\sigma'}^2,\mu')  = \rho({\sigma'}^2+\sigma^2,\mu+\mu')
-$$
-
-And in principle for some time step $t $ we would require that 
-
-$$
-A(\sigma^2t,\mu t)\rho({\sigma'}^2,\mu')  = \rho( {\sigma'}^2+\sigma^2t,\mu'+\mu t)
-$$
-
-this expresses clearly that the time update can be done over discrete time intervals and we would always get the same result. Defining $B(t)=A(\sigma^2t,\mu t)$, then 
-
-$$
-B(t_1)B(t_2) \rho({\sigma'}^2,\mu') = B(t_1+t_2) \rho({\sigma'}^2,\mu')\rho( {\sigma'}^2+\sigma^2(t_1+t_2),\mu'+\mu(t_1+t_2) )
-$$
-
-thus as long as the standard deviation and the expected values of the transition function do not change with time we will have a consistent way to update the transition function that does not depend upon the discretization of the time-grid.
-
-The discretized transition function reads as the following 
-
-$$\boxed{
-A(x,z,\varepsilon) = \frac{\exp(-\tfrac{1}{2}\sigma^{-2}\varepsilon^{-1}(x-z-\mu\varepsilon)^2)}{\sqrt{2\pi\sigma^2\varepsilon}}
-}$$
-
-with $\varepsilon$ some tiny time step. The more general expression will involve $x$ and $t$ varying $\sigma$ and $\mu$.
-
-
-Operators that satisfy $B(t)B(\tau-t)=B(\tau)$ we call them convolutional operators or symmetric evolution operators. The gaussian operator with constant coeficients $(\sigma,\mu)$ is such a good example of a symmetric evolution operator. Note however that in real stochastic processes the operator will not have such nice property, but we can still compute the probability in a straightforward fashion. 
-## Probabilistic discrete model 
-
-Let $\mbf{A}\in L(\mbb{R}\times \mbb{R}\times \mbb{N})$ be a rank-$3$ hilbert operator. Let us denote the operator via how it acts on elements of $L(\mbb{R}\times\mbb{N})$ 
-
-
-$$
-\mbf{A}(k)\bsym{\psi}(k) = \int_{\mbb{R}} A(x,y,k)\psi(x,k)\ dx
-$$
-
-With this symbology we may express the update of the probability $\bsym{\psi}$ as 
-
-$$ 
-\bsym{\psi}(k+1) = \mbf{A}(k)\bsym{\psi}(k)
-$$
-
-Assuming some initial probability distribution at time $k_0$, solving the diference equation forward we have the closed form solution 
-
-$$
-\bsym{\psi}(k) = \mbf{A}(k)\mbf{A}(k-1)\cdots \mbf{A}(k_0)\bsym{\psi}_{k_0}
-$$
-
-with $\bsym{\psi}_{k_0}=\bsym{\psi}(k_0)$ the distribution at time $k_0$. The value of the probabiity at time $k$ depends linearly on the probability at time $k_0$ via the operator 
-
-$$
-\mbf{A}(k_0,k)\equiv \mbf{A}(k)\mbf{A}(k-1)\cdots \mbf{A}(k_0)
+\mcal{L}(\psi,\mu,\lambda) = F(\psi) + \lambda^\dagger G(\psi) + \mu^\dagger H(\psi)
 $$
 
 
-The flow $\mathcal{F}$ associated with the solution of the differential equation is a function from the input at time $k_0$ to time $k$ and can be written as 
+where $\mu,\lambda\in\mcal{F}(\mcal{U})$ are functions with domain $\mcal{U}$. We will eventually want to show that local optimum functions $\psi^*$ of the optimization problem satisfy the [Karush-Kuhn-Tucker conditions](https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions) that is 
 
 $$
-\mathcal{F}(k,\bsym{\psi}(k_0)) = \bsym{\psi}(k) = \mbf{A}(k_0,k)\bsym{\psi}(k_0)
+\begin{align}
+\fder \mcal{L}(\psi*) &= 0\\
+G(\psi^*) &= 0, \ \  H(\psi^*) \geqslant 0\\
+\mu &\geqslant 0,\ \ \mu^\dagger H(\psi^*) = 0
+\end{align}
 $$
 
-The flow function tell us how a distribution gets transformed after $k-k_0$ time steps. The flow function can be interpreted in finantial terms as follows: consider that we have a stock that evolves in discrete time with probability $\bsym{\psi}(k)$. Time $k_0$ is the present, as time passes by $k_0$ increases, as $k_0$ increases we will have a new estimate value of $\bsym{\psi}(k_0)$ given all observations, in fact we will know deterministically what that value is going to be, that is the value can be expressed as $\psi(x,k_0)=\delta(x-x_{k_0})$, where $x_{k_0}$ is the observed value of the stock. So the flow tells us, given this new knowledge what is the probability in the future.
+The last condition is sometimes written in the equivalent form $\mu(x) H(\psi^*(x))=0,\ \ \forall x\in\mcal{V}$
 
-### The continualization of the discrete equations
-
-Recall that we provided an operator $A$ that updates the distribution function for very small steps. Now if we consider non-constant coefficients the transition function will look as follows
-
-$$\boxed{
-A(x,z,t,\varepsilon) = \frac{\exp(-\tfrac{1}{2}\sigma^{-2}(z,t)\varepsilon^{-1}(x-z-\mu(z,t)\varepsilon)^2)}{\sqrt{2\pi\sigma^2(z,t)\varepsilon}}
-}$$
-
-we want to determine the equation the governs the continuous time evolution of a distribution function. As such we will rewrite the discrete equation as the following
+A note about equality and inequalities of functions: inequalities and equalities $=,<,>,\leqslant,\geqslant$ are to be interpeted as 'element wise' for instance if we write 
 
 $$
-\bsym{\rho}(t+\varepsilon) = \mbf{A}(t,\varepsilon)\bsym{\rho}(t)
+\psi < \phi 
 $$
 
-subtracting by $\bsym{\rho}(t)$ and dividing by $\varepsilon$ gives us 
+this is equivalent to writing 
 
 $$
-\frac{\bsym{\rho}(t+\varepsilon)-\bsym{\rho}(t)}{\varepsilon} = \frac{\mbf{A}(t,\varepsilon)-\mbf{I}}{\varepsilon}\bsym{\rho}(t)
+\psi(x) < \phi(x),\ \forall x\in\mcal{V}
 $$
-
-as $\varepsilon$ goes to $0$ the left hand side is straightforward to evaluate, it gives the the derivative in time $t$, while the right hand side is more complicated. Let us assume that in the limit we get a new operator as such we just define 
-
-$$
-\mbf{B}(t) \equiv \lim_{\varepsilon \rightarrow 0} \frac{\mbf{A}(t,\varepsilon)-\mbf{I}}{\varepsilon} \label{eq:Boft:limitA}
-$$
-
-and the differential equation may then be written as 
-
-$$
-\dot{\bsym{\rho}}(t) = \mbf{B}(t)\bsym{\rho}(t)
-$$
-
-Note that as $\varepsilon$ goes to $0$ the transition function will become similar to a dirac delta function centered at $z+\mu(z,t)\varepsilon$, thus in some sense equation $\eqref{eq:Boft:limitA}$ will give us the derivative of the delta function. Another view can be taken by approximating the identity $\mbf{I}$ with the Gaussian transition function, and when $\varepsilon$ goes to zero we get some sort of derivative with respect to the Gaussian function. 
-
-Even though I have not given a closed form expression for the transition function $A(t)$, I want to hightlight that as long as we are able to provide a discrete version of the transition function which nicely depends on the time step $\varepsilon$ then we are able to transform that equation to a continuous time differential equation.  
-
-Now note that we can write a closed form solution for the differential equation if we assume $\mbf{B}$ to be constant in time $t$, then 
-
-$$
-\dot{\bsym{\rho}}(t) = \mbf{B}\bsym{\rho}(t)\longrightarrow {\bsym{\rho}}(t) = e^{\mbf{B}t}\bsym{\rho}(t_0)
-$$
-
-where the exponential function must be interepreted in a functional sense, that is, expressing the exponential as a power series and understanding that powers of $\mbf{B}$ are self compositions of the operator. For instance the square of the operator $\mbf{B}$ is just the integral
-
-
-$$
-\mbf{B}^2 = \int_{\mathbb{R}^n} B(y,z)B(z,x) \ dz
-$$
-
-
-
-## The integral as a linear operator
-
-As we have seen there is a clear analog between transition functions and transition matrices. Indeed this analog is created by replacing indices $i,j\in\mathbb{N}$ with marks/arguments $x,y\in\mathbb{R}$ and sums over indices by integrals over arguments. Since we have a word for index objects $a_{ij}$ and we have defined how they operate (via matrix-matrix multiplication), we are impeled to define an operator that acts as an integral. We define it as the concatenation operation, concretely, for 'matrix'-'vector' multiplication we define 
-
-
-$$
-\chi \rho \equiv \int_{\mathbb{R}^n} \chi(x,y)\rho(y)\ dy
-$$
-
-where $\chi \rho$ is to be understood as $\chi$ acts on $\rho$ as an integral. Let us now call $\chi$ a linear operator and use the symbol $\mathcal{A}^2$ to represent rank-$2$ linear operators, where the $2$ is the number of arguments.  
-
-
-Now that we have defined the integral as an operator we can do a lot cool shit with it. If we view $\chi$ as a matrix where composition of operators is just the repeated integration, then for $A,B\in\mathcal{A}^2$ the product $AB$ is well defined.
-
-## Differential Equation for the Probability
-
-Recall that the $k$-time update of the probability distribution was given by $\eqref{eq:discrte:eq:trans:func}$. To determine an equation in continuous time $t$ we rewrite $\eqref{eq:discrte:eq:trans:func}$ as
-
-$$
-\rho(x,t+\Delta t) = \int_{\mathbb{R}^n} \chi(x,y,t)\rho(y,t)\ dy
-$$
-
-subtracting $\rho(x,t)$ on both sides and identifying $\int_{\mathbb{R}^n}\delta(x-y) \rho(y,t)\ dy=\rho(x,t)$, we may write 
-
-$$
-(1/\Delta t)(\rho(x,t+\Delta t) - \rho(x,t)) = \frac{1}{\Delta t}\int_{\mathbb{R}^n} (\chi(x,y,t) - \delta(x-y))\rho(y,t)
-$$
-
-Now we approximate the left hand side as a time derivative, and we arrive at the equation
-
-$$
-\frac{d}{dt} \rho(x,t) = \alpha \frac{1}{\Delta t}\int_{\mathbb{R}^n} (\chi(x,y,t) - \delta(x-y))\rho(y,t) = \alpha(\chi-I)\rho(x,t)
-$$
-
-
-For the particular case where $\chi$ does not depend on time $t$ the equation can be solved by using the exponential function applied to the operator $\alpha(\chi-I)$, then 
-
-$$
-\rho(x,t) = \exp(\alpha(\chi-I)t)\rho_0(x)
-$$
-
-to show that this is in fact a solution, we take a derivative with respect to time. 
-
-$$
-\frac{d}{dt} \rho(x,t) = \alpha(\chi-I)\exp(\alpha(\chi-I)t)\rho_0(x) = \alpha(\chi-I)\rho(x,t)
-$$
-
-thus we obtain the desired differential equation
-
-$$
-\boxed{
-\frac{\partial \rho}{\partial t} = \alpha(\chi-I)\rho
-}
-$$
-
-Note that it is to be undersood that the exponential of and operator $A\in\mathcal{A}^2$ is defined as follows 
-
-$$
-\exp(A) = \sum_{k=0}^\infty \frac{A^k}{k!}
-$$
-
-and where $A^k$ are $k$-repeated integration of the function $A(x,y)$, in particular for $k=2$ we have 
-
-$$
-(A^2)(y,x) = \int_{\mathbb{R}^n} A(y,z)A(z,x) \ dz
-$$
-
-While $A^2$ is the integral of the above over $A(y,x)$ that is 
-
-$$
-A^3 = (A^2)A = \int_{\mathbb{R}^n} (A^2)(y,z)A(z,x) \ dz = \int_{\mathbb{R}^n} \int_{\mathbb{R}^n} A(y,z')A(z',z) A(z,x) \ dz'\ dz
-$$
-
-given this definition it is also quite trivial to see that for a scalar $\lambda \in\mathbb{R}$ we have $(\lambda A)^k=\lambda^k A^k$, as expected.
 
 
