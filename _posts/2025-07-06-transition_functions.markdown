@@ -15,9 +15,15 @@ $\newcommand{\fdel}{\mathbf{\delta}}$
 $\newcommand{\mbb}{\mathbb}$ 
 $\newcommand{\bsym}{\boldsymbol}$ 
 $\newcommand{\fder}{\mathcal{D}}$ 
-$\newcommand{\trace}{\mathrm{Tr}}$ 
 $\newcommand{\mcal}{\mathcal}$
 $\newcommand{\msf}{\mathsf}$
+
+$\newcommand{\matrixtrace}{\text{mtr}}$ <!-- Matrix Trace -->
+$\newcommand{\ctrace}{\text{ctrace}}$ <!-- Complete trace: Operator and matrix trace -->
+$\newcommand{\trace}{\mathrm{otrace}}$  <!-- Operator Trace -->
+
+$\newcommand{\infd}{\mathbf{d}}$ <!-- Infinitesimal Operator -->
+$\newcommand{\infD}{\mathrm{D}}$ <!-- Infinitesimal Volume Operator -->
 
 <style>
 .wrapper {
@@ -33,7 +39,8 @@ TODO:
 - Prove identity $\eqref{eq:der:of:der:identity}$
 - Need to clarify notation between adjoint and differential operators of euclidean space and of functional space (Hilbert spaces and Banach spaces)
 
-
+* TOC
+{:toc}
 
 
 The main goal of this post is to build a mathematical machinery that provides the user(i.e. the matematician) with clear and simple tools to do functional calculus. A key distinction of my approach is that I avoid the ideia of basis functions or orthogonal basis functions, however for some types of problems the basis function description can simplify computations, either on physical computer or analyticaly. One of my goals is to be able to relate ideas from linear algebra to the space of linear operators over an infinite dimensional vector space (which are the functions). The reader should start to get aquanted to the ideia of functions being interpeted as vectors with infinite basis elements indexed by infinitesimal components. 
@@ -68,6 +75,10 @@ $$
 $$
 
 The most useful tool in linear algebra are matrices. Matrices act on vector to produce other vectors, and they are linear on their argument, we can write a linear operation by the simple use of the inner product, let $a\in\mcal{E}^n$ then the following is an example of a linear operation by applying the matrix to the vector $v$:
+
+$$
+Av = au\cdot v
+$$
 
 $$
 Av = au\cdot v
@@ -138,7 +149,8 @@ $$
 \begin{align}
 \psi^\dagger \mbf{A} &= (\mbf{A}^\dagger\psi)^\dagger\\
 \psi^\dagger\phi &= \int_{\Omega} \psi(x)\phi(x) dx\in\mbb{R}\\ 
-\phi\psi^\dagger &\in L(\Omega) 
+\phi\psi^\dagger &\in L(\Omega) \\
+(\mbf{AB})^\dagger &= \mbf{B}^\dagger\mbf{A}^\dagger
 \end{align}
 $$
 
@@ -176,6 +188,196 @@ $$
 $$
 
 Again, see the similarity with the linear algebra expression $\eqref{eq:ortho;cond:lin:alg}$!? Try to replace indices by components from $\Omega$ and the sum by an integral!
+
+*Projection Operators* are symmetric and indepotent operators meaning for $\mbf{P}$ an projection operator, we have
+
+$$
+\begin{split}
+\mbf{P}^\dagger &= \mbf{A}\\
+\mbf{P}^2 &= \mbf{PP}^\dagger = \mbf{P}
+\end{split}
+$$
+
+The most trivial projection operator is given as the outer product of two degree-one functions. 
+
+$$
+\mbf{P} = \psi\psi^\dagger
+$$
+
+with $\psi^\dagger\psi=1$. We can also form projection operators by integrating over some parameterization of degree-one functions $\psi_\lambda$
+
+$$
+\mbf{P} = \int_{\mbb{R}} \psi_x\psi_x^\dagger dx
+$$
+
+Note however in order for this to be a projector, each $\psi_x$ must satisfy 
+
+$$
+\begin{align}
+\psi_x^\dagger\psi_{x'} &= \delta(x-x'), \ \forall x,x' \in {S}\\ 
+\|\psi_x\| &= 0,\ \ \forall x\notin S
+\end{align}
+$$
+
+with $S\subset \mbb{R}$.
+
+
+
+$$
+\mbf{P}^2 = \int_{S} \psi_x\psi_x^\dagger dx\int_{S} \psi_{x'}\psi_{x'}^\dagger dx' = \int_S\int_S \psi_x\psi_x^\dagger\psi_{x'}\psi_{x'}^\dagger dx dx' =  \int_S\int_S \psi_x\delta(x-x')\psi_{x'}^\dagger dx dx' = \mbf{P}
+$$
+
+to show that it is symmetric we do 
+
+$$
+\mbf{P}^\dagger = \int_{\mbb{R}}(\psi_x\psi_x^\dagger )^\dagger dx = \mbf{P}
+$$
+
+Any symmetric operator $\mbf{A}$ can be written as the integral 
+
+$$
+\mbf{A} = \int_{\mbb{R}}\lambda_x \psi_x\psi_{x}^\dagger dx
+$$
+
+we call the above the spectral decomposition of $\mbf{A}$, and we call $\psi_x$ the spectral functions of $\mbf{A}$. Note that each $\psi_x$ satisfies the eigenvalue problem 
+
+$$
+\mbf{A}\psi_x = \lambda_x \psi_x
+$$
+
+The determinant of the symmetric operator can be determined from the eigenvalues $\lambda_x$, in particular we have 
+
+$$
+\log\det(\mbf{A}) = \int_{\mbb{R}}\log(\trace(\lambda_x \psi_x\psi_{x}^\dagger))\ dx = \int_S \log(\lambda_x)\  dx
+$$
+
+there is another interesting way to determine the determinant of an operator. We use the following 
+
+$$
+\det(e^{\mbf{B}}) = e^{\trace({\mbf{B}})}\label{eq:det:from:trace}
+$$
+
+where $\trace(\cdot)$ is the operator trace (see [Operator Trace](#operator-trace)). 
+
+#### Operator exponential
+
+We can deterimine an operator $\mbf{B}$ such that $e^{\mbf{B}} = \mbf{A}$. First note that 
+
+$$
+\mbf{A}^2 = \int_{\mbb{R}}\int_{\mbb{R}}\lambda_x\lambda_{x'} \psi_x\psi_{x}^\dagger \psi_{x'}\psi_{x'}^\dagger\  dx\ dx' = \int_\mbb{R} \lambda_x^2\psi_x\psi_{x}^\dagger \ dx
+$$
+
+and more generaly we have 
+
+$$
+\mbf{A}^k = \int_\mbb{R} \lambda_x^k\psi_x\psi_{x}^\dagger \ dx
+$$
+
+for any positive integer $k$. Then assume that $\mbf{B}$ has the decomposition 
+
+$$
+\mbf{B} = \int_{\mbb{R}} \alpha_x\phi_{x}\phi_{x}^\dagger \ dx
+$$
+
+Now use the exponential power series to write 
+
+$$
+\begin{split}
+\exp(\mbf{B}) &= \sum_{k=0}^\infty \frac{\mbf{B}^k}{k!} = \sum_{k=0}^\infty \int_{\mbb{R}} \frac{\alpha_x^k}{k!}\phi_{x}\phi_{x}^\dagger \ dx \\
+&= \int_{\mbb{R}} \sum_{k=0}^\infty \frac{\alpha_x^k}{k!}\phi_{x}\phi_{x}^\dagger \ dx = \int_{\mbb{R}} \exp(\alpha_x) \phi_{x}\phi_{x}^\dagger dx
+\end{split}
+$$
+
+Finally consider that 
+
+$$
+\mbf{A} = e^\mbf{B}
+$$
+
+which suggests that $\phi_x=\psi_x$ and $\lambda_x=\exp(\alpha_x)$. Now use $\eqref{eq:det:from:trace}$ to write 
+
+$$
+\begin{split}
+\det(\mbf{A}) &= \exp(\trace(\mbf{B})) =  \exp\left(\trace\left(  \int_{\mbb{R}} \alpha_x\phi_{x}\phi_{x}^\dagger \ dx \right)\right) \\
+&= \exp\left(\int_{\mbb{R}} \trace(\alpha_x\phi_{x}\phi_{x}^\dagger)\right) = \exp\left(\int_{R} \alpha_x\ dx \right) \\
+&= \exp\left(\int_{S} \log(\lambda_x)\ dx \right) 
+\end{split}
+$$
+
+where  $R=S$, because $\psi_x=\phi_x$ and where $\alpha_x=\log(\lambda_x)$. 
+
+
+## The trace of operators 
+{:#operator-trace}
+We define the operator trace $\trace(\cdot)$ as 
+
+$$
+\trace(\mbf{A}) = \int_{\mbb{R}} A(x,x)\ dx
+$$
+
+the *Operator Trace* has the following properties
+
+$$
+\begin{align}
+\trace(\alpha \mbf{A}) &= \alpha\!\ \trace(\mbf{A})\\
+\trace(\mbf{A}+\mbf{B}) &= \trace(\mbf{A}) + \trace(\mbf{B})\\
+\trace(\mbf{A}^\dagger) & = \trace(\mbf{A})\\
+\trace(\mbf{AB}) &= \trace(\mbf{BA})\\
+\trace(\alpha) &= \alpha 
+\end{align}
+$$
+
+As a special case of the above we have
+
+$$
+\trace(\psi\phi^\dagger) = \phi^\dagger\psi = \int_{\mbb{R}} \phi(x)\psi(x)\ dx
+$$
+
+## Skew, Symmetric and Orthogonal Operators
+
+Any linear operator $\mbf{A}$ can be wirtten as the summ of a symmmetric part $\mbf{A}\_+$ and a skew-symmetric part $\mbf{A}\_-$, *i.e.*
+
+$$
+\mbf{A} = \mbf{A}_++\mbf{A}_-
+$$
+
+with 
+
+$$
+\mbf{A}_+ = \frac{1}{2}(\mbf{A+A^\dagger}),\ \ \ \mbf{A}_-  =\frac{1}{2}(\mbf{A-A^\dagger})
+$$
+
+We say that an operator $\mbf{A}$ is *symmetric* if it satisfies $\mbf{A}^\dagger=\mbf{A}$, and we say that an operator $\mbf{A}$ is *skew-symmetric* if it satisfies $\mbf{A}^\dagger=\mbf{A}$. In terms of the kernel $A(x,y)$ of the operator $\mbf{A}$ this means that 
+
+$$
+\begin{split}
+A(x,y)  = A(y,x) \quad \quad &(\text{symmetric operator})\\
+A(x,y)  = -A(y,x) \quad \quad &(\text{skew-symmetric operator})
+\end{split}
+$$
+
+Skew-symmetric operators generate orthogonal operators. For $\mbf{A}$ a skew-symmetric operator we can easily show that 
+
+$$
+\mbf{U} = \exp(\mbf{A})
+$$
+
+is an orthogonal linear operator. An orthogonal operator satisfies 
+
+$$
+\mbf{U}^\dagger\mbf{U} = \mbf{UU}^\dagger  = \mbf{I}
+$$
+
+
+To show that this is indeed true, recall that the exponential can be written as taylor series expansion and that $(\mbf{AB})^\dagger=\mbf{B}^\dagger\mbf{A}^\dagger$, then
+
+$$
+\mbf{U}^\dagger = \exp(\mbf{A})^\dagger = \sum_{k=0}^\infty \frac{\left(\mbf{A}^k\right)^\dagger}{k!} = 
+\sum_{k=0}^\infty \frac{\left(\mbf{A}^\dagger\right)^k}{k!} = \exp(\mbf{A}^\dagger) = \exp(-\mbf{A}) = \mbf{U}^{-1}
+$$
+
+
+This suggests that we can generate any orthogonal linear operator by considering some linear operator $\mbf{A}$ with arbitrary kernel function, compute its skew-symmetric part and evaluate $\mbf{U}=\exp(\mbf{A}_-) = \exp\\!\left(\tfrac{1}{2}(\mbf{A-A}^\dagger)\right)$
 
 
 
@@ -300,7 +502,7 @@ $$
 \int_{I} \psi \phi'\ dx = [\psi\phi]_{\partial{I}} - \int_{I}\psi'\phi\ dx
 $$
 
-with $I\in\mathbb{R}$ some interval and $\partial I$ its boundary. Applying this result to $\psi(x)\delta^{(k)}(x-y)$ yields the formula 
+with $I\subset\mathbb{R}$ some interval and $\partial I$ its boundary. Applying this result to $\psi(x)\delta^{(k)}(x-y)$ yields the formula 
 
 $$
 \int_{\mathbb{R}} \delta^{(k)}(x-y)\psi(x)\ dx = [\delta^{(k)}(x-y)\psi(x)]_{-\infty}^{+\infty} - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx = - \int_{\mathbb{R}}\psi'(x)\delta^{(k-1)}(x-y)\ dx
@@ -314,6 +516,45 @@ $$
 $$
 
 which after evaluating the integral on the right will give $\eqref{eq:dirac:delta:derivative}$.
+
+
+We have to be carefull when dealing with the kernel functions of derivative operators. Let us consider the particular case when we have an operator $\mbf{D}$ with kernel 
+
+$$
+D(x,y) = -\frac{d}{dx}\delta(x-y) = \frac{d}{dy}\delta(x-y)
+$$
+
+Now we use $\mbf{D}$ on a test function $\psi$, then 
+
+$$
+\begin{split}
+[\mbf{D\psi}](x) &= \int_{\mbb{R}} \left(\frac{d}{dy}\delta(x-y) \right)\psi(y)\ dy\\
+&= -\int_{\mbb{R}} \delta(x-y)\frac{d\psi}{dy}\ dy + [\delta(x-y)\psi(y)]_{-\infty}^{+\infty}\\
+&= -\frac{d\psi}{dx}
+\end{split}
+$$
+
+next we use the transmutated operator $\mbf{D}^\dagger$ to determine 
+
+$$
+\begin{split}
+[\mbf{D^\dagger\psi}](y) &= \int_{\mbb{R}} \left(-\frac{d}{dx}\delta(x-y) \right)\psi(x)\ dx\\
+&= \int_{\mbb{R}} \delta(x-y)\frac{d\psi}{dx}\ dx + [\delta(x-y)\psi(x)]_{-\infty}^{+\infty}\\
+&= \frac{d\psi}{dy}
+\end{split}
+$$
+
+This suggests that $\mbf{D}^\dagger=-\mbf{D}$ thus $\mbf{D}$ is a skew-symmetric operator! Note however that $k$-th derivatives are not all skew-symmetric, namely, consider the identity
+
+$$
+\frac{d^k}{dx^k}\delta(x-y) = (-1)^k\frac{d^k}{dy^k}\delta(x-y)
+$$
+
+thus $k$-the derivatives are symmetric for $k$ even and skew for $k$ an odd function. This is also obvious to see when we compute 
+
+$$
+(\mbf{D}^k)^\dagger = (\mbf{D}^\dagger)^k = (-1)^k \mbf{D}^k 
+$$
 
 ## Derivative operator from Kernel Function
 
@@ -351,6 +592,47 @@ $$
 $$
 
 To this kinds of linear operators we shall call them <ins>**Domain Transformation Operators**</ins>. 
+
+**Functions that preserve $\mbf{i}$-normalization**
+
+It is interesting to determine what types of transformations $f(x)$ will make the transformed function $\mbf{i}$-normalized. Consider $\psi$ to be an $\mbf{i}$-normalized function, then we want to find all $f's$ such that $\mbf{i}^\dagger\mbf{F}\psi=1$, then 
+
+$$
+\int_{\mbb{R}^n} \psi(f(x)) d^nx = \int_{\mbb{R}^n} \psi(y)\det(\underline{f})^{-1}d^ny
+$$
+
+
+where we used the chain rule 
+
+$$
+\mbf{d}y = \mbf{d}f(x) = \und{f}\mbf{d}x
+$$
+
+with $\mbf{d}$ the infinitesimal differential operator defined as $\mbf{d}f(x) \equiv \infd x\cdot\nabla_x f(x)$, with $\mbf{d}x$ an infinitesimal change. And consequently: $d^ny=\det(\und{f})d^nx$. The above integral suggests that in order to ensure $\mbf{F}$ keeps the $\mbf{i}$-normalization property we have to choose an $f(x)$ such that $\det(\underline{f})=1$.
+
+To ensure $\mbf{i}$-normalization we can also consider satisfying the requirement $\mbf{i^\dagger F}=\mbf{i}$, thus using a change of variables we have 
+
+$$
+\int_{\mbb{R}^n} \delta(f(x)-y)d^nx = \int_{\mbb{R}^n} \delta(x-y)\det(\und{f})^{-1} d^nx = \left[\det(\und{f})^{-1}\right](y)
+$$
+
+This suggests that we should consider a kernel $F$ of $\mbf{F}$ as 
+
+$$
+F(x,y) = \delta(f(x)-y)[\det(\und{f})](y)
+$$
+
+which obviously ensures $\mbf{i}$-normalization. Note that we have assumed that $f(x)=y$ only has one solution for each $y$, however if we can find more then one solution, we may express it using the winding number $\mcal{k}(y)\in\mbb{N}$ the number of solutions to the equation $f(x)=y$, then $\mbf{i^\dagger F}$ takes the form 
+
+$$
+\int_{\mbb{R}^n} \delta(f(x)-y)d^nx  = \left[\det(\und{f})^{-1}\right]\!(y)\!\ k(y)
+$$
+
+as long as $\det(\und{f})\neq 0$ and $k(y)\neq 0$ we can allways redefine $\mbf{F}$ such that $\mbf{F}$ is $\mbf{i}$-normalized. Then the kernel $F$ of $\mbf{F}$ must be of the form 
+
+$$
+F(x,y) = \delta(f(x)-y)\frac{[\det(\und{f})](y)}{k(y)}
+$$
 
 
 ### A More General Derivative Operator 
@@ -870,65 +1152,316 @@ with $\phi=A\psi$.
 
 # **IS THE FUNCTIONAL DERIVATIVE PROPERLY DEFINED???**
 
-### Manifold Signals
 
-We want to study signals/functions/fields that are defined only over some $m$-dimensional manifold $\mathcal{M}\subset \mbb{R}^n$. In particular we want to consider the following 
+### Important Identities
+
+
+The generic chain rule is, let $F(\psi)=G(f(\psi))$ 
 
 $$
-\psi(x) = 
+\fder_\psi G(f(\psi))= \bar{f}(\fder_\phi) G(\phi)
+$$
+
+with $\phi=f(\psi)$
+
+$$
+\bar{f}(\phi) = \bar{f}\phi = (\mcal{D}f)^{\ddagger}\phi
+$$
+
+Now let $G$ be a simple function, then 
+
+$$
+\begin{split}
+[\bar{f}(\fder_\phi) G(\phi)](x,y) &= \int_{\mbb{R}^n} (\fder f)^\top(z,x) \fder_\phi(z)[G(\phi)](y)d^nz\\ 
+&= \int_{\mbb{R}^n} (\fder f)^\top(z,x)[G'(\phi)](y)\delta(z-y)d^nz\\
+&= [G'(\phi)](y) \left[(\fder f)^\ddagger\right](x,y)
+\end{split}\label{eq:chain-rule:complete:der}
+$$
+
+
+where we used $$\fder_\phi(z)[G(\phi)](y)=[G'(\phi)](y)\delta(z-y)$$. Another important special case is the derivative of the function $J(\psi)=\mbf{i}^\dagger G(f(\psi))=\mbf{i}^\dagger F(\psi)$, to evaluate this special case first note that 
+
+$$
+\fder^\ddagger J = \fder^\ddagger \mbf{i}^\ddagger F = (\fder F)^\ddagger \mbf{i}
+$$
+
+Now use $\eqref{eq:chain-rule:complete:der}$ to write 
+
+$$
+\fder^\ddagger J = \int_{\mbb{R}}[G'(\phi)](y) \left[(\fder f)^\ddagger\right](x,y)\ dx =   (\fder f)^\ddagger G'(\phi) = \left(G'(\phi)^\ddagger (\fder f) \right)^\ddagger
+$$
+
+Finally we arrive at the required result:
+
+$$
+\boxed{
+\fder J = \fder\!\ \mbf{i}^\ddagger G(f(\psi))= G'(\phi)^\ddagger (\fder f) 
+}\label{eq:fder:J:simple}
+$$
+
+where the last expression is to be understood as the linear operator $(\fder f)^\ddagger$ applied to the function $G'(\phi)$.
+
+
+**A trivial proof**
+
+Let $\theta:\mbb{R}^n\mapsto\mbb{R}^n$ and $A\in\mbb{R}^{n\times n}$ some arbitrary matrix function, then 
+
+$$
+\und{\theta}\cdot \mathsf{A} = \matrixtrace(\underline{\theta}\mathsf{A}) = \matrixtrace(\theta\nabla^\top\mathsf{A}) = (\mathsf{A}^\top\nabla)^\top \theta = (\mathsf{A}^\top\nabla) \cdot\theta\label{eq:matrix:differential:trace} 
+$$
+
+**Gradients** 
+
+
+
+
+Let us now consider the case when we have gradients $\nabla$ of functions involved when computing derivatives. We want to show that the Euler-Lagrange equations only involving $\und{\psi}$ (the jacobian matrix of $\psi$) can be written as 
+
+$$
+\fder J = - \nabla_x^\top\nabla_{\und{\psi}} \mcal{L}(\und{\psi}) = 0
+$$
+
+Let 
+
+$$
+J(\psi) = \int_{\mbb{R}^n} \mcal{L}(\und{\psi}) d^nx
+$$
+
+Next compute the directional derivative of $J$ in the $\phi$ direction 
+
+$$
+\phi\cdot\fder J(\psi) = \lim_{\varepsilon\rightarrow 0}  \int_{\mbb{R}^n} \frac{\mcal{L}(\und{\psi}+\varepsilon\und{\phi})-\mcal{L}(\und{\psi})}{\varepsilon} d^nx
+$$
+
+which simplifies into 
+
+$$
+\phi\cdot\fder J(\psi)  =   \int_{\mbb{R}^n} \und{\phi}\cdot\nabla_{\und{\psi}} \mcal{L}(\und{\psi})\ d^nx
+$$
+
+Now use $\eqref{eq:matrix:differential:trace}$ and note that $\nabla_{\und{\psi}}$ is a matrix of derivatives, then write:
+
+$$
+\und{\phi}\cdot\nabla_{\und{\psi}} = (\nabla_\und{\psi}^\top\nabla_x)\cdot\phi
+$$
+
+Now express $\phi\cdot\fder J(\psi) =F(\phi)=\mbf{i}^\dagger G\left(\left(\nabla_\und{\psi}^\top\nabla_x\right)\cdot\phi\right)=\mbf{i}^\dagger G(\mbf{A}\cdot\phi)$ as a function of $\phi$. With $G\left(\left(\nabla_\und{\psi}^\top\nabla_x\right)\cdot\phi\right)=\und{\phi}\cdot\nabla_{\und{\psi}} \mcal{L}(\und{\psi})$ a linear function of the argument $\und{\phi}\cdot\nabla_{\und{\psi}}$. 
+
+Then use $\eqref{eq:fder:J:simple}$ to write 
+
+$$
+\fder_\phi \phi\cdot\fder J(\psi) = \fder_\phi F(\phi) = G'(\theta)^\ddagger \mbf{A} = \left(-\nabla_y^\top\nabla_{\und{\psi}} \mcal{L}(\und{\psi})\right)^\ddagger
+$$
+
+where we used $G'=\mcal{L}(\und{\psi})$. And also note that $\mbf{A}^\ddagger = (\nabla_y^\top\nabla_{\und{\psi}})^\ddagger = -\nabla_{\und{\psi}}^\top \nabla_x$, when $\nabla_{\und{\psi}}^\top \nabla_x$ interpreted as a linear operator. ($\nabla_x^\dagger = \nabla_y$).
+
+#### Multivariate Euler-Poisson Equation
+
+Now consider the case when $\mcal{L}$ depends on both $\psi$ and $\und{\psi}$ then it can be shown (left as an exorcism for the reader) that 
+
+$$
+\fder_\psi J(\psi) = \nabla_{\psi}\mcal{L}-\nabla_x^\top\nabla_{\und{\psi}}\mcal{L} \label{eq:mult:euler:poisson}
+$$
+
+where 
+
+$$
+J(\psi) = \int_{\mbb{R}^n} \mcal{L}(\psi,\und{\psi})d^nx
+$$
+
+
+
+
+
+## Manifold Projection Operators 
+
+Let us consider operators $\mbf{P}$ that project to $m$-dimensional manifolds of $\mbb{R}^n$.Manifold projection operators take some arbitrary function $\psi$ with domain in $\mbb{R}^n$ and project that function into $\mcal{M}$, in particular, for $\mbf{P}$ an $\mcal{M}$-projection operator we want 
+
+$$
+\mbf{P}\psi = 
 \begin{cases}
-0 & \text{if}\ x\notin \mathcal{M}\\
-\psi(x) & \text{otherwise}
+\psi(x)&\text{if}\ x\in\mcal{M}\\
+0&\text{otherwise}
 \end{cases}
 $$
 
-This type of signal can be expressed as the application of a manifold operator $\mbb{A}=\mbb{A}(\mathcal{M})$ to some arbitrary field $\phi$. In particuar we may choose $\mbb{A}$ to be a convolutional operator such that its domain of integration is $\mathcal{M}$. Thus
+Or in other words, for all points $x$ such that $x\notin \mcal{M}$ we have $$[\mbf{P}\psi](x)=0$$. We can express manifold projection operators by defining 
 
 $$
-\mbf{A}\bsym{\phi} = \int_{\mathcal{M}} A(x,y) \phi(x) d^mx 
+\mbf{P}\psi = \int_{\mcal{M}} \delta(x-y)\psi(y)d^my 
 $$
 
-where $A(x)$ is some arbitrary function of $x\in\mathcal{M}$. In order for $\mbf{A}$ to be a proper $\mathcal{M}$-projection operator we must ensure that $A(x,y)$ is zero when the argument is non-zero, we can easily find such a family of functions, in particular the choice $A(x,y)=a(x)\delta(x-y)$ is the proper one. And the integral then becomes
+The question on wether $\mbf{P}$ is a projection operator or not can be answered by determining the transmutation of $\mbf{P}$, and by computing $\mbf{P}^2$. 
+
+To determine the transmutation of $\mbf{P}$ we start by defining $\phi=\mbf{P}\psi$ and then computing 
 
 $$
-\int_{\mathcal{M}} a(x)\delta(x-y) \phi(x) d^mx 
+\omega^\dagger \mbf{P}\psi = \omega^\dagger \phi = \int_{\mbb{R}^n} \omega(x)\phi(x) d^nx = \int_{\mbb{R}^n}\int_{\mcal{M}} \delta(x-y)\psi(y)\ d^my\ d^nx =  \int_{\mcal{M}} \omega(y)\psi(y)\ d^my
 $$
 
-Note how this simplifies when we use the properties of the $\delta$-function 
+where we changed the order of integration. Now note that the last integral can also be written as 
 
 $$
-\mbf{A}\bsym{\phi}  = a(y)\phi(y) \int_{\mathcal{M}} \delta(x-y) d^mx 
+\int_{\mcal{M}} \omega(y)\psi(y)\ d^my = \int_{\mbb{R}^n}\int_{\mcal{M}}\delta(x-y)\omega(y)\ d^my\ \psi(x)\ d^nx = \psi^\dagger\mbf{P}\omega 
 $$
 
-this simplification makes now think about a new class of operator that we will call convolutional $\mathcal{M}$-manifold operators, contrary to the $\mathcal{M}$-projection operator, these operators do not project to $\mathcal{M}$ rather they are only defined over $\mathcal{M}$. So let us consider 
+Thus $\psi^\dagger \mbf{P}\omega = \omega^\dagger \mbf{P}\psi$ for any functions $\psi,\omega\in\mcal{F}(\mbb{R}^n)$ imply that 
 
 $$
-\mbf{A}=\mbf{A}(\mathcal{M}) = \int_{\mathcal{M}}\ d^mx A(x-y)
+\mbf{P}^\dagger=\mbf{P}
 $$
 
-with $A:\mathbb{R}^n\mapsto \mbb{R}$. 
+thus manifold projection operators are symmetric operators! To show that $\mbf{P}$ is an indempotent operator we compute 
 
-To distinguish between integrals and operators we will provide a different way of expressing the integrals. When we have an integral we will write the $d^mx$ at the rightmost part of the equation, but when we are just expressing an integral operator we will write $d^mx$ right after the integral $\int$ symbol. So the above expression means the integral operator and not the integral itself. 
+$$
+\mbf{P}^2\psi = \mbf{P^\dagger P}\psi = \int_{\mcal{M}} \delta(x-z)\int_{\mcal{M}} \delta(z-y)\psi(y)\ d^my \ d^mz = \int_{\mcal{M}} \delta(x-z)\psi(z) \int_{\mcal{M}}  \delta(z-y)\ d^my \ d^mz
+$$
 
-A common problem that we encounter is determining manifolds for operators. This problem seems very abstract but it can be made very concrete by considering parameterizations of functions. In particular we shall consider that the manifold $\mathcal{M}$ can be parameterized by a function $\rho:\mbb{R}^m\mapsto\mbb{R}^n$. Then the problem of determining $\mathcal{M}$ reduces to the problem of determining $\rho$.  
-
-By taking the change of variables $x=\rho(z)$ the differential will transform into $d^mx = \det(\underline{\rho})d^mz$ where $\underline{\rho}$ is the jacobian matrix of the transformation $x=\rho(z)$ and the determinant of the transformation has to be computed as a determinant in $m$-D??. In geometric algebra terms it is $d^mz = \|\underline{\rho}(dz^1)\wedge\cdots\wedge \underline{\rho}(dz^m)\|=\|\underline{\rho}(I_m)\|d^mz$ with $dz^k=e_kdz_k$ the directional measure, and with $I_m$ the unit pseudo-scalar of $\mbb{R}^m$. Under this change of variables the operator takes the form 
+Now notice that 
 
 $$\boxed{
-\mbf{A} = \int_{\mbb{R}^m} d^mz \det(\underline{\rho}) A(\rho(z)-y)
+\int_{\mcal{M}} \delta(z-y)\ d^my = 1, \ \ \forall z\in\mcal{M}
 }$$
 
-This is clearly non-linear equation on the function $\rho=\rho(z)$. In order to evaluate the functional derivative of this operator we will make use of the directional derivative. In particular we want to compute $\phi\cdot\fder \mbf{A}$, which using the definition is 
+which means that the above integral will reduce to 
 
+$$
+\mbf{P}^2\psi = \int_{\mcal{M}} \delta(x-z)\psi(z)d^mz = \mbf{P}\psi
+$$
 
-$$\begin{split}
-\phi\cdot\fder \mbf{A}&= \lim_{\varepsilon\rightarrow 0} \int_{\mbb{R}^m} d^mz\ \frac{\det(\underline{\rho}+\varepsilon \underline{\phi}) A(\rho(z)+\varepsilon \phi(z)-y) - \det(\underline{\rho}) A(\rho(z)-y)}{\varepsilon}\\
-&= \int_{\mbb{R}^m} d^mz\ \underline{\phi}\cdot\nabla_{\underline{\rho}}\det(\underline{\rho})  A(\rho(z)-y) + \det(\underline{\rho}) \phi\cdot\nabla_\rho A(\rho(z)-y) 
+thus proving that $\mbf{P}^2=\mbf{P}$ is an indempotent operator! By which we conclude that $\mbf{P}$ is a projection operator. Manifold projection operators can be expressed with respect to some parameterization. Consider $\mcal{M}$ is given by a parameterization $$\mcal{M}=\{y\in\mbb{R}^n \ \\| \ y=\sigma(z), \forall z\in\mbb{R}^m\}$$ with $\sigma:\mbb{R}^m\mapsto \mbb{R}^n$ such a parameterization of $\mcal{M}$, then we can show that 
+
+$$
+\mbf{P}\psi = \int_{\mbb{R}^m} \delta(x-\sigma(y))\psi(x)\det(\und{\sigma}) d^my  \label{eq:proj:manif:param}
+$$
+
+with $\und{\sigma}$ the jacobian matrix of $\sigma$. Note that we have written $\det(\und{\sigma})$, however $\und{\sigma}$ is not a square matrix, this is why in [Change of Variables](#chage-of-variables) we have extended the notion of determinant to non-square matrices.
+
+One of the applications for which I aim to used manifold projection operators is when determining signal that belong to some $m$-dimensional manifold. Think for instance that we have some dataset that expresses the digitalization of some process. Assume that the dataset does not have any type of structure. Now assume that the real process is defined only on an $m$-dimensional manifold, this means that the reconstructed process must be projected to the manifold. A more concrete example is the problem of 3D image reconstruction when the dataset are point clouds, i.e. discrete measuraments of the 3D space. By the nature of the sensures used we know that the dataset must come from discrete samples of a 2-dimensional manifold. However we do not know what is that manifold. Which means that we need to somehow provide interesting algorithms for which we can determine $\mcal{M}$.  
+
+### A Problem on Manifold Projections
+
+Let us consider the problem of determining a manifold $\mcal{M}$ projection. Consider two signals $\phi,\psi\in\mcal{F}(\mbb{R}^n\mapsto \mbb{R})$ then assume that 
+
+$$
+\phi \approx \mbf{P}\psi
+$$
+
+holds approximatly for some $\mbf{P}\in\mcal{P}$ ($\mcal{P}$ is the space of manifold projection operators). The goal is to find the manifold projection operator $\mbf{P}$ that makes $\phi$ very close to $\mbf{P}\psi$. Consider the following optimization problem 
+
+$$
+\underset{\mbf{P}\in\mcal{P}}{\text{minimize}} \ \|\mbf{P}\psi-\phi\|^2\label{eq:p:opt:proj:manif}
+$$
+
+We can pose this problem in terms of some parameterization function $\sigma$, namely recall $\eqref{eq:proj:manif:param}$, now express $\mbf{P}=\mbf{P}(\sigma)$ as a functional of the parameterization, then we can rewrite $\eqref{eq:p:opt:proj:manif}$ as the following optimization problem 
+
+$$
+\underset{\sigma\in\mcal{F}{(\mbb{R}^m\rightarrow \mbb{R}^n)}}{\text{minimize}} \ \|\mbf{P}(\sigma)\psi-\phi\|^2
+$$
+
+Now write the cost function as the quadratic equation 
+
+$$
+\|\mbf{P}\psi - \phi\|^2 = \psi^\dagger\mbf{P}^\dagger\mbf{P} \psi + \phi^\dagger\phi - 2\phi^\dagger \mbf{P}\psi = (\psi^\dagger - 2\phi^\dagger)\mbf{P}\psi  + \phi^\dagger\phi 
+$$
+
+where we used $\mbf{P}^\dagger\mbf{P}=\mbf{P}$. Now define $\theta=\psi-2\phi$, then the problem will reduce to 
+
+$$
+\underset{\sigma\in\mcal{F}{(\mbb{R}^m\rightarrow \mbb{R}^n)}}{\text{minimize}} J(\sigma)\equiv\theta^\dagger\mbf{P}(\sigma)\psi 
+$$
+
+We start by computing the derivative with respect to $\sigma$, then
+
+$$
+\fder_{\sigma}^\ddagger J(\sigma) = (\fder_\sigma \mbf{P}(\sigma)\psi)^\ddagger\theta
+$$
+
+Now write 
+
+$$
+\mbf{P}(\sigma)\psi = \int_{\mbb{R}^n}\mcal{L}(\sigma,\und{\sigma}) d^ny
+$$
+
+with $\mcal{L}(\sigma,\und{\sigma})=\delta(x-\sigma(y))\psi(x)\det(\und{\sigma})$. Now use the Euler-Poisson chain rule $\eqref{eq:mult:euler:poisson}$ to write 
+
+$$
+\begin{split}
+\fder_\sigma \mbf{P}(\sigma)\psi &= \nabla_{\sigma}\mcal{L} - \nabla_y^\top\nabla_{\und{\sigma}}\mcal{L} \\
+&= \psi(x)\left(\det(\und{\sigma})\nabla_\sigma^\top \delta(x-\sigma(y))-[\nabla_y^\top\delta(x-\sigma(y))]\nabla_{\und{\sigma}}\det(\und{\sigma}) - \delta(x-\sigma(y))[\nabla_y^\top\nabla_{\und{\sigma}} \det(\und{\sigma})]\right)\\
+&= \psi(x)\left(-\det(\und{\sigma})\nabla_x^\top \delta(x-\sigma(y)) + (\bar{\sigma}\nabla_x)^\top \delta(x-\sigma(y)) \nabla_{\und{\sigma}}\det(\und{\sigma}) -\delta(x-\sigma(y))[\nabla_y^\top\nabla_{\und{\sigma}} \det(\und{\sigma})]\right)
 \end{split}
 $$
 
-where we used the product rule.
+Next we compute 
 
+$$
+\begin{split}
+(\fder_\sigma \mbf{P}(\sigma)\psi)^\ddagger\theta &= \int_{\mbb{R}^n}  \psi(x)\theta(x) \left(-\det(\und{\sigma})\nabla_x^\top \delta(x-\sigma(y)) + (\bar{\sigma}\nabla_x)^\top \delta(x-\sigma(y)) \nabla_{\und{\sigma}}\det(\und{\sigma}) -\delta(x-\sigma(y))[\nabla_y^\top\nabla_{\und{\sigma}} \det(\und{\sigma})]\right)\ d^nx\\
+&= -\nabla_{\sigma}^\top (\psi(\sigma)\theta(\sigma)) \left[\und{\sigma} \nabla_{\und{\sigma}} \det(\und{\sigma}) -\mathsf{I}\det(\und{\sigma}) \right] - \psi(\sigma)\theta(\sigma) [\nabla_y^\top\nabla_{\und{\sigma}} \det(\und{\sigma})]
+\end{split}
+$$
+
+
+
+<!-- $$ -->
+<!-- \theta^\dagger\mbf{P}(\sigma)\psi  = \int_{\mbb{R}^n} \theta(x)[\mbf{P}(\sigma)\psi](x) \ d^nx -->
+<!-- $$ -->
+
+
+### A note on the change of variable for non-square jacobians
+{: #chage-of-variables}
+
+We want to show the definition of the determinant by showing how a parameterization of the manifold gives rise to an infinitesimal volume change. In particular we want to show that 
+
+$$
+\begin{split}
+|\det(\und{f})| &= |\und{f}(I_m)|=|\und{f}(e_1)\wedge \und{f}(e_2)\wedge\cdots\wedge \und{f}(e_m)|\\
+&= |(\partial_1f)\wedge(\partial_2f)\wedge\cdots\wedge (\partial_m f)|  
+\end{split}
+$$
+
+with $\partial_i=e_i\cdot\nabla$, the derivatives at all possible directions $e_i$, with $e_i$ spanning the entire vector space $\mbb{R}^m$. 
+
+We start with some important definitions. The infinitesimal change operator tells us how a function $f$ changes when we change $x$ by an infinitesimal amount, that is $x+\infd x$. The infinitesimal change operator $\infd$ is defined as
+
+$$\boxed{\infd f(x) \equiv f(x+\infd x)-f(x)= \infd x\cdot\nabla f(x) = \und{f}\infd x}.$$
+
+Next we define the infinitesimal directed volume change operator $\infD$ as 
+
+$$\boxed{\infD^m f(x) \equiv (\infd^1 f(x))\wedge(\infd^2 f(x))\wedge\cdots\wedge (\infd^m f(x)) }\label{eq:def:inf:vol:el}$$
+
+with $\infd^if(x)=\infd x^i\cdot\nabla f(x) = \und{f}\infd x^i$, the change with respect to the $i$-th component of $x$. We call $\infD^m f(x)$ the infinitesimal directed volume element at the point $x$. From the definition of the infinitesimal directed volume element we can use the outermorphism property to compute
+
+$$
+\infD^m f(x) = (\und{f}\infd x^1)\wedge (\und{f}\infd x^2)\wedge\cdots\wedge (\und{f}\infd x^m) = \und{f}(\infd x^1\wedge \infd x^2\wedge\cdots\wedge \infd x^m) = \und{f}(\infD^m x)
+$$
+
+where of course, from the definition of $\infD$ in $\eqref{eq:def:inf:vol:el}$ we have  
+
+$$
+\infD^m x = \infd x^1\wedge \infd x^2\wedge\cdots\wedge \infd x^m
+$$
+
+Now note that however we can further express $\infD^m x$ in terms of the infinitesimal volume components $dx_i$ by setting $\infd x^i = e_i dx_i $, then 
+
+$$
+\infD^m x = e_1\wedge e_2\wedge \cdots\wedge e_m dx_1dx_2\cdots dx_m = I_m d^mx\label{eq:infD:vol:elem:Im}
+$$
+
+with $I_m = e_1\wedge e_2\wedge \cdots\wedge e_m$ the unit pseudoscalar of $\mbb{R}^m$ and $d^mx=dx_1dx_2\cdots dx_m$ the infinitesimal volume element. Now note that we can take the magnitude on both sides of $\eqref{eq:infD:vol:elem:Im}$ to obtain 
+
+$$
+|\infD^m x| = |I_m|d^mx = d^mx
+$$
+
+This means that also by a change of variables $y=f(x)$ we have
+
+$$
+d^m y = |\infD^m y| = |\infD^m f(x)| = |\und{f}(\infD^m x)| = |\und{f}(I_m)|d^mx = \det(\und{f})d^mx
+$$
+
+where we set $\|\und{f}(I_m)\|\equiv\det(\und{f})$. 
 
 
 ### Taylor Series expansion 
@@ -1236,6 +1769,8 @@ To distinguish between vector spaces and function spaces, we will call vectors t
   - Functions that transform fields $\msf{F},\msf{G},\msf{H}\in\mcal{H}(\mcal{V})=\\{\msf{F}:\mcal{V}\mapsto\mcal{V}\\}$ 
   - Non scalar functions of fields $\Psi,\Theta,\Phi,\Omega\in\mcal{F}(\mcal{V}\mapsto\mcal{V})=\\{\Psi : \mcal{V}\mapsto\mcal{V}\\}$
   - Linear transformations $\msf{A}$ of fields can be denoted $\msf{A}\in\mcal{L}(\mcal{V})\equiv\mcal{L}_{\mcal{V}}$ that transforms $\mcal{V}$ into $\mcal{V}$ linearly
+  - While ${}^\dagger$ swaps the order of the arguments of functions, the operator ${}^\top$ swaps the order of indexation (This means that $$[\mbf{A}^\top]_{ij}=[\mbf{A}]_{ji}$$ while $$[\mbf{A}^\dagger](x,y)=[\mbf{A}](y,x)$$).
+  - The degree of a function tells us how many arguments the function has and rank means how many indices it has, for example a rank-2 degree-3 function $A$ is $A_{ij}(x,y,z)$ with $x,y,z\in\mcal{V}$.
 
 A field $\mcal{V}$ is a pseudo-euclidean vector space with some important multiplicative properties. When we talk about fields we can also talk about transformations of fields, of upmost importance are the linear transformations of fields. When we talk about a linear transformation we are just considering a 'matrix' that transforms fields $\mcal{V}$, let $x\in\mcal{V}$ then $\msf{A}x\in\mcal{V}$ is a linear transformation of $x$. Of course we can also talk about general transformations that transform fields, let $\msf{A}\in\mcal{F}(\mcal{V}\mapsto\mcal{V})$ then $\msf{A}(x)\in\mcal{V}$. 
 
@@ -1763,4 +2298,337 @@ $$
 \psi(x) < \phi(x),\ \forall x\in\mcal{V}
 $$
 
+## Basis Functions and Reciprocals 
+
+One way that we like to do computations on real hardware is by considdering a set of basis functions $\omega_1,\omega_2,\dots,\omega_N$ and their reciprocals $\omega^1,\omega^2,\dots,\omega^N$. These two sets of functions satisfy 
+
+$$
+\omega_i^\dagger \omega_j = \delta_{ij}
+$$
+
+There are certain types of functions which can be written with respect to this basis vectors in particular for $\psi$ belonging to some function space we have 
+
+$$
+\psi=\sum_i \psi_i\omega^i = \sum_i \psi^i \omega_i
+$$
+
+where 
+
+$$
+\begin{align}
+\psi_i &= \omega_i^\dagger \psi \\
+\psi^i &= \omega^{i\dagger}\psi
+\end{align}
+$$
+
+## Discretizing Linear Operators
+
+When we consider that functions can be expressed with respect to basis functions differential operators can be simplified greatly. Consider the linear equation 
+
+$$
+\phi = \mbf{A}\psi = \mbf{A}\omega^i \psi_i=\mbf{A}\omega_i \psi^i
+$$
+
+Now take the $j$-th component of $\phi$ and its $j$-th reciprocal component then 
+
+$$
+\begin{align}
+\phi_i &= \omega_i^\dagger \phi = \omega_i^\dagger\mbf{A}\omega^j \psi_j=\omega_i^\dagger\mbf{A}\omega_j \psi^j\\
+\phi^i &= \omega^{i\dagger} \phi = \omega^{i\dagger}\mbf{A}\omega^j \psi_j=\omega^{i\dagger}\mbf{A}\omega_j \psi^j
+\end{align}
+$$
+
+this suggests that we have four ways to compute the matrix of $\mbf{A}$:
+
+| $\omega_i^\dagger\mbf{A}\omega^j$|$\omega_i^\dagger\mbf{A}\omega_j$|
+| $\omega^{i\dagger}\mbf{A}\omega^j$ | $\omega^{i\dagger}\mbf{A}\omega_j$ |
+
+### Different Types of Basis Functions 
+
+Let us consider step basis functions, let the discretization step be $\Delta x\in\mbb{R}$ then define 
+
+$$
+u(x) = 
+\begin{cases}
+1&\text{if}\ |x|_1 < \Delta x\\
+0&\text{otherwise}
+\end{cases}
+$$
+
+next define the following basis functions 
+
+$$
+\omega_i(x) = \frac{u(x-x_i)}{\sqrt{(\Delta x)^n}}
+$$
+
+And next compute 
+
+$$
+\omega_i^\dagger \omega_j = \frac{1}{(\Delta x)^n}\int_{\mbb{R}^n}  u(x-x_i)u(x-x_j) d^nx = \delta_{ij}\frac{1}{(\Delta x)^n} \int_{\mbb{R}^n} u(x)d^nx = \delta_{ij}
+$$
+
+since $\|x_i-x_j\|=\Delta x$ for $i\neq j$, and where $\int_{\mbb{R}^n} u(x)d^nx=(\Delta x)^n$ is the volume of the $n$-dimensional unit square with side $\Delta x$. Thus the functions $\omega_i$ form an orthonormal basis set and their reciprocals are $\omega^i=\omega_i$. This set of basis functions can be used to discretize functional equations!!  
+
+**Sampling Basis Functions and Operators**
+
+Let us start by considering sampled signal at fixed distances, namely assume a sampling domain $\mcal{S}=\\{x_1,x_2,\dots,x_N\in\mbb{R}^n\\}$ where each $x_i$ satisfies $\|x_i-x_j\|=\Delta x(1-\delta_{ij})$. Sampling can be achieved with the use of a sampling operator $\mbf{S}=\mbf{S}(\mcal{S})$, as we will see the kernel of this sampling operator can be written as 
+
+$$
+S(x,y) = \sum_{k=1}^N \delta(y-x_k)\delta(x-y)
+$$
+
+A sampled signal $\psi_d$ is expressed as the following
+
+$$
+\psi_d(x) = \sum_{y\in\mcal{S}} \delta(x-y) \psi(y)     
+$$
+
+While using the operator $\mbf{S}$ we have
+
+$$
+\psi_d = \mbf{S}\psi = \int_{\mbb{R}^n} \sum_{k=1}^N \delta(y-x_k)\delta(x-y)\psi(y)\ d^ny = \sum_{k=1}^N \delta(x-x_k)\psi_k
+$$
+
+with $\psi_k=\psi(x_k)$. The components $\psi_d^i$ of the discrete signal can also be computed by the use of the basis functions 
+
+$$
+\omega_i(x) =\delta(x-x_i) 
+$$
+
+then we have in component form that 
+
+$$
+\psi^i_d = \omega_i^\dagger \psi
+$$
+
+with each $\psi_d^i\in\mbb{R}$ and where 
+
+$$\psi_d = \sum_i \omega_i\psi_d^i = \sum_i \omega_i\omega_i^\dagger \psi$$
+
+Thus we can write the sampling operator in the form 
+
+$$
+\mbf{S} = \sum_i \omega_i\omega_i^\dagger
+$$
+
+Note that while $\psi$ is some arbitrary continuous function, the discrete counterpart $\psi_d$ is a sum of dirac delta functions. 
+
+
+
+### Functional Equations with Basis Functions
+
+A digital computer cannot solve functional equations in raw form. In order for us to provide algorithms that a computer can use to solve functional equations we have to consider some basis functions $\omega_i$. Consider the basic functional equation:
+
+$$
+\boxed{F(\psi)=0}
+$$
+
+assume that $F:\mcal{F}\mapsto\mcal{F}$. When we want to solve this equation we write $\psi$ as a linear combination of the basis functions $\omega_i$ then write 
+
+$$
+F\left(\sum_i\psi^i\omega_i\right) = 0
+$$
+
+however note that the output is also a function, which means that we must also compute components of $F(\psi)$, since $F$ can in general be a very complicated functional equation of $\psi$ there is no guarante that $F(\psi)$ can also be expressible as a linear combination of the basis functions $\omega_i$, which sugests that we consider some other basis function set $\alpha_k$, not necessarily orthogonal, then we try to solve 
+
+$$
+\alpha_j^\dagger F\left(\sum_i\psi^i\omega_i\right) = 0,\ \text{for all}\ j
+$$
+
+by finding the components $\psi^i\in\mbb{R}$ that solve this equation. 
+
+#### Aproximating Cost Functionals with Basis Functions
+
+Let us consider the particular case of a cost functional, that is a function that receives as input another function and outputs a real number. Let $J:\mcal{F}\mapsto \mbb{R}$. We are particularly interested in finding stationary points of $J$, in order to achieve that we will consider a taylor series approximation 
+
+$$
+J(\psi+\phi) \approx J(\psi) + \phi\cdot \fder J + \tfrac{1}{2}\phi^\dagger \fder^2 J \phi 
+$$
+
+Now consider $\phi$ expressed in terms of some basis function $\omega_i$, that is $\phi=\phi^i\omega_i$, then 
+
+$$
+J(\psi+\phi)\approx J(\psi) + \phi^i\omega_i\cdot \fder J + \tfrac{1}{2}\phi^i\phi^j \omega_i^\dagger\fder^2 J \omega_j    
+$$
+
+Notice how the linear term becomes vector-vector product of $\bsym{\phi}=(\phi^1,\dots,\phi^N)$ with $\mathsf{a}=(\omega_1\cdot \fder J,\dots,\omega_N\cdot \fder J)$, while the quadratic term becomes matrix-vector and vector-vector product, letting $[\mathsf{A}]_{ij}=\omega_i^\dagger\fder^2 J \omega_j$ we can write the cost function as 
+
+$$
+J(\psi+\phi) \approx g(\bsym{\phi})\equiv J(\psi) + \mathsf{a}^\top\bsym{\phi} + \tfrac{1}{2}\bsym{\phi}^\top \mathsf{A}\bsym{\phi}
+$$
+
+This suggests that we may minimize the approximate function with respect to the components $\phi^i$, then we compute 
+
+$$
+\nabla_{\bsym{\phi}}g(\bsym{\phi}) = 0\ \ \Leftrightarrow \  \ \bsym{\phi} = -\mathsf{A}^{-1}\mathsf{a} \label{eq:sol:min:from:components}
+$$
+
+Functional quadratic equations turn into quadratic vector equations. 
+
+#### Zeros of functionals
+
+Consider now the problem of finding zeros of functionals. To find zeros we can consider a first order approximation, let $F:\mcal{F}\mapsto \mcal{F}$, then 
+
+$$
+F(\psi+\phi) \approx F(\psi) + (\fder F)^\dagger\phi = 0
+$$
+
+Note how solving this for $\psi$ is equivalent to solving a simple linear functional equation, in particular we can determine $\phi$ by computing 
+
+$$
+\phi = - (\fder F)^{-\dagger} F(\psi)
+$$
+
+However we can consider a solution involving matrices instead of functions, let $\phi=\phi^i\omega_i$ and extract the components of $F(\psi+\phi)$ to find 
+
+$$
+\alpha_j^{\dagger } F(\psi+\phi^i\omega_i) \approx \alpha_j^{\dagger } F(\psi) + \alpha_j^{\dagger } (\fder F)^\dagger\omega_i \phi^i
+$$
+
+Now set $\mathsf{b}=(\alpha_j^{\dagger } F(\psi),\dots,\alpha_M^{\dagger } F(\psi))$ and $[\mathsf{B}]_{ij}=\alpha_j^{\dagger } (\fder F)^\dagger\omega_i$ to arrive at the equation 
+
+$$
+f(\bsym{\phi}) \equiv \mathsf{b} + \mathsf{B}\bsym{\phi} = 0
+$$
+
+which solving for $\bsym{\phi}$ yields 
+
+$$
+\bsym{\phi} = -\mathsf{B}^{-1}\mathsf{b}
+$$
+
+Now consider the particular case that $F$ is the functional derivative of the cost function $J$, that is 
+
+$$
+F(\psi) = \fder J(\psi)\label{eq:F:fder:J}
+$$
+
+
+Then, given $\eqref{eq:F:fder:J}$ we can write 
+
+$$
+F(\psi + \phi) \approx  F(\psi) + (\fder F)^\dagger\phi  = \fder J(\psi) + \fder^2 J(\psi)\phi
+$$
+
+
+Now compare the two ways we tried to determine solutions to the minimum of the approximate quadratic equation, on one hand we considered writing the cost functional in terms of components of $\phi$ and then minimize it with respect to those components, while on the other hand we try to solve for the functional optimality conditions $F(\psi) = \fder J(\psi)=0$, by extracting components from $F$ and requiring that $\phi$ be expressed through basis functions. The question that arises is: The solutions to the optimization problem on both cases are fundamentally different??
+
+
+
+
+
+<!-- Then the Newtown step can be expressed in terms of a functional equation as  -->
+<!---->
+<!-- $$ -->
+<!-- F(\psi) + \phi^\dagger(\fder F) = 0 -->
+<!-- $$ -->
+<!---->
+
+## Image Sequencing Estimation
+
+Consider that we have a sequence of RGB images encoded in some functions $\psi_0,\psi_1,\dots,\psi_N\in\mcal{F}(\mbb{R}^3\mapsto\mbb{R}^3)$ the domain of $\psi_k$ describes the position in the image, while the co-domain is the RGB color domain $[0,1]^3$. We want to estimate a linear functional $\mbf{A}\in\mcal{G}(\mbb{R}^{3\times 3})$ that transforms each element in the sequence to the next element, mathematically this can be expressed as 
+
+$$
+\psi_{k+1} \approx \mbf{A}\psi_k
+$$
+
+in order to determine the operator $\mbf{A}$ that best transforms $\psi_k$ to $\psi_{k+1}$ we have to formulate the following functional optimization problem 
+
+$$
+\underset{\mbf{A}\in\mcal{G}(\mbb{R}^{3\times 3})}{\text{minimize}} \sum_k \|\mbf{A}\psi_k-\psi_k\|^2 
+$$
+
+The norm squared can be written in the following form 
+
+$$
+\|\psi\|^2 = \int_{\mbb{R}^3} |\psi(x)|^2\ d^m {x} 
+$$
+
+
+$$
+|\psi(x)|^2 = \psi^\top(x)\psi(x)
+$$
+
+$$
+\|\mbf{A}\psi_k-\psi_k\|^2  = \int_{\mbb{R}^3} \left|[\mbf{A}\psi_k](y) - \psi_k(y)\right|^2\ d^m {y} 
+$$
+
+
+
+$$
+\left|[\mbf{A}\psi_k](y) - \psi_k(y)\right|^2 = |\psi_k(y)|^2 + |[\mbf{A}\psi_k](y)|^2 - \psi_k^\top(y)[\mbf{A}\psi_k](y)
+$$
+
+
+$$
+\psi_k^\top(y)[\mbf{A}\psi_k](y) = \psi_k^\top(y)\int_{\mbb{R}^n} A(y,z)\psi_k(z) d^mz = \int_{\mbb{R}^n}\matrixtrace(A(y,z)\psi_k(z)\psi_k(y)^\top) d^mz = \matrixtrace\left(  \int_{\mbb{R}^n}A(y,z)\psi_k(z)\psi_k(y)^\top d^mz\right)
+$$
+
+Where we used the linearity of the matrix trace function to take $\matrixtrace$ out of the integral. Now set $B(z,y)=\psi_k(z)\psi_k(y)^\top$ and then notice that the integral evaluates to 
+\omega\phi^\dagger\psi = \phi\ \ \Leftrightarrow \ \  \phi^\dagger\psi = \frac{\omega^\dagger\phi}{\omega^\dagger\omega} \ \ \Leftrightarrow\ \ \psi = \frac{\phi\ (\omega^\dagger\phi)}{(\phi^\dagger\phi)(\omega^\dagger\omega)}
+$$
+
+a particular solution for $\psi$, the general solution is obtained by adding solutions of $\psi_p^\dagger\phi=0$ to the above particular solution. Given the constraint $\dot{\psi} = \mbf{A}(t)\psi$ we can provide a differential equation for $\omega$ of the form 
+
+$$
+\frac{d}{dt}\left( \frac{\phi\ (\omega^\dagger\phi)}{(\phi^\dagger\phi)(\omega^\dagger\omega)}
+ \right) = \frac{ \omega^\dagger\phi}{(\phi^\dagger\phi)(\omega^\dagger\omega)}\mbf{A}\phi
+$$
+
+which certainly is not trivial to solve for $\omega$. Note however that this result is only valid when we have a finite integrable function $\phi$, note that for the case $\phi=\delta(x-s(t))$ we have $\phi^\dagger\phi = \delta(0)=+\infty$, then we have to reconsider $\eqref{eq:der=0}$, recall that $\psi(t)^\dagger\phi(t)=\psi(t,s(t))$ then $\eqref{eq:der=0}$ takes the form
+
+$$
+\frac{\delta(x-s(t))}{\psi(t,s(t))} =  \mbf{A}^\dagger(t)\lambda(t) + \dot{\lambda}(t) \label{eq:der:lambda:eq}
+$$
+
+let us rewrite the above in the form 
+
+$$
+\rho(t,x)\delta(x-s(t)) = \omega(t,x)
+$$
+
+with $\omega$ defined as above. And with $\rho(t,x)=1/\psi(t,x)$. This suggests that we can write instead 
+
+$$
+\delta(x-s(t)) = [\mbf{A}^\dagger(t)\lambda(t) + \dot{\lambda}(t)](x)\psi(t,x)
+$$
+
+Integrating on $x$ on both sides yields 
+
+$$
+1 = \psi^\dagger\mbf{A}^\dagger\lambda + \psi^\dagger\dot{\lambda} = \dot{\psi}^\dagger\lambda + \psi^\dagger\dot{\lambda}
+$$
+
+then it is straightforward to conclude that 
+
+$$
+\frac{d}{dt}(\psi^\dagger\lambda) = \text{const}
+$$
+
+thus 
+
+$$
+\psi^\dagger\lambda = t-t_0
+$$
+
+
+Now recall that the solution to the equation $\eqref{eq:der:lambda:eq}$ is given by 
+
+$$
+\lambda(t) = \Phi(t_0,t)\lambda_0 + \int_{t_0}^t \Phi(t_0,\tau)\theta(\tau)\ d\tau  
+$$
+
+with $\Phi$ an appropriate transition function that solely depends on $\mbf{A}(t)$, and with $\theta(t,x) = -\frac{\delta(x-s(t))}{\psi(t,s(t))}$.
+
+
+## Need to motivate better!!!
+
+
+consider that we measured a sample function $\phi$, the probability that this sample function comes from  the probability density $\psi$ is given by
+
+$$
+ \log P(\psi,\phi)\equiv \int_{\mbb{R}^n} \log(\psi(x)\phi(x))\ d^nx
+$$
+
+This is a generalization for when we have multiple continuous samples at each point in time??? 
 
