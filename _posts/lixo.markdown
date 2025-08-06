@@ -532,4 +532,49 @@ which has as unique solution $\lambda(x)=\exp(\alpha(x))$.
 <!---->
 
 
+## Geometric Algebra
+
+<div class="content-box">
+  <h3>Welcome!</h3>
+  <p>This is a <strong>custom colored box</strong> using CSS with the <code>minima</code> theme.</p>
+</div>
+
+
+<!-- <div class="content-box"> -->
+<!-- <p>  -->
+An interesting realization of $\msf{U}$ can be expressed with respect to the geometric product in some geometric algebra as the following 
+
+$$
+\msf{U}(\omega,x,y)\msf{u} = e^{\tfrac{1}{2}\omega x\wedge y}\msf{u}e^{-\tfrac{1}{2}\omega x\wedge y } = e^{\omega x\wedge y} \msf{P}(x,y)\msf{z} + \msf{P}^\perp(x,y)\msf{z}
+$$
+
+with $\msf{P}(x,y)\msf{z} = \msf{z}\cdot(x\wedge y)(x\wedge y)^{-1}$ the projection into the plane of rotation $x\wedge y$ and $\msf{P}^\perp(x,y) = \msf{I}-\msf{P}(x,y)$ the orthogonal projection, out of the plane of rotation. The exponential function will be of the form 
+
+
+$$
+\exp(\omega x\wedge y) = c(\omega |x\wedge y|) + \frac{x\wedge y}{|x\wedge y|} s(\omega |x\wedge y|)
+$$
+
+where the functions $c(\cdot)$ and $s(\cdot)$ depend on wether $x\wedge y$ square to one, minus one or zero. Next note that 
+
+$$
+\exp(\omega x\wedge y)\msf{P}(x,y)\msf{z} = (\msf{I} c(\omega |x\wedge y|) + \msf{B}(x,y)s(\omega |x\wedge y|))\msf{P}(x,y)\msf{z}
+$$
+
+with
+
+$$
+\msf{B}(x,y)\msf{z} = \frac{x\wedge y}{|x\wedge y|} \cdot\msf{z}
+$$
+
+$$
+(x\wedge y)^2 = (x\cdot y)^2 - x^2y^2 
+$$
+
+and $$\\|x\wedge y\\| = \sqrt{(x\wedge y)^2} = \sqrt{(x\cdot y)^2 - x^2y^2}$$
+
+<!-- </p> -->
+<!-- </div> -->
+
+
 

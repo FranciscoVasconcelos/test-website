@@ -34,57 +34,61 @@ max-width: 1500px !important;
 {% include mathjax.html %}
 
 
+
+
+* TOC
+{:toc}
+
 TODO:
 - Clarify/prove Taylor series approximation for functionals
 - Prove identity $\eqref{eq:der:of:der:identity}$
 - Need to clarify notation between adjoint and differential operators of euclidean space and of functional space (Hilbert spaces and Banach spaces)
-
-* TOC
-{:toc}
 
 
 The main goal of this post is to build a mathematical machinery that provides the user(i.e. the matematician) with clear and simple tools to do functional calculus. A key distinction of my approach is that I avoid the ideia of basis functions or orthogonal basis functions, however for some types of problems the basis function description can simplify computations, either on physical computer or analyticaly. One of my goals is to be able to relate ideas from linear algebra to the space of linear operators over an infinite dimensional vector space (which are the functions). The reader should start to get aquanted to the ideia of functions being interpeted as vectors with infinite basis elements indexed by infinitesimal components. 
 
 ## Finite Dimensional Euclidean Spaces ($\mbb{R}^n$)
 
-For the reader, $n$-dimensional euclidean vector spaces $\mcal{E}^n$ are mostly familiar. When talking about euclidean spaces we like to think about a set of basis vector $\{e_1,\dots,e_n\}$ $e_i\cdot e_j=\delta_{ij}$ that span the entire vector space $\mcal{E}^n$ and any vector that belongs to this vector space can be expressed as a linear combination of its components, namely for $v\in\mcal{E}^n$ we have 
+For the reader, $n$-dimensional Euclidean vector spaces $\mcal{E}^n$ are mostly familiar. When talking about euclidean spaces we like to think about a set of basis vectors $$\{\msf{e}_1,\dots,\msf{e}_n\}$$ with $$\msf{e}_i\cdot \msf{e}_j=\delta_{ij}$$ that span the entire vector space $\mcal{E}^n$ and any vector that belongs to this vector space can be expressed as a linear combination of its components, namely for $\msf{v}\in\mcal{E}^n$ we have 
 
 $$
-v = v^1e_1 + v^2e_2 + \cdots + v^ne_n
+\msf{v} = v^1\msf{e}_1 + v^2\msf{e}_2 + \cdots + v^n\msf{e}_n
 $$
 
 however the representation of this vector space through this basis is not unique, we can find a different set of basis from which we shall be able to describe the vector $v$. Essentialy the vector space satisfies the following trivialities
 
 $$
 \begin{align}
-u+v &\in \mcal{E}^n,\\
-\alpha u &\in \mcal{E}^n
+\msf{u+v} &\in \mcal{E}^n,\\
+\alpha \msf{u} &\in \mcal{E}^n
 \end{align}
 $$
 
-for any $u,v\in\mcal{E}^n$. There are a set of notions that are attached to the ideia of an Euclidean space. One is the notion of distance and length, but first we need to define an inner product $u\cdot v$ from which we can reclaim the notion of angles and distance. If we express the vectors $u$ and $v$ through the basis vectors. Then the inner product can be expressed as 
+for any $\msf{u,v}\in\mcal{E}^n$. There are a set of notions that are attached to the ideia of an Euclidean space. One is the notion of distance and length, but first we need to define an inner product $\msf{u\cdot v}$ from which we can reclaim the notion of angles and distance. If we express the vectors $\msf{u}$ and $\msf{v}$ through the basis vectors. Then the inner product can be expressed as 
 
 $$
-u\cdot v = (u^1,u^2,\dots,u^n)\cdot (v^1,v^2,\dots,v^n) = \sum_k u^k v^k
+\msf{u\cdot v} = (u^1,u^2,\dots,u^n)\cdot (v^1,v^2,\dots,v^n) = \sum_k u^k v^k
 $$
 
-While the notion of angle can be expressed via the expression $u\cdot v = \|u\|\|v\|\cos(\theta)$ the notion of magnitude or distance can be expressed as 
+While the notion of angle can be expressed via the expression $\msf{u\cdot v = \|u\|\|v\|}\cos(\theta)$ the notion of magnitude or distance can be expressed as 
 
 $$
-|u| = \sqrt{u\cdot u}
+|\msf{u}| = \sqrt{\msf{u\cdot u}}
 $$
 
-The most useful tool in linear algebra are matrices. Matrices act on vector to produce other vectors, and they are linear on their argument, we can write a linear operation by the simple use of the inner product, let $a\in\mcal{E}^n$ then the following is an example of a linear operation by applying the matrix to the vector $v$:
+The most useful tool in linear algebra are matrices. Matrices act on vector to produce other vectors, and they are linear on their argument, we can write a linear operation by the simple use of the inner product, let $\msf{a}\in\mcal{E}^n$ then the following is an example of a linear operation by applying the matrix to the vector $\msf{v}$:
 
 $$
-Av = au\cdot v
+\msf{Av} = \msf{a}\msf{u\cdot v}
 $$
 
+with $A:\mcal{E}^n\mapsto \mcal{E}^n$ a matrix that takes $\mcal{E}^n$ and transforms it into $\mcal{E}^n$. In general we can express a linear transformation that maps $\mcal{E}^n$ into $\mcal{E}^n$ by writting 
+
 $$
-Av = au\cdot v
+\msf{Av} = \sum_{i=1}^n \msf{a}_iv^i
 $$
 
-with $A:\mcal{E}^n\mapsto \mcal{E}^n$ a matrix that takes $\mcal{E}^n$ and transforms it into $\mcal{E}^n$. Matrix vector multiplication can also be computed with the use of indexation in particular we may write 
+where $\msf{a}_i\in\mcal{E}^n$, for all $i=1,2,\dots,n$. Matrix vector multiplication can also be computed with the use of index notation in particular we may write 
 
 $$
 u_i = \sum_{j=1}^n A_{ij}v_j\label{mat:mult:components}
@@ -99,13 +103,17 @@ $$
 We are being carefull to include all of this indexed operations because we want to make the bridge to the functional operators that will have continuous rather then integer indices.
 
 
-A matrix $U\mbb{R}^{n\times n}$ is orthogonal when it satisfies the orthogonal condition $U^\top U=I$ with $I$ the identity matrix. In index notation the orthogonality condition can be expressed as 
+A matrix $\msf{U}\in\mbb{R}^{n\times n}$ is orthogonal when it satisfies the orthogonal condition $\msf{U^\top U=I}$ with $\msf{I}$ the identity matrix. In index notation the orthogonality condition can be expressed as 
 
 $$
-u_i^\top u_j = \sum_{k=1}^n U_{ik}U_{jk} = \delta_{ij}\label{eq:ortho;cond:lin:alg}
+\msf{u}_i^\top \msf{u}_j = \sum_{k=1}^n U_{ik}U_{jk} = \delta_{ij}\label{eq:ortho;cond:lin:alg}
 $$
 
-where the $u_i$ are columns of $U$. 
+where the $$\msf{u}_i\in\mcal{E}^n$$ are column vectors of $\msf{U}$. The matrix components $A_{ij}$ of the matrix $\msf{A}$ are computed with respect to some arbitrary basis vectors, we shall use the following notation to express a matrix in index notation:
+
+$$
+[\msf{A}]_{ij} \equiv \msf{e}_i^\top \msf{Ae}_j = A_{ij}
+$$
 
 ## Function Spaces and Functional Operators
 
@@ -188,6 +196,58 @@ $$
 $$
 
 Again, see the similarity with the linear algebra expression $\eqref{eq:ortho;cond:lin:alg}$!? Try to replace indices by components from $\Omega$ and the sum by an integral!
+
+While in Euclidean space we have provided a description of a vector through its components we can also consider a similar concept consider the parameterized function $\mbf{e}_x$ that satisfies 
+
+$$
+\mbf{e}_x^\dagger \mbf{e}_y = \delta(x-y)\label{eq:ortho:cond}
+$$
+
+An element $\psi\in\mcal{F}_\Omega$ can be expresses as a *"Linear Combination"* of its components ${\psi}_x$, thus
+
+$$
+\boxed{
+\psi = \int_{\Omega} \psi_x\mbf{e}_x \ dx
+}$$
+
+Then from equation $\eqref{eq:ortho:cond}$ we find that 
+
+$$
+\mbf{e}_y^\dagger \psi = \int_{\Omega} \psi_x\mbf{e}_y^\dagger \mbf{e}_x \ dx = \int_{\Omega} \psi_x\delta(y-x) \ dx =  \psi_y
+$$
+
+This suggests that we can also write 
+
+$$
+\psi = \int_{\Omega}  \mbf{e}_x\mbf{e}_x^\dagger \psi \ dx 
+$$
+
+Then if $\Omega$ spans the entire function domain we find that 
+
+$$
+\int_{\Omega} \mbf{e}_x\mbf{e}_x^\dagger \ dx = \mbf{I} 
+$$
+
+where $\mbf{I}$ is the identity operator with kernel 
+
+$$
+[\mbf{I}](x,y) = \delta(x-y)
+$$
+
+Provided an orthonormal basis $\mbf{e}_x$ we can compute the infinitesimal "components" or the kernel of linear operators, in particular we write 
+
+$$
+[\mbf{A}](x,y) = \mbf{e}_x^\dagger \mbf{A}\mbf{e}_y = A(x,y) 
+$$
+
+
+We can also extract infinitesimal columns or rows by using
+
+$$
+\mbf{a}_x = \mbf{Ae}_x , \ \ \mbf{b}_x^\dagger = \mbf{e}_x^\dagger \mbf{A}
+$$
+
+with $$\mbf{a}_x,\mbf{b}_x\in\mcal{F}_\Omega$$. 
 
 *Projection Operators* are symmetric and indepotent operators meaning for $\mbf{P}$ an projection operator, we have
 
@@ -1711,6 +1771,44 @@ g(\Psi) = \Psi(x)\cdot\Psi(y)
 $$
 
 This results on a kernel of a linear operator and can be interpeted as the inner product operator with respect to the function $\Psi$. 
+
+We want to consider another covariant transformation that provide us with frequenccy valued congruence relations between matrices. Consider a functional $F:\mcal{F}(\mbb{R}^n\mapsto\mbb{R})\mapsto\mcal{F}(\mbb{R}\mapsto \mbb{R}^{n\times n})$ with the following property:
+
+$$
+\boxed{
+F(\psi(\msf{R})) = \msf{R}^\top F(\psi)\msf{R}
+}
+$$
+
+we can concretize such a functional, by admiting a rotation matrix $\msf{U}=\msf{U}(\omega,x,y)$ that rotates on the plane spanned by $x$ and $y$ and with angle $\omega$. We consider $\msf{U}$ such that 
+
+$$
+\msf{U}(\omega,\msf{R}x,\msf{R}y) = \msf{RU}(\omega,x,y)\msf{R}^\top
+$$
+
+then we define the functional transformation 
+
+$$
+[F(\psi)](\omega) = \int_{\mbb{R}^n} \int_{\mbb{R}^n} \msf{U}(\omega,x,y)\psi(x)\psi(y)\ d^nx\ d^ny
+$$
+
+An interesting realization of the matrix-valued function $\msf{U}$ can be expressed as the exponential map
+
+$$
+\msf{U}(\omega,x,y) = \exp(\omega(xy^\top-yx^\top))
+$$
+
+thus $\msf{U}$ is a rotation matrix that rotates through the plane of rotation that spans both $x$ and $y$. To show that $\msf{U}$ satisfies the required properties we write 
+
+$$
+\msf{U}(\omega,\msf{R}x,\msf{R}y) =  \exp(\omega\msf{R}(xy^\top-yx^\top)\msf{R}^\top) = \exp(\omega \msf{R}\msf{X}\msf{R}^\top)
+$$
+
+now recall that $\msf{RR}^\top=\msf{R^\top R} = \msf{I}$, then 
+
+$$
+\exp(\omega \msf{RXR}^\top) = \sum_{k=0}^\infty \frac{\omega^k}{k!} (\msf{RXR}^\top)^k = \msf{R}\left(\sum_{k=0}^\infty \frac{\omega^k}{k!} \msf{X}^k \right)\msf{R}^\top = \msf{R}\exp(\omega \msf{X})\msf{R}^\top 
+$$
 
 ## Estimating Rotations from covariant transformations 
 
