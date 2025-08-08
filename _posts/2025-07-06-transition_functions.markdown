@@ -143,7 +143,7 @@ $$
 - The last letters of the alphabet to represent arguments of functions $x,y,z,w\in\Omega$ or $x_1,x_2,\dots,x_m\in\Omega$ 
 - The symbol ${}^\dagger$ is used to denote the transmutation operation over function spaces (is equivalent to matrix transpose)
 - Kernel functions have the same letter as associated linear functionals, but non bold $A(x,y),B(x,y),C(x,y),D(x,y)\in \mcal{F}(\Omega\times \Omega)$
-
+- We use the notation $$[\cdot](x)$$, $$[\cdot](x,y)$$, $$[\cdot](x_1,x_2,\dots,x_n)$$ to express the kernel function associated with the argument (the same way we use indices to index basis elements of a matrix or a vector), in particular $$[\mbf{A}](x,y)=A(x,y)$$ when $A$ is the kernel function of the operator $\mbf{A}$  
 
 To a linear operator $\mbf{A}\in L(\Omega)$ we can always associate an integral operator, with an associated kernel function $A\in\mcal{F}(\Omega\times\Omega)$. Operating on some function with the linear operator $\mbf{A}$ is equivalent to integrating over the vector space $\Omega$, then 
 
@@ -173,6 +173,18 @@ So the outer product of functions produces a linear operator! The transmutation 
 $$
 \mbf{A}^\dagger\psi \equiv \int_{\Omega} A(y,x)\psi(y)\ dy 
 $$
+
+
+Some examples of kernels of transmutated elements are 
+
+$$
+\begin{align}
+[\mbf{A}^{\dagger}](x,y) = [\mbf{A}](y,x),\\
+[\psi^\dagger](x,y) = [\psi](y,x) = \psi(y) 
+\end{align}
+$$
+
+while $$[\psi](x,y)=\psi(x)$$. (We can interpet $\psi$ as a column vector, while $\psi^\dagger$ can be interpeted as a row vector) 
 
 Multiplying linear operator is equivalent to integrating their respective kernel functions. Let $\mbf{C}=\mbf{AB}$ then a relation for the kernel functions happens to be 
 
@@ -746,6 +758,16 @@ $$
 
 We can think about $\phi(z,x)$ as being a parameterized function with parameter $z$ of the argument $x\in\Omega$. That is, for each different fixed value of $z$ we have a different function $\phi(z,x)$. We can also think on $\phi$ as the kernel function of a linear operator $\bsym{\Phi}$, with $\bsym{\Phi}'$ being its inverse with kernel $\phi'$. 
 
+
+Let $\mbf{e}_x\in\mcal{H}$, for all $x\in\mbb{R}$, be some basis function with reciprocal $\mbf{e}^y$ satisfying $$[\mbf{e}_x^\dagger\mbf{e}^y](x,y) = \delta(x-y)$$, then we write the total functional derivative as the following integral 
+
+$$
+\boxed{
+\fder = \int_{\mbb{R}} dx\ \mbf{e}^x \mbf{e}_x\cdot \fder
+}
+$$
+
+
 I am not satisfied with the previous two definitions since they either involve integration over an infinite dimensional space or a sum over an infinite number of functions, and when we are adding or integrating infinites amounts of something a lot of questions about convergence start to arise, and to be honest I want to avoid needing to answer such questions, let us leave it for the mathmatical purists to figure it out! So, I will provide another definition for the total functional derivative $\fder$ as the following:
 
 $$
@@ -835,7 +857,7 @@ $$
 The resulting product of $\bar{f}(\fder_\phi)$ with $G(\phi)$ will be the outer product, in other words it will result in a function of $x$ and $y$, that is, $\bar{f}(\fder_\phi)G(\phi) = \bar{f}(\fder_\phi)[y] G(\phi)[x]$. Let us express this product as
 
 $$
-\bar{f}(\fder_\phi)G(\phi) = \int_{\Omega}(\fder f)(y,z)(\fder_\phi G)(z,x)\  dz \equiv (\fder f)(\fder_\phi G)
+\bar{f}(\fder_\phi)G(\phi) = \int_{\Omega}[\fder f](y,z)[\fder_\phi G](z,x)\  dz \equiv (\fder f)(\fder_\phi G)
 $$
 
 Which shows that the chain rule results in the product of two linear operators or in the product of linear operator with a function when $G$ does not explicitily depend on $x$.  
@@ -845,12 +867,12 @@ Which shows that the chain rule results in the product of two linear operators o
 A particular case of the chain rule is when I assume that $G$ is simple on $\phi=f(\psi)$ and thus $\fder_\phi(z)G(\phi,x)=G'(\phi)\delta(x-z)$ then 
 
 $$
-\fder F = \int_{\mbb{R}} (\fder f)(y,z)\fder_\phi(z) G(\phi,x)\ dz =  \int_{\mbb{R}} (\fder f)(y,z) G'(\phi)\delta(x-z)\ dz = (\fder f)(y,x) G'(\phi,x)
+\fder F = \int_{\mbb{R}} [\fder f](y,z)\fder_\phi(z) G(\phi,x)\ dz =  \int_{\mbb{R}} [\fder f](y,z) G'(\phi)\delta(x-z)\ dz = [\fder f](y,x) G'(\phi,x)
 $$
 
 with $G'=\frac{\partial G}{\partial \phi}$ the classic derivative of $G$ with respect to $\phi$. Or more sucintily 
 
-$$\boxed{\fder F=(\fder f) \frac{\partial G}{\partial \phi}}\label{eq:part:case:simple}$$
+$$\boxed{\fder F=\fder f \frac{\partial G}{\partial \phi}}\label{eq:part:case:simple}$$
 
 **Functional Divergence**
 
@@ -858,14 +880,14 @@ Note how we can also consider the functional divergence which we denote $\fder\c
 
 $$
 \boxed{
-\fder \cdot F = \trace(\fder F)= \int_{\mbb{R}} (\fder F)(x,x)\ dx 
+\fder \cdot F = \trace(\fder F)= \int_{\mbb{R}} [\fder F](x,x)\ dx 
 }$$
 
 ### Simple Functionals and its Derivatives
 
 We call a functional $$F:\mcal{F}_\Omega\mapsto\mcal{F}_\Omega$$ simple when it is a function of its arguments. For each value $x$ of the argument of the function $\psi$ it outputs a value which is a function of $\psi(x)$. Using some non-standard notation a simple functional $f$ satisfies:
 
-$$\phi(x) = f(\psi(x)) = f(\psi)[x]$$
+$$\phi(x) = f(\psi(x)) = [f(\psi)](x)$$
 
 This means that evaluating $\phi = f(\psi)$ at the point $y$ gives us $f(\psi(y))$. If we relate this with functions defined on finite dimensional euclidean space $\mcal{E}^n$, we say that a function $\sigma:\mbb{R}^n\mapsto\mbb{R}^n$ is simple if it acts on vectors element wise. For instance $\sigma\left(\sum_{k=1}^n v_ne_n\right)=\sigma_0(v_n)e_n$. With $e_n$ the standard orthogonal basis vectors of $\mcal{E}^n$. Or with the use of vector notation $\sigma([v_1 \ v_2 \ \dots \ v_n])=[\sigma_0(v_1) \ \sigma_0(v_2) \ \dots \ \sigma_0(v_n)]$. 
 
@@ -883,11 +905,13 @@ $$
 \phi\cdot \fder f &= \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi)-f(\psi)}{\varepsilon}\\
 &= \phi\lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi)-f(\psi)}{\phi\varepsilon} \\
 &= \phi \lim_{\delta\rightarrow 0} \frac{f(\psi+\delta)-f(\psi)}{\delta}\\
-&= \phi\frac{\partial f}{\partial \psi}
+&= \phi\frac{\partial f}{\partial \psi} 
 \end{split}
 $$
 
-since at the limit when $\varepsilon$ goes to zero the ratio will not depend on $\phi$ or any of its derivatives, in other words we can take a change of variables $\delta=\varepsilon\phi$. The functional derivative of a functional $F\in\mcal{G}$ is the kernel that transforms $\phi$ in the linear operational equation $\phi\cdot\fder F$. Hence the kernel function of this linear transformation is a diagonal kernel and given by $\eqref{eq:der:simp:func}$. 
+
+since at the limit when $\varepsilon$ goes to zero the ratio will not depend on $\phi$ or any of its derivatives, in other words we can take a change of variables $\delta=\varepsilon\phi$. The functional derivative of a functional $F\in\mcal{G}$ is the kernel that transforms $\phi$ in the linear operational equation $\phi\cdot\fder F$. Hence the kernel function of this linear transformation is a diagonal kernel and given by $\eqref{eq:der:simp:func}$. To best see this we 
+note that $$\left[\phi\frac{\partial f}{\partial \psi}\right](x)= \phi(x) \left[\frac{\partial f}{\partial \psi}\right](x) = \int_{\mbb{R}} \left[\frac{\partial f}{\partial \psi}\right](x)\delta(x-y)\phi(y) dy$$ 
 
 
 
@@ -899,319 +923,172 @@ since at the limit when $\varepsilon$ goes to zero the ratio will not depend on 
 In this section we want to use some of the "mathematical tools" that we built to determine equations of variational calculus. In particular, of most importance we have the Euler-Lagrange equation and the Euler-Poisson equation. What this equations tells us is that their solution is the trajectory of a particle that is a stationary trajectory of the action integral. In other words solutions to the Euler-Lagrange equation aims to find stationary points of 
 
 $$
-J = \int_{\mbb{R}} L\left(\psi,\frac{d\psi}{dx}\right)\ dx\label{eq:act:int:eul:lag}
+J = \int_{\mbb{R}} F\left(\psi,\frac{d\psi}{dx}\right)\ dx\label{eq:act:int:eul:lag}
 $$
 
-with $L$ some function of both of its arguments $L:\mbb{R}\times \mbb{R}\rightarrow \mbb{R}$ (Note however that $L$ is a simple functional, that is it is a function in the classic sense). The Euler-Lagrange equations tells us that in order to find the stationary paths $\psi(x)$ for the action integral we must determine $\psi$ that solves the Euler-Lagrange equation
+with $F$ some function of both of its arguments $F:\mbb{R}\times \mbb{R}\rightarrow \mbb{R}$ (Note however that $F$ is a simple functional, that is it is a function in the classic sense). The Euler-Lagrange equations tells us that in order to find the stationary paths $\psi(x)$ for the action integral we must determine $\psi$ that solves the Euler-Lagrange equation
 
 $$
-\frac{dL}{d\psi} - \frac{d}{dt}\frac{dL}{d\dot{\psi}} = 0
+\frac{dF}{d\psi} - \frac{d}{dt}\frac{dF}{d\dot{\psi}} = 0
 $$
 
 with $\dot{\psi}=\frac{d\psi}{dx}$. With the notation that we have introduced so far we can express the action integral as 
 
 $$
-J = \mbf{i}^\dagger L(\psi,\mbf{D}\psi)
+J = \mbf{i}^\dagger F(\psi,\mbf{D}\psi)
 $$
 
-with $\mbf{D}=\frac{d}{dx}$. To derive the Euler Poisson equation we recall that the kernel of $\mbb{D}$ is $-\delta'(x-y)$, then using the chain rule and considering $L$ to be simple we have  
+with $\mbf{D}=\frac{d}{dx}$. To derive the Euler Poisson equation we start by using the chain rule on $J=\mbf{i}^\dagger {F}$ to write
 
 $$
-\fder^\dagger J = (\fder L)^\dagger \mbf{i} = \left(\left(\frac{\partial L}{\partial \psi} + \mbf{D}^\dagger\frac{\partial L}{\partial \dot{\psi}}\right)\delta(x-y)\right)^\dagger \mbf{i} = \frac{\partial L}{\partial \psi} + \left(\frac{\partial L}{\partial \dot{\psi}}\mbf{D}^\dagger \delta(x-y)\right)^\dagger \mbf{i} 
+\fder J = \fder \mbf{i}^\dagger {F} = \bar{F}(\fder_\phi)\phi^\dagger\mbf{i} = \bar{F}(\fder_\phi \phi^\dagger\mbf{i}) = \bar{F}(\mbf{i}) = (\fder F)^\dagger \mbf{i}
 $$
 
+while the derivative of $F=F(\psi,\dot{\psi})=F(\psi,\mbf{D}\psi)$ is 
 
-$\mbf{D}^\dagger$ is a linear operator that transforms elements with argument $x$. The second term is equal to the integral 
-
-$$
-\int_{\mbb{R}} \frac{\partial L}{\partial \dot{\psi}} \delta'(x-y)\ dy = -\frac{d}{dx}\frac{\partial L}{\partial \dot{\psi}}
-$$
-
-where we used $\mbf{D}^\dagger\delta(x-y)=\delta'(x-y)$. In a similar manner we can derive the Euler-Poisson equations, the key difference is that we will have a function $L$ of multiple arguments where each argument is a $k$ derivative of $\psi$, consequently a linear transformation (in the sense of functions) of $\psi$.  
-
-
-## Fokker Plank equation
-
-We want to give some sense to the Fokker Plank equation in terms of an evolving probability distribution and how it can relate with the operational equation $\dot{\psi}=\mbf{B}(t)\psi$. While the Fokker Plan is also a time evolving process which can be expressed as an operational equation $\dot{\psi}=\mbf{D}(t)\psi$ it is less general then the operational equation since it ignores higher order moments of the probability distribution and I am not sure if it satisfies the requisites for being a stochastic operator. 
-
-For a one space dimensional process the focker Planck can be written in the form 
-
-$$
-\dot{\psi}(t,x) = \frac{d}{dx}(f(t,x)\psi(t,x)) + \frac{1}{2} \frac{d^2}{dx^2} (g(t,x)^2 \psi(t,x) )
-$$
-
-Now note that if we define the operator $\mbf{D}(t)=\frac{d}{dx} f(t,x)+\tfrac{1}{2} \frac{d^2}{dx^2} g(t,x)^2 $, then the above equation can be simply written as 
-
-$$
-\dot{\psi} = \mbf{D}(t)\psi  
-$$
-
-To really understand if this provides us with a proper generator operator that preserves $\mbf{i}$-normalization we have to check some properties of $\mbf{D}$ by looking at its kernel. These properties are 
-
-$$
-\mbf{i^\dagger D} = 0, \ \ D(x,y)\geqslant 0\ \forall x\neq y
-$$
-
-The kernel $D(x,y)$ of $\mbf{D}$ can be expressed as 
-
-$$
-D(x,y) = -f(t,x)\delta'(x-y) + \frac{df(t,x)}{dx}\delta(x-y) +  \frac{1}{2} \frac{d^2g(t,x)^2
-}{dx^2} - \frac{1}{2} \frac{d g(t,x)^2}{dx}\delta'(x-y) + \frac{1}{2}g(t,x)^2\delta''(x-y)
-$$
-
-Note that since the dirac-delta and its derivatives are zero except at the point where its arguments are zero, then we see this is a diagonal kernel, which means that the inequality $D(x,y)\geqslant 0\ \forall x\neq y$ is straightforwardly satisfied. The other condition might take a little more work. 
-
-$$
-\mbf{i^\dagger D} = \mbf{Di} = \frac{d}{dx}(f(t,x)1) + \frac{1}{2} \frac{d^2}{dx^2} (g(t,x)^2 1 ) = \frac{df(t,x)}{dx} + \frac{1}{2}\frac{d^2g(t,x)^2
-}{dx^2}
-$$
-
-which must be equal to zero. However using the fundamental theorem of calculus we also see that 
-
-$$
-\mbf{i^\dagger D}\psi = \int_{\mbb{R}} \frac{d}{dx}(f(t,x)\psi(t,x)) + \frac{1}{2} \frac{d^2}{dx^2} (g(t,x)^2 \psi(t,x) )\ dx = 0
-$$
-
-assuming boundary terms vanish i.e. $f(t,\pm\infty)\psi(t,\pm\infty)= \frac{d}{dx}g(t,\pm\infty)^2 \psi(t,\pm\infty) = 0$. This means that, even though $\mbf{i^\dagger D}$ does not vanish the total probability is preserved preserved since $\mbf{i^\dagger D}\psi=\mbf{i}^\dagger\dot{\psi} = \frac{d}{dt}\mbf{i}^\dagger\psi = 0$, which means that $\mbf{i^\dagger}\psi$ is constant on $t$. 
-
-
-One of the most used differential equations for the description of space-time evolution of density distributions is the fokker plank equation. We can derive a differential equation by truncating the taylor series of $\rho$ at some integer value. To see how this approximation gives rise to a differential equation we write 
-
-Note that both $A(x,y)$ and $\rho(x)$could be made time $t$ independent without any change being made to the above. Then an equation of the form 
-
-$$
-\boxed{
-\frac{\partial \rho}{\partial t} = A\rho
-}
-$$
-
-will become of the form 
-
-$$
-\boxed{
-\frac{\partial \rho}{\partial t} = \sum_{k=0}^N a_k(x,t)\frac{\partial^k \rho}{\partial x^k}
-}
-$$
-
-which turns into the Fokker plank equation when we set $N=2$ and $a_0(x,t)=0$.
-
-
-
-The integral is equivalent to taking spatial $x$ derivatives of the input function $\rho$ and then multiplying each derivative by some function of $x$ and $t$. 
-
-
-We now are interested in the other problem: Given some coeficients $a_k(x)$ of the differential equation how do we find $A(x,y)$? The answer to this question can be answered by proposing the following transition function 
-
-$$
-\boxed{
-A(x,y) = \sum_k \delta^{(k)}(x-y) a_k(x)
-}
 $$
-
-with $\delta^{(k)}(x-y)=\frac{\partial^{k}\delta}{\partial x^k}$ the $k$-th derivative of the delta-de-dirac distribution function. To see if this indeed is equivalent to the differential equation we first need to recall that 
-where we assume that $\psi$ and all its derivatives vanish at $-\infty$ and $+\infty$. Then the application of $A$ to $\rho$ gives 
-
-$$
-A\rho = \int_{\mathbb{R}}\sum_k \delta^{(k)}(x-y) c_k(x)\rho(y)\ dy = \sum_k a_k(x) \int_{\mathbb{R}}\delta^{(k)}(x-y)\rho(y)\ dy = \sum_k (-1)^k a_k(x)\frac{\partial^{k}\rho}{\partial x^k}
-$$
-
-We can consider an aproximate solution by considering a gaussian distribution function instead of the delta-de-dirac, making it computationaly feasible in terms of integral operations. To show how the relationship between the derivatives of the delta-de-dirac function as an operator yield the signed derivative, first 
-
-## Functional directional and total derivatives 
-
-In this section we understand how we can evaluate derivatives with respect to functions of functions and what does that mean in terms of operations. We start by clearly defining the directional functional derivative in the following manner 
-
-$$
-\delta_\phi f = \phi\cdot\delta f = \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi) - f(\psi)}{\varepsilon} = \frac{\partial}{\partial t} f(\psi+t\phi) = \phi f'(\psi)
-$$
-
-with $$ f'(\psi)=\frac{\partial f}{\partial \psi} = \lim_{\rightarrow 0} \frac{f(a+b)-f(a)}{b} \\|_{a=\psi} $$.
-
-
-An orthonormal set $e(x,y)$ is defined as the following integral equation
-
-$$
-\boxed{
-\int_{\mathbb{R}} e(z,y)e(z,x)\ dz = \delta(x-y)
-}
-$$
-
-for each $x\in\mathbb{R}$ the function $e(x,y)$ is an orthogonal vector (Each column of $e(x,y)$ it's orthogonal to the other columns). 
-
-The total derivative can be thought as a linear operator, in particular applying it to some function $\phi$ yields 
-
-$$
-\phi\cdot\delta f = (\delta f)\cdot \phi = \int_{\mathbb{R}} (\delta f)(y,x) \phi(x)\ dx
-
+\fder F = (\mbf{I}\fder_\psi  + \mbf{D}^\dagger \fder_\phi ) F(\psi,\phi) 
 $$
 
-The differential operator $\delta$ can be regarded as a vector while the product $\delta f$ can be understood as the outer product $\delta(y)f(x)$, this symbol must not be confused with the dirac-de-delta function. If we consider $f=f(\psi)$ to be a simple function of $\psi$ then the functional gradient reduces to 
+where yet again we used the chain rule. The kernel of this derivative evaluates trivially when $F$ is simple then 
 
 $$
-\delta f = \frac{\partial f}{\partial \psi} \delta(x-y)
+\begin{align}
+[\fder_\psi F](x,y) &= \frac{dF }{d\psi}\delta(x-y)\\
+[\fder_\phi F](x,y) &= \frac{dF }{d\phi}\delta(x-y)\\
+\end{align}
 $$
 
-Note that when we say a simple function we mean a function that acts element wise on the components of $\psi$, for example the following function is not simple:
+thus $\fder_\psi F$ and $\fder_\phi F$ are diagonal operators. Let $\mbf{S}$ be a diagonal operator with kernel of the form 
 
 $$
-f(\psi) = \int_{\mathbb{R}} \int_{\mathbb{R}} \psi(x)\psi(y) A(x,y)\ dx\ dy = \psi\cdot A\cdot\psi
+[\mbf{S}](x,y) = s(x)\delta(x,y)
 $$
 
-where the values of $\psi$ of diferent components get multiplied together. The directional derivative of this quadratic equation yields 
+We can easily show that $\mbf{Si}=s$ with  
 
 $$
-\phi\cdot\delta f(\psi) = \psi\cdot A\cdot \phi + \phi\cdot A \cdot \psi = \phi\cdot(A+A^\top)\cdot\psi
+[\mbf{Si}](x) = \int_{\mbb{R}} s(y)\delta(x,y) dy = s(x)
 $$
 
-now taking the derivative with respect to $\phi$ yields the vector 
+then it is quite trivial to write $[\fder_\psi F]\mbf{i} = \frac{dF}{d\psi}$ and $[\fder_\phi F]\mbf{i} = \frac{dF}{d\phi}$, thus we arrive at the equation 
 
 $$
-\delta f = \delta_\phi \phi\cdot\delta f = (A+A^\top)\cdot \psi
+\fder J = (\fder_\psi F  + \mbf{D}^\dagger \fder_\phi F ) \mbf{i} =  \frac{dF}{d\psi} + \mbf{D}^\dagger \frac{dF}{d\phi}
 $$
 
-while the second derivarive yields the operator 
+but now recall that $\phi=\dot{\psi}=\mbf{D}\psi$ and that $\mbf{D}^\dagger=-\mbf{D}$ to rewrite the above as 
 
 $$
-\delta^2 f = A+A^\top = A(x,y)+A(y,x)
-$$
-
-Thus the hessian operator of a scalar quadratic function results on a linear operator. If $A$ is symmetric then we can recover $f$ from the hessian just by computing $f=\frac{1}{2}\psi\cdot (\delta^2 f)\cdot \psi$.
-
-
-Let us now consider a linear function 
+\fder J = \frac{dF}{d\psi} - \frac{d}{dx} \frac{dF}{d\dot{\psi}}
 
 $$
-f(\psi) = A\cdot \psi \equiv \int_{\mathbb{R}} A(y,x) \psi(y)\ dy
-$$
 
-Using the definition of the directional derivative we easily find that 
+The Euler-Poisson Equation tells us that in order to find stationary points of the cost functional we have to find $\psi$ such that 
 
 $$
-\phi\cdot\delta f = A\cdot \phi
+\fder J = 0
 $$
 
-while the functional gradient is just the linear operator $A$, that is 
+for which we reach the desired result!
 
-$$
-\delta f = \delta_\phi\phi\cdot\delta f = A
-$$
+<!---->
+<!---->
+<!-- $$ -->
+<!-- \fder^\dagger J = (\fder L)^\dagger \mbf{i} = \left(\left(\frac{\partial L}{\partial \psi} + \mbf{D}^\dagger\frac{\partial L}{\partial \dot{\psi}}\right)\delta(x-y)\right)^\dagger \mbf{i} = \frac{\partial L}{\partial \psi} + \left(\frac{\partial L}{\partial \dot{\psi}}\mbf{D}^\dagger \delta(x-y)\right)^\dagger \mbf{i}  -->
+<!-- $$ -->
+<!---->
+<!---->
+<!-- $\mbf{D}^\dagger$ is a linear operator that transforms elements with argument $x$. The second term is equal to the integral  -->
+<!---->
+<!-- $$ -->
+<!-- \int_{\mbb{R}} \frac{\partial L}{\partial \dot{\psi}} \delta'(x-y)\ dy = -\frac{d}{dx}\frac{\partial L}{\partial \dot{\psi}} -->
+<!-- $$ -->
+<!---->
+<!-- where we used $\mbf{D}^\dagger\delta(x-y)=\delta'(x-y)$. In a similar manner we can derive the Euler-Poisson equations, the key difference is that we will have a function $L$ of multiple arguments where each argument is a $k$ derivative of $\psi$, consequently a linear transformation (in the sense of functions) of $\psi$.   -->
 
-Thus for the cases of linear transformations and quadratic equations we recover exactly the operators that we were expecting. And of course we deduce that for $f$ a linear 'transformation' $f(\psi)=(\delta f)\cdot \psi$.
 
+## Functional Integral 
 
-To see that this result aplied as a linear operator to some function $\phi$ does indeed recover the directional derivative we compute 
+Integrals with respect to functions are quite tricky, not only functions are represented as an infinite dimensional hilbert space, but also 'indices' of components are infinitesimally close to one another. To try and provide a proper definiton through an analog with the traditional integral, consider some arbitrary function $\phi$ expressed through its components $\phi_i$, thus
 
 $$
-(\delta f)\cdot \phi = \int_{\mathbb{R}} \frac{\partial f}{\partial \psi} \delta(x-y) \phi(x)\ dx = \frac{\partial f}{\partial \psi}\phi(x) = \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi) - f(\psi)}{\varepsilon\phi}\phi(x) = \phi\cdot\delta f
+\phi = \sum_{i=1}^n\phi_i\mbf{e}_i
 $$
-
-With $\frac{\partial f}{\partial \psi} = \lim_{\varepsilon\rightarrow 0} \frac{f(\psi+\varepsilon\phi) - f(\psi)}{\varepsilon\phi}$
-
-
-### A new attempt at defining this crapity crap
 
-Let us think about the total derivative $\fder$ in a different way. Recall that the gradient vector $\nabla$ can be defined as the sum of directional derivatives, thus
+with $$\mbf{e}_i$$ an orthonormal basis, thus satisfying $$\mbf{e}_i^\dagger\mbf{e}_j=\delta_{ij}$$, thus the most sensible choice for the integral would be 
 
 $$
-\nabla = \gamma^\mu\partial_\mu = e^\mu e_\mu\cdot\nabla
+\int F(\phi)\ d\phi = \int\cdots\int F\left(\sum_{i=1}^n\phi_i\mbf{e}_i\right) d\phi_1\cdots d\phi_n
 $$
 
-where $\gamma^\mu$ and $e_\mu$ are arbitrary linearly independent vectors with $e_\mu\cdot e^\nu = \delta_{\mu\nu}$. In a similar fashion we may express the total functional derivative $\fder$.
+since, in fact an Hilbert space is infinite dimensional and must be spanned by an infinite amount of basis functions $\mbf{e}_i$ we require instead that 
 
 $$
-\fder = \sum_\mu \phi^{\mu}\phi_\mu\cdot \fder 
+\int F(\phi)\ d\phi = \lim_{n\rightarrow\infty}\int\cdots\int F\left(\sum_{i=1}^n\phi_i\mbf{e}_i\right) d\phi_1\cdots d\phi_n
 $$
-
-with $\phi_\mu\cdot \phi^\nu = \int_{\mbb{R}} \phi_\mu(x) \phi^\nu(x)\ dx=\delta_{\mu\nu}$. Note however that the space of functions is infinite dimensional, meaning that the sum will go up to infinity. We can provide another representation by considering an integral over all possible functions 
-
-Another property is that if $f(\psi)$ is of rank-$k$ the  its derivative will be of rank-$(k+1)$, in other words in terms of number of arguments of functions, if $f$ is a function of $k$ arguments, i.e. $f=f(\psi,x_1,x_2,\dots,x_k)$ then $\fder f = (\fder f)(\psi,x_1,\dots,x_{k+1})$  
-
-
-
-
 
-with $\phi=\mbf{A}\psi$. The derivative of a simple function $f$ (a function that only operates on functions element wise) is a diagonal operator. An example of such a function is $f(\psi)=(\psi(x))^\alpha$ for some $\alpha\in\mbb{R}$. 
+Let us consider $\phi$, expressed instead, as the integral 
 
 $$
-\fder f = f'(\psi(x))\delta(x-y)
+\phi = \int_{\mbb{R}}\phi_x\mbf{e}_x dx
 $$
 
-with $f:\mbb{R}\mapsto \mbb{R}$ and its $f'$ is its derivative. $f'(\alpha) = \lim_{\varepsilon \rightarrow 0} \frac{f(\alpha+\varepsilon)-f(\alpha)}{\varepsilon}$ with $\alpha\in\mbb{R}$.  
+However expressing an integral with respect to the components $\phi_x$ is obviously not straightforward, an heuristic way we can try to express such a definiton is to note that 
 
-However if $\phi\in L(\mbb{R}^n,\mbb{R}^{m})$ then 
-
-$$\boxed{
-\fder f = \nabla_\psi f(\psi(x))\delta(x-y)
-}$$
-
-where $\nabla$ is the conventional $m$-dimensional gradient operator. 
-
-
-**Notes on the chain rule**
-
-It is not that much clear what the chain rule expressed in $\eqref{eq:chain:rule}$ can be interpeted both computationaly and philosophically. First we need to understand the derivative $\fder$ operator as a vector aka a function. In some sense the product $\fder F$ is a product of $\fder(y)$ with $F(\psi,x)$, this implies that what the chain rule says is how the $\fder_\phi$ gets transformed by the jacobian transformation $\bar{f} = (\fder f)^\top$. Let us expand the integral operator of $\bar{f}(\fder_\phi)$
-
 $$
-\bar{f}(\fder_\phi) = \int_{\mbb{R}} (\fder f)(x,y)\fder_\phi(y)\ dy 
+ d^n \phi = \exp\left(\sum_{i=0}^n \log(d\phi^i)  \right) \longrightarrow  \exp\left(\int_{\mbb{R}} \log(d\phi_x) \ dx\right)
 $$
 
+this suggests that the infinitesimal volume measure $d^n \phi$ is itself an integral over all components of $\phi$. This is why it makes sense to consider some measure space where we can clearly define an integral 
 
 
-
-In variational problems of mechanichs and physics we usually enconter action integrals, which are just the integral of the Lagrangian function. Let $F$ be some Lagrangian function, then define 
-
 $$
-J(F)= \int_{\mbb{R}} F(\psi,x) a(x)\ dx \equiv \mbf{a}\cdot F
+d\mu(\phi) = \exp\left(\int_{\mbb{R}} \log(d\phi_x) \ dx\right)
 $$
 
-we want to determine the functional derivative of $J$ with respect to $\psi$. In order to do that we will make use of the chain rule, then 
+then any functional integral can be expressed with respect to the measure $\mu$ as 
 
 $$
-\fder J(F) = \bar{F}(\fder_\phi) J(\phi) = \bar{F}(\fder_\phi)\phi\cdot \mbf{a} = \fder{F}(\mbf{a}) = (\fder F)^\top \mbf{a} = \int_{\mbb{R}} (\fder F)(y,x)a(x)\ dx\label{eq:chain:rule:part:case:int}
+\int_{\mcal{P}} F(\phi) d\mu(\phi)
 $$
 
+with $\mcal{P}$ a subspace of some function space $\mcal{F}$ and where it is to be understood that the integral is taken over the entire function space $\mcal{P}$. 
 
-#### Gradients as Linear Integral Operators 
 
-The gradient vector $\nabla$ can be expressed as an integral, namely reacalling that $\nabla=e^\mu e_\mu\cdot\nabla$ and taking $e_\mu\cdot\nabla = -\int_{\mbb{R}^n}dy\ e_\mu\cdot\nabla \delta(x-y)$ 
+The differential of a functional can be derived from the functional chain rule and reads 
 
 $$
-\nabla = \mbf{D} = -\int_{\mbb{R}^n}dy\ e^\mu e_\mu\cdot\nabla \delta(x-y) = -\int_{\mbb{R}^n}dy\ \nabla\delta(x-y)
+\mbf{d}F(\psi) = \und{F}\mbf{d}\psi
 $$
 
-Let $\psi:\mbb{R}^n\rightarrow\mbb{R}$ and define $F=F(\nabla \psi) = F(\mbf{D}\psi)$ then the derivative of $F$ may be computed using the chain rule, thus
+where $\mbf{d}\psi$ is an infinitesimal change of the $\psi$ function. If we care about some particular direction $\mbf{e}_x$ we write 
 
 $$
-\fder F = \mbf{D}^\top(\nabla_y)F(y) = -\nabla_x\cdot\nabla F(\psi(x))
+\mbf{d}^x F(\psi) = \und{F}\mbf{d}\psi^x = \und{F}\mbf{e}_x{d}\psi_x 
 $$
-
-with $y=\nabla \psi$. With $\nabla$ acting on $F$.
 
-#### Deriving Euler-Poisson
 
-To derive the Euler-Poisson equations from the machinery that we have set down so far we will make use of the chain rule. In particular we will consider $J(F)=F\cdot\mbf{i}=\int_{\mbb{R}}F\ dx$ and $F=G(\mbf{D}\psi)$ with $\mbf{D}$ a differential operator and $G$ simple. Equation $\eqref{eq:part:case:simple}$ together with $\eqref{eq:chain:rule:part:case:int}$ gives us the equation 
+If in particular $F$ is the identity transformation we get the result 
 
 $$
-\fder J = \int_{\mbb{R}}(\fder F)(y,x)\ dx = \int_{\mbb{R}}D(y,x)G'(\phi,x) dx
+\mbf{d}^x\psi = \mbf{e}_x d\psi_x
 $$
 
-But if we set $D(y,x)=(-1)^k\delta^{(k)}(x-y)$ the above integral reduces to the derivative with respect to $y$, then 
+this sugests that we may write $d\psi_x$ as 
 
 $$
-\fder J  = \int_{\mbb{R}}(-1)^k\delta^{(k)}(x-y)G'(\phi,x) dx = \frac{d^k}{dy^k} G'(\phi,y) = \frac{d^k}{dy^k} \frac{d}{d\phi}G(\phi,y)
+d\psi_x = \mbf{e}_x^\dagger \mbf{d}^x\psi  = \mbf{e}_x^\dagger \mbf{d}\psi^x = \pm |\mbf{d}\psi^x|
 $$
-
-with $\phi=A\psi$.
-
-
-
 
 
+TODO: 
 
+- **Functional Integral as the inverse operation of the funcitonal derivative?**
 
 
-# **IS THE FUNCTIONAL DERIVATIVE PROPERLY DEFINED???**
 
+## Multivariate Functional Calculus
 
 ### Important Identities
 
@@ -1262,13 +1139,15 @@ $$
 where the last expression is to be understood as the linear operator $(\fder f)^\ddagger$ applied to the function $G'(\phi)$.
 
 
-**A trivial proof**
+**Need this for Later**
 
-Let $\theta:\mbb{R}^n\mapsto\mbb{R}^n$ and $A\in\mbb{R}^{n\times n}$ some arbitrary matrix function, then 
+Let $\theta:\mbb{R}^n\mapsto\mbb{R}^n$ and $\msf{A}\in\mbb{R}^{n\times n}$ some arbitrary matrix function, then 
 
 $$
 \und{\theta}\cdot \mathsf{A} = \matrixtrace(\underline{\theta}\mathsf{A}) = \matrixtrace(\theta\nabla^\top\mathsf{A}) = (\mathsf{A}^\top\nabla)^\top \theta = (\mathsf{A}^\top\nabla) \cdot\theta\label{eq:matrix:differential:trace} 
 $$
+
+where it is to be understood we are taking the gradient with respect to the argument of $\theta$
 
 **Gradients** 
 
@@ -1522,150 +1401,6 @@ d^m y = |\infD^m y| = |\infD^m f(x)| = |\und{f}(\infD^m x)| = |\und{f}(I_m)|d^mx
 $$
 
 where we set $\|\und{f}(I_m)\|\equiv\det(\und{f})$. 
-
-
-### Taylor Series expansion 
-
-We can consider taylor expanding any arbitrary function, recall the classic taylor series expansion, and apply it to functions of functions to yield the operational equations
-
-$$
-f(\psi + \phi) = \sum_{k=0}^\infty \frac{(\phi\cdot\delta)^kf(\psi)
-}{k!} $$
-
-For the case where we have at most quadratic terms this reduces to 
-
-$$
-f(\psi + \phi) = f(\psi) + \phi\cdot(\delta f(\psi))+(1/2)\phi\cdot (\delta^2 f(\psi))\cdot \phi
-$$
-
-with $\delta f$ a vector and $\delta^2 f$ a matrix when $f$ is a scalar function.
-
-
-## Euler Poisson Equations
-
-We can derive the Euler-Poisson equations by transforming derivatives into linear integral operators and then using the chain rule while evaluating the derivative. First we consider the following property for the composition of functions, let $F(\psi)=G(f(\psi))$ then 
-
-$$
-\delta F = \delta_\psi G(f(\psi))  = \bar{f}\delta_\phi G(\phi)|_{\phi=f(\psi)}
-$$
-
-where $\bar{f}$ is a linear integral operator and is the Jacobian transpose of $f$, namely $\bar{f}\equiv (\delta f)^\top$, which on itself is a linear integral operator. A generalization of this chain rule can be attained when we consider $G$ with multiple arguments, specifically $F(\psi)=G(f_1(\psi),\dots,f_n(\psi))$ then 
-
-$$
-\delta F = \sum_k \bar{f}_k \delta_{\phi_k} G(\phi_1,\dots,\phi_n)|_{\phi_k=f_k(\psi)}
-$$
-
-While for the particular case when each $f_k$ is a linear operator, by which $f_k(\psi)=A_k\psi$ we have the following 
-
-$$
-\delta F = \sum_k A_k^\top \delta_{\phi_k} G(\phi_1,\dots,\phi_n)|_{\phi_k=A_k\psi}
-$$
-
-Letting the $A_k$ be derivative operators $A_k=\frac{\partial^k}{\partial x^k}=(-1)^k\int_\mathbb{R}dy\ \delta^{(k)}(x-y)$ expressed as linear integral operators. Next use the notation $\psi^{(k)}=A_k\psi=\frac{\partial^k\psi}{\partial x^{k}}$ and recall that for a simple function $f=f(\psi)$ $\delta f = \frac{\partial f}{\partial \psi} \delta(x-y)$, since we assume that $G$ is simple(acts 'element' wise) on each of its arguments then $\delta_{\phi_k}G=\frac{\partial G}{\partial\phi_k}\delta(x-y)$, then the functional derivative becomes 
-
-$$
-\delta F = \sum_k A_k  \frac{\partial G}{\partial\phi_k}\delta(x-y) = \sum_k (-1)^k \frac{\partial^{k}}{\partial y^k}\frac{\partial G}{\partial\phi_k}\delta(x-y)
-$$
-
-Integrating the above expression over $y$ yields 
-
-$$
-\delta J({F}) = \int_{\mathbb{R}} \delta F(\psi(x))\ dy = \int_{\mathbb{R}}\sum_k (-1)^k \frac{\partial^{k}}{\partial y^k}\frac{\partial G}{\partial\phi_k}\delta(x-y)\ dy =  \sum_{k} (-1)^k \frac{\partial^k}{\partial x^k} \frac{\partial F}{\partial \psi^{(k)}}
-$$
-
-as required from the Euler-Poisson equations.
-
-
-
-We are expected to arrive at the expression 
-
-$$
-\delta J({F}) = \sum_{k} (-1)^k \frac{\partial^k}{\partial x^k} \frac{\partial F}{\partial \psi^{(k)}}
-$$
-
-where $J(F) = \int_{\mathbb{R}} F(\psi(x))\ dx = i\cdot F(\psi)$, with $i$ a "vector of all ones", i.e $i \cdot = \int_\mathbb{R}\ dx$. First note that we can rewrite the derivative of $J$ as 
-
-$$
-\delta J = \delta (i\cdot F) = (\delta F)^\top\cdot i = \int_{\mathbb{R}} \left(\delta F(\psi(x))\right)^\top \ dx
-$$
-
-
-The transpose ${}^{\top}$ changes the arguments of functions for example $A\cdot = \int_{\mathbb{R}}\ dx A(x,y)$ and $A^\top\cdot = \int_{\mathbb{R}}\ dx A(y,x)$, thus $A\rightarrow A(x,y)$ and $A^\top\rightarrow A(y,x)$.
-
-
-
-## The operation equation as an eigenvalue equation 
-
-We are interested in solving the following linear operational equation 
-
-$$
-\dot{\psi} = A\psi
-$$
-
-with initial conditions $\psi(t_0,x)=\psi_0(x)$. In terms of operators we have seen that the straightforward solution is simply 
-
-$$
-\psi(t,x) = e^{At}\psi_0(x)
-$$
-
-But as we have also seen evaluating $e^{At}$ involves the composition of multiple integrals. Another interesting approach is to determine the eigendecomposition of the operator $A$. Consider that we find operators $U,\Lambda$ such that 
-
-$$
-A = U\Lambda U^{-1}
-$$
-
-with $UU^{-1}=I=\int_{\mbb{R}}dy\ \delta(x-y)$ with $I$ the identity operator, and $\Lambda=\int_{\mbb{R}}dy\ \lambda(x)\delta(x-y)$ a diagonal operator, that is, it acts element wise. Let $U(x,z)$ label an eigenvector, that is, for each different $z$ the function $U(x,z)$ is the $z$-th eigenvector of $A$. If we write it instead as $u_z(x)=U(z,x)$, then we may write the eigenvalue equation in the form
-
-$$
-\boxed{
-Au_z = \lambda_z u_z
-}
-$$
-
-So instead of indexing the eigenpair with integers $(\lambda_i,u_i)$, $i\in\mbb{N}$ we index with a real number $z\in\mbb{R}$, thus the eigenpair $(\lambda_z,u_z)$ not only is a function of $x$ but also of its indexing $z$. Assuming that we found the eigendecomposition of the operator $A$ then the exponential is trivial to evaluate, namely
-
-$$
-e^{At} = \sum_{k=0}^\infty {(U\Lambda U^{-1}t)^k}{k!} = I + tU\Lambda U^{-1}+(t^2/2)U\Lambda U^{-1}U\Lambda U^{-1} + \cdots = I  + tU\Lambda U^{-1}+(t^2/2)U\Lambda^2U^{-1} + \cdots = Ue^{\Lambda t}U^{-1}
-$$
-
-The operator $e^{At}$ shares the same eigenvectors of $A$ but has eigenvalues $e^{\Lambda t}$, the eigenpair of $e^{At}$ is $(e^{\lambda_z t},u_z)$. This can also be stated as the eigenvalue equation 
-
-$$
-e^{At}u_z = e^{\lambda_z t}u_z
-$$
-
-Then to determine the general solution given the initial conditions, we must express $\psi_0(x)$ as a 'linear combination' of the eigenvectors, for that we assume the existence of $a_0=a_0(x)$ such that 
-
-$$
-\psi_0 = Ua_0 = \int_{\mbb{R}}U(x,y)a_0(y)\ dy
-$$
-
-then 
-
-$$
-\psi = e^{At}\psi_0 = Ue^{\Lambda t}U^{-1}Ua_0 = Ue^{\Lambda t} a_0 = U(e^{\lambda(x)t}a_0(x))
-$$
-
-The operator $U$ is just a change of basis operator! Defining $\phi=U^{-1}\psi$ we find 
-
-$$
-\phi(x,t) = e^{\lambda(x)t}a_0(x)
-$$
-
-In the different basis we find that the solution $\phi=\phi(x,t)$ is very simple. 
-
-
-## Estimating the transition function from samples
-
-
-
-Let us consider samples $x(k)$ from the probability distribution at time $k$, and that the probability transition function does not depend on time $k$. An approach that would yield almost good results would be to define the count function
-
-$$
-C(x,y) = \sum_{k=0}^{N-1}g(x(k)-x,x(k+1)-y)
-$$
-
-with $g$ an appropriate function.
 
 
 
@@ -2633,7 +2368,7 @@ $$
 in order to determine the operator $\mbf{A}$ that best transforms $\psi_k$ to $\psi_{k+1}$ we have to formulate the following functional optimization problem 
 
 $$
-\underset{\mbf{A}\in\mcal{G}(\mbb{R}^{3\times 3})}{\text{minimize}} \sum_k \|\mbf{A}\psi_k-\psi_k\|^2 
+\underset{\mbf{A}\in\mcal{G}(\mbb{R}^{3\times 3})}{\text{minimize}} \sum_k \|\mbf{A}\psi_k-\psi_{k+1}\|^2 
 $$
 
 The norm squared can be written in the following form 
@@ -2648,13 +2383,13 @@ $$
 $$
 
 $$
-\|\mbf{A}\psi_k-\psi_k\|^2  = \int_{\mbb{R}^3} \left|[\mbf{A}\psi_k](y) - \psi_k(y)\right|^2\ d^m {y} 
+\|\mbf{A}\psi_k-\psi_{k+1}\|^2  = \int_{\mbb{R}^3} \left|[\mbf{A}\psi_k](y) - \psi_{k+1}(y)\right|^2\ d^m {y} 
 $$
 
 
 
 $$
-\left|[\mbf{A}\psi_k](y) - \psi_k(y)\right|^2 = |\psi_k(y)|^2 + |[\mbf{A}\psi_k](y)|^2 - \psi_k^\top(y)[\mbf{A}\psi_k](y)
+\left|[\mbf{A}\psi_k](y) - \psi_{k+1}(y)\right|^2 = |\psi_{k+1}(y)|^2 + |[\mbf{A}\psi_k](y)|^2 - \psi_k^\top(y)[\mbf{A}\psi_k](y)
 $$
 
 
@@ -2662,7 +2397,72 @@ $$
 \psi_k^\top(y)[\mbf{A}\psi_k](y) = \psi_k^\top(y)\int_{\mbb{R}^n} A(y,z)\psi_k(z) d^mz = \int_{\mbb{R}^n}\matrixtrace(A(y,z)\psi_k(z)\psi_k(y)^\top) d^mz = \matrixtrace\left(  \int_{\mbb{R}^n}A(y,z)\psi_k(z)\psi_k(y)^\top d^mz\right)
 $$
 
-Where we used the linearity of the matrix trace function to take $\matrixtrace$ out of the integral. Now set $B(z,y)=\psi_k(z)\psi_k(y)^\top$ and then notice that the integral evaluates to 
+Where we used the linearity of the matrix trace function to take $\matrixtrace$ out of the integral. Now set $\msf{B}(z,y)=\psi_k(z)\psi_k(y)^\top$, then write 
+
+$$
+\int_{\mbb{R}^3} \psi_{k+1}^\top(y)[\mbf{A}\psi_k](y)d^3y  = \matrixtrace(\mbf{A}\mbf{B}) 
+$$
+
+with $\mbf{B}=\sum_{k=1}^N\psi_k\psi_k^{\ddagger}$. Use 
+
+
+$$
+\|\psi\|^2 = \psi^\ddagger\psi = \trace(\psi\psi^\ddagger)
+$$
+
+to compute
+
+$$
+\|\mbf{A}\psi_k-\psi_{k+1}\|^2 = \sum_k \trace(\mbf{A}^\ddagger\mbf{A}\psi_{k}\psi^\ddagger_{k}) -2\!\ \trace(\mbf{A}\psi_k\psi_{k+1}^\ddagger) + \|\psi_{k+1}\|^2
+$$
+
+taking the derivative with respect to $\mbf{A}$ and equaling to zero yields 
+
+$$
+\mbf{A} = \left(\sum_k \psi_k\psi_{k+1}^\ddagger\right)\left(\sum_{k}\psi_k \psi_k^\ddagger\right)^{-1}
+$$
+
+
+
+
+
+
+### Log-Likelihood Estimation 
+
+In this section we want to consider the problem of maximizing the sampling probability. Let $\psi(t)\in\mcal{F}$ be a time varying probability distribution function. The probability of a sample $x(t)$ to be drawn from $\psi(t)$ is 
+
+
+$$
+p(s(t)) = \psi(t,s(t))
+$$
+
+
+While the probability of all samples $x(t)$ to be drawn from $\psi(t)$ is given by the integral 
+
+$$
+\log p (s) = \int_{\mbb{R}} \log(\psi(t,s(t))) dt  =   \int_{\mbb{R}} \log(\psi^\dagger(t)\phi(t))
+$$
+
+with $$[\phi(t)](x)= \delta(x-s(t))$$. Let us consider that $\psi(t)$ evolves trough some operator equation of the form 
+
+$$
+\dot{\psi}(t) = \mbf{A}(t)\psi(t)
+$$
+
+where $\mbf{A}(t)$ is a known operator function of time, which also satisfies $\mbf{i}^\dagger\mbf{A}(t)=0$, for all $t\in\mbb{R}$. In order to find the best distribution $\psi$ for which the samples have the greatest probability we consider the optimization problem 
+
+$$
+\begin{split}
+\underset{\psi(t)}{\text{maximize}}&\ \int_{\mbb{R}} \log(\psi^\dagger(t)\phi(t))\\
+\text{subject to}&\ \dot{\psi}(t) = \mbf{A}(t)\psi(t) , \ \forall t\in\mbb{R}
+\end{split}
+$$
+
+
+
+
+and then notice that the integral evaluates to 
+$$
 \omega\phi^\dagger\psi = \phi\ \ \Leftrightarrow \ \  \phi^\dagger\psi = \frac{\omega^\dagger\phi}{\omega^\dagger\omega} \ \ \Leftrightarrow\ \ \psi = \frac{\phi\ (\omega^\dagger\phi)}{(\phi^\dagger\phi)(\omega^\dagger\omega)}
 $$
 
@@ -2719,14 +2519,99 @@ $$
 with $\Phi$ an appropriate transition function that solely depends on $\mbf{A}(t)$, and with $\theta(t,x) = -\frac{\delta(x-s(t))}{\psi(t,s(t))}$.
 
 
-## Need to motivate better!!!
+## Log-probability Measure 
 
-
-consider that we measured a sample function $\phi$, the probability that this sample function comes from  the probability density $\psi$ is given by
+Consider two probability density functions $\psi,\phi\in\mcal{F}(\mbb{R}^n)$ then consider some probability function $P:\mbb{R}^n\mapsto \mbb{R}$ that expresses the probability with respect to the distance between $x$ and $x'$. The probability that $\psi$ at the point $x$ matches with $\phi$ at the point $x'$ is given by $\psi(x)P(x-x')\phi(x)$ thus the matching Log-probability is given by the following integral
 
 $$
- \log P(\psi,\phi)\equiv \int_{\mbb{R}^n} \log(\psi(x)\phi(x))\ d^nx
+\log P(\psi,\phi) = \int_{\mbb{R}^n}\int_{\mbb{R}^n} \log(\psi(x)P(x-x')\phi(x))d^nxd^nx'
 $$
 
-This is a generalization for when we have multiple continuous samples at each point in time??? 
+The matching Log-probability tells us how likely is $\psi$ to match with $\phi$. Motivated by this measure we can also provide a distance $D$ between functions given some arbitrary measure $Q(x-x')$, consider the following 
+
+$$
+D(\psi,\phi) = \int_{\mbb{R}^n}\int_{\mbb{R}^n} \psi(x)Q(x,x')\phi(x)\ d^nx\ d^nx' = \psi^\dagger\mbf{Q}\phi
+$$
+
+One interesting choice for $\mbf{Q}$ is 
+
+$$
+[\mbf{Q}](x,x') = \rho(\|x-x'\|_k)
+$$
+
+where the subscript $k$ symbolizes the $k$-norm, and $\rho:\mbb{R}\mapsto \mbb{R}$ is some arbitrary function. If we want to give more enphasis to points $x$ and $x'$ that are closest together we could choose $\rho$ to be the negative exponential.  
+
+## Sampling and Reconstruction of Signals
+
+In this section we will consider the problem of reconstruction of signals derived from samples of continuous distributions. A relevant application of this type of problem is when dealing with points sampled from a lidar sensor. While in traditional signal processing methodoligies we consider a reconstruction strategy based on the nyquist theorem, in this type of problem we are not dealing with signals with infinite amount of samples.   
+
+In order to provide an algorithm that provides us with interesting reconstruction abilities we will consider two subproblems. Consider that we sample points from the signal $\psi\mcal{F}(\mbb{R}^n)$, assume that $\psi$ is expressed as the following integral 
+
+$$
+\psi(x) = \int_{\mcal{M}} \delta(x-x')\ d^mx' = \int_{\mbb{R}^m} \delta(x-\sigma(x'))\det(\und{\sigma})\ d^mx' 
+$$
+
+with $\mcal{M}$ an $m$-dimensional manifold with $m<n$, and $\sigma$ a parameterization of $\mcal{M}$. Lidar data is obtained by sampling elements from $\psi$, consider some arbitrary sampling operator $\mbf{S}$, then the sampled signal can be expressed as the following equation:
+
+$$
+\psi_d = \mbf{S}\psi
+$$
+
+Now consider that we know a signal $\phi$ which resembles $\psi$ up to some error. The sampling distance tells us by how much samples of $\phi$ are very close to samples of $\psi$, in particular 
+$$
+D_s^2(\psi,\phi) = D^2(\mbf{S}\psi,\mbf{S}\phi) = \psi^\dagger\mbf{S}^\dagger\mbf{Q}\mbf{S}\phi 
+$$
+
+One of the steps of the reconstruction process can be posed by trying to answer the question: What is the signal $\theta$ that is very close to $\phi$ and for which samples of it are very close with $\psi_d$, in other words, find $\theta\in\mcal{F}(\mbb{R}^n)$ that minimizes the cost function 
+
+
+$$
+J(\theta) = D^2(\mbf{S}\theta,\psi_d) + \lambda R^2(\theta,\phi)
+$$
+
+with $R^2$ some appropriate distance measure between $\theta$ and $\phi$. A particular realization of this can be expressed by chosing some positive definite operators $\mbf{Q}$ and $\mbf{P}$ and writing 
+
+$$
+J(\theta) = \theta^\dagger \mbf{S}^\dagger\mbf{Q}\psi_d + \lambda\theta^\dagger \mbf{P}\phi + \tfrac{1}{2}\mu\theta^\dagger\mbf{A}\theta
+$$
+
+where the last term is a regularization term to ensure that $\theta$ does not go to zero. The minimizer of $J$ is given by 
+
+$$
+\theta = \mu^{-1}\mbf{A}^{-1}(\mbf{S}^\dagger\mbf{Q}\psi_d + \lambda \mbf{P}\phi)
+$$
+
+Note however rhat we can consider finding the manifold $\mcal{M}$ by deriving an algorithm that determines the parameterization function $\sigma\in\mcal{F}(\mbb{R}^m\mapsto\mbb{R}^n)$ by finding the stationary points of the cost function 
+
+
+$$
+L(\sigma) = D^2(\mbf{S}\psi,\psi_d) = \psi_d^\dagger\mbf{QS}\psi
+$$
+
+
+with $\psi$ and implicit functional of $\sigma$. We can consider the problem of finding $\sigma$ by considering the following relaxation for $\psi$, namely 
+
+$$
+\psi(x) = F(\sigma) =  \int_{\mbb{R}^m} \delta(x-\sigma(x'))\ d^m x'
+$$
+
+
+Then the problem of minimizing $L$ with respect to $\sigma$ reduces to finding $\sigma$ that solves 
+
+$$
+\nabla_\sigma \omega(\sigma) = 0
+$$
+
+with 
+
+$$
+\omega = \mbf{S^\dagger Q^\dagger}\psi_d
+$$
+
+Where we used 
+
+$$
+[\fder_\sigma\psi](x,y)  = [\fder_\sigma F(\sigma)](x,y) = -\nabla_x \delta(x-\sigma(x')) 
+$$
+
 
